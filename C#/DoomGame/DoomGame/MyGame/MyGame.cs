@@ -1,36 +1,164 @@
 using System;
-using System.Drawing;
 
 namespace GXPEngine.MyGame
 {
 	public class MyGame : Game
 	{
-		public MyGame() : base(800, 600, false)		// Create a window that's 800x600 and NOT fullscreen
+		private readonly string _map = "";
+
+		private float _fPlayerX = 8.0f;
+		private float _fPlayerY = 8.0f;
+		private float _fPlayerA = 0.1f;
+
+		private const int N_MAP_WIDTH = 16;
+		private const int N_MAP_HEIGHT = 16;
+
+		private const float F_FOV = Mathf.PI / 4f;
+		private const float F_DEPTH = 16.0f;
+
+		private const float F_ROTATION_SPEED = 0.005f;
+		private const float F_MOVE_SPEED = 0.005f;
+
+		private readonly EasyDraw _canvas;
+
+		private MyGame() : base(1280, 720, false, true, pPixelArt: true)
 		{
+			_map += "################";
+			_map += "#.#............#";
+			_map += "#.#......#######";
+			_map += "#.###..........#";
+			_map += "#..............#";
+			_map += "#..............#";
+			_map += "#...#..........#";
+			_map += "#...#..........#";
+			_map += "#..............#";
+			_map += "#........#.....#";
+			_map += "#........#.....#";
+			_map += "#..............#";
+			_map += "#..............#";
+			_map += "#...###........#";
+			_map += "#..............#";
+			_map += "################";
+
 			// Draw some things on a canvas:
-			EasyDraw canvas = new EasyDraw(800, 600);
-			canvas.Clear(Color.MediumPurple);
-			canvas.Fill(Color.Yellow);
-			canvas.Ellipse(width / 2, height / 2, 200, 200);
-			canvas.Fill(50);
-			canvas.TextSize(32);
-			canvas.TextAlign(CenterMode.Center, CenterMode.Center);
-			canvas.Text("Welcome!", width / 2, height / 2);
+			_canvas = new EasyDraw(width, height);
+
+			//Render Background
+			EasyDraw background = new EasyDraw(width, height);
+			for (int iy = 0; iy < height; iy++)
+			{
+				if (iy < height / 2)
+				{
+					// Ceiling
+					float fac = Map(iy, 0, height, 1.0f, 0.4f);
+					background.Stroke(0, (int) (150 * fac), (int) (255 * fac));
+				}
+				else
+				{
+					//Floor
+					background.Stroke((int) Map(iy, 0, height, 0, 64));
+				}
+
+				background.Line(0, iy, width, iy);
+			}
 
 			// Add the canvas to the engine to display it:
-			AddChild(canvas);
+			AddChild(background);
+			AddChild(_canvas);
 			Console.WriteLine("MyGame initialized");
 		}
 
 		// For every game object, Update is called every frame, by the engine:
-		void Update()
+		private void Update()
 		{
-			// Empty
+			_canvas.ClearTransparent();
+
+			if (Input.GetKey(Key.A))
+			{
+				_fPlayerA -= F_ROTATION_SPEED * Time.deltaTime;
+			}
+
+			if (Input.GetKey(Key.D))
+			{
+				_fPlayerA += F_ROTATION_SPEED * Time.deltaTime;
+			}
+
+			if (Input.GetKey(Key.W))
+			{
+				_fPlayerX += Mathf.Sin(_fPlayerA) * F_MOVE_SPEED * Time.deltaTime;
+				_fPlayerY += Mathf.Cos(_fPlayerA) * F_MOVE_SPEED * Time.deltaTime;
+				if (_map[(int) _fPlayerY * N_MAP_WIDTH + (int) _fPlayerX] == '#')
+				{
+					_fPlayerX -= Mathf.Sin(_fPlayerA) * F_MOVE_SPEED * Time.deltaTime;
+					_fPlayerY -= Mathf.Cos(_fPlayerA) * F_MOVE_SPEED * Time.deltaTime;
+				}
+			}
+
+			if (Input.GetKey(Key.S))
+			{
+				_fPlayerX -= Mathf.Sin(_fPlayerA) * F_MOVE_SPEED * Time.deltaTime;
+				_fPlayerY -= Mathf.Cos(_fPlayerA) * F_MOVE_SPEED * Time.deltaTime;
+				if (_map[(int) _fPlayerY * N_MAP_WIDTH + (int) _fPlayerX] == '#')
+				{
+					_fPlayerX += Mathf.Sin(_fPlayerA) * F_MOVE_SPEED * Time.deltaTime;
+					_fPlayerY += Mathf.Cos(_fPlayerA) * F_MOVE_SPEED * Time.deltaTime;
+				}
+			}
+
+			//Render Walls
+			for (int ix = 0; ix < width; ix++)
+			{
+				float fRayAngle = (_fPlayerA - F_FOV / 2.0f) + (ix / (float) width) * F_FOV;
+
+				float fDistanceToWall = 0.0f;
+				bool bHitWall = false;
+
+				float fEyeX = Mathf.Sin(fRayAngle);
+				float fEyeY = Mathf.Cos(fRayAngle);
+
+				while (!bHitWall && fDistanceToWall < F_DEPTH)
+				{
+					fDistanceToWall += 0.01f;
+
+					int nTestX = (int) (_fPlayerX + fEyeX * fDistanceToWall);
+					int nTestY = (int) (_fPlayerY + fEyeY * fDistanceToWall);
+
+					if (nTestX < 0 || nTestX >= N_MAP_WIDTH | nTestY < 0 || nTestY >= N_MAP_HEIGHT)
+					{
+						bHitWall = true;
+						fDistanceToWall = F_DEPTH;
+					}
+					else
+					{
+						if (_map[nTestY * N_MAP_WIDTH + nTestX] == '#')
+						{
+							bHitWall = true;
+						}
+					}
+				}
+
+				float fCeiling = height / 2.0f - height / fDistanceToWall;
+				float fFloor = height - fCeiling;
+
+				_canvas.Stroke((int) Map(fDistanceToWall, 0, F_DEPTH, 255, 0));
+				_canvas.Line(ix, fCeiling, ix, fFloor);
+			}
+
+			_canvas.Text(currentFps.ToString(), 10, 10);
+
+			_canvas.Stroke(255, 0, 0);
 		}
 
-		static void Main()							// Main() is the first method that's called when the program is run
+		private static void Main() // Main() is the first method that's called when the program is run
 		{
-			new MyGame().Start();					// Create a "MyGame" and start it
+			new MyGame().Start(); // Create a "MyGame" and start it
+		}
+
+		private static float Map(float value,
+			float start1, float stop1,
+			float start2, float stop2)
+		{
+			return start2 + (stop2 - start2) * ((value - start1) / (stop1 - start1));
 		}
 	}
 }
