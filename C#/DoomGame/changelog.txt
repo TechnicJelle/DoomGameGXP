@@ -1,0 +1,150 @@
+Last update: 2-11-2021
+
+
+0.0.1 - initial post
+0.0.2 - fixed Canvas to allow for faster writing
+0.0.3 - fixed collider bug (collider bugged when destroyed)
+		fixed destroy bug (child wasn't destroyed)
+		fixed negative width problem (scaled sprites return negative width)
+		added game.ShowMouse(false); to show/hide mouse
+0.0.4 - added sound channel parameter to Sound.Play.
+		fixed system from running too fast on systems without vsync
+		fixed game.Destroy() to close window.
+		
+0.0.5  
+------
+AnimSprite:
+	- all fields protected instead of private now
+	- updated setUVS to deal with rounding errors which were causing visible tearing when aligning tiles
+Canvas:
+	- rewritten, now extends Sprite and allows existing images to be passed in, rotation, collision, and setting the origin
+Game:
+	- now allows listening for before and after update events to allow for manager addition without it having to be a game object.
+	- updated rendering mechanism to work with target frame rate and provide target vs real fps
+Key:
+	- table updated to include more keys and correct key codes
+GL:
+	- updated with codes for line drawing. 
+	- updated with codes for texture repetition
+GLContext:
+	- POLYGON_SMOOTH disabled to fix diagonal tearing in sprites.
+	- GLContext no longer drives the Time class to fix a timing bug concerning framerate and deltatime
+	- Turned off VSYNC by default, since it interfered with custom FPS rendering
+	- GLContext now takes parameter vsync on startup and handles all timing internally, by default vsync is true
+GameObject:
+	- now adds itself to the game instance for updates/collisions
+	- collision code moved from sprite to gameobject
+	- invalidate flag removed
+	- TransformPoint rewritten to reuse base class TransformPoint
+	- class is now partial
+Sprite:
+	- Hittest code moved to base class, installed BoxCollider through new mechanism
+	- Initialization and collider installing now overridable
+	- blendMode property added
+CollisionManager/UpdateManager:
+	- now handle double additions/removal correctly
+Time:
+	- updated time class to use glfw timing due to better granularity
+Texture2D:
+	- enabled wrap property, which allows you to set the texture to repeat mode (subclass of sprite required which modifies the UV's)
+BlendMode:
+	- added BlendMode class, please send in your awesome blendmode creations to Bram/Hans
+MouseHandler:
+	- added MouseHandler as a very basic event based interface to the Input.mouseXY/mousedown properties
+
+				
+0.0.7 - changed GetKeyDown and GetKeyMouse behaviour to allow for multiple calls pro frame
+      - Added sprite Texture cache cleanup
+      - Added Pivot class
+      - Added GetCollisions method to GameObject
+      - Updated game.width, game.height on resize so they should return actual width/height now
+      - Added InverseTransformPoint (not tested properly) and DistanceTo
+      - Added Mathf lib
+      - Renamed AnimSprite -> AnimationSprite
+      - GameObject is now an abstract class, use Pivot instead
+
+0.0.8 - Replaced all 'double' properties with floats
+
+0.0.9 - Fixed collision issue around max edges
+	Missing keycodes
+	White texture issue
+0.0.10 - White texture restored
+0.0.11 - Texture2D.Dispose returning null error resolved (Canvas.Destroy fix)
+	- targetFramerate can't go below 1 to avoid division by zero
+	- setScale added to set both scaleX and scaleY at once
+	- getMouseUp (thanks LeonB)
+	- Sprite.cs width/height getter/setter fixed .. they were using ints 
+	
+	
+----- 2018/2019 version (PBO06):	
+
+* Splitscreen functionality (See Camera and Window) 
+* Cache sounds - no memory leaks 
+* Viewport resolution independent from "game logic" resolution (game.width and game.height) 
+* Adding diagnostic tools to Game (report number of colliders, objects in hierarchy, etc) 
+* Option to keep textures in cache (to prevent too much file loading and stuttering) 
+* Trying to read non-existing sound file gives exception 
+* Prevented Canvas Destroy Exception 
+* Adding EasyDraw class, very much inspired by the Processing API 
+* Enabling pixel art - see the Game constructor 
+* Adding TiledMapParser - note that this now requires fiddling with .exe.config files on Mac/Linux... 
+* Adding Settings.cs (loading parameters at runtime)
+* Adding HierarchyManager (allowing delayed Destroy, after the update loop)
+
+----- 2019/2020 version (PBO06):
+
+BUG FIXES / BUG PREVENTION:
+* Creating sprites before calling the Game constructor gives a useful Exception
+* resizing the window will update the Game's Renderwindow again
+* Tiled's ImageLayer offsets are floats instead of ints
+* Fixing both hittests in BoxCollider for the case of skewed sprites 
+  (which can happen when combining non-uniform scaling for a parent with child rotations), using true SAT.
+* Fixing common causes of memory leaks and inexplicable bugs:
+    -Game has no explicit list of game objects contained.
+    -Game objects are only updated / collision checked when they are in the hierarchy.
+    -Destroyed game objects cannot be added to the hierarchy again.
+* Fixing the CollisionManager: Destroy / AddChild etc cannot be called while the OnCollision loop is active. 
+   Use LateDestroy / LateAddChild etc. instead. 
+   (For old projects that now give exceptions: you can turn off this functionality using CollisionManager.SafeCollisionLoop=false)
+
+* GameObject.GetChildren is now safe by default (clone list)
+* Sound.Play has volume & pan parameter: now SoLoud can also play with different volume and pan.   
+   
+FEATURES:
+* TiledParser: adding a method that converts the string data (innerXML) to a 2-dimensional array of integers.
+* Added "MoveUntilCollision" method for GameObjects (plus helper methods).
+* (Box)Colliders now have a GetCollisionInfo method: returns collision details for overlapping colliders, such as normal, point of impact and penetration depth.
+* HierarchyManager and GameObject have LateDestroy, LateAdd(At) and LateRemove methods.
+* Adding the option to *only* render using camera's. (game.RenderMain=false)
+* All Sprite (sub)classes now have an optional argument for adding a collider or not (default = true). Now the option to not add a collider is not quite as
+hidden, and doesn't require subclassing.
+
+* (BHO03:) Supporting SoLoud as audio backend on Windows and Mac, both 32 and 64 bit.
+
+----- 2020/2021 version (PBO06):
+
+FEATURES:
+
+* TiledLoader: automatically creates GXPEngine sprites based on a Tiled file, with proper position, rotation, scale, fonts (enables using Tiled as a WYSIWYG (UI) editor, except when using newlines in Tiled text). If you want to customize the object loading, there's an event you can subscribe to, and a number of useful utility methods for creating and placing sprites and text.
+* TiledMapParser: adding some functionality, such as reading rotations from Object groups or Tile layers. You can now get the raw data (including mirror and rotation bitflags) or processed data (just tile numbers) from tile layers.
+* FindObject(s)OfType for easy (but slightly inefficient) finding of game objects. Don't abuse this! (E.g. don't call from Update!)
+* AnimationSprite has useful SetCycle and Animate methods, for easy animation.
+* Utils has a FontLoader method, for loading fonts from (ttf) files.
+* Gizmos: Allows for easily drawing line-based debug shapes on top of the scene.
+
+----- 2021/2022 version (PBO06):
+
+FEATURES:
+
+* Colliders can now be made triggers, ignored by MoveUntilCollision (GetCollisions and OnCollision can be configured to include/exclude triggers or solid colliders)
+* Adding SpriteBatch, for efficient rendering of large groups of static sprites (without colliders)
+* Adding more blend modes
+* More useful EasyDraw methods (Text and Clear overloads)
+* Input.AnyKey(Down)
+* Camera has ScreenPointToGlobal method
+* MoveUntilCollision takes Lists too
+* Enabling framerate independent animation for AnimationSprites
+* TiledLoader can be called from a separate assembly
+* VSync can be toggled at runtime
+* Sprites can be initialized from a texture
+* Minor changes (comments, updating folder structure, adding various getters, ...)

@@ -1,0 +1,82 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{B5126D4C-7FE0-4552-BC8C-E68D529C22B2}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>GXPEngine</RootNamespace>
+    <AssemblyName>GXPEngine</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DebugSymbols>True</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>False</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
+    <ConsolePause>False</ConsolePause>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <DebugType>none</DebugType>
+    <Optimize>True</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
+    <ConsolePause>False</ConsolePause>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="GXPEngine\AddOns\Gizmos.cs" />
+    <Compile Include="GXPEngine\AddOns\SpriteBatch.cs" />
+    <Compile Include="GXPEngine\AddOns\TiledLoader.cs" />
+    <Compile Include="MyGame.cs" />
+    <Compile Include="GXPEngine\Core\Canvas.cs" />
+    <Compile Include="GXPEngine\Game.cs" />
+    <Compile Include="GXPEngine\GameObject.cs" />
+    <Compile Include="GXPEngine\Sound.cs" />
+    <Compile Include="GXPEngine\SoundChannel.cs" />
+    <Compile Include="GXPEngine\Sprite.cs" />
+    <Compile Include="GXPEngine\Core\BlendMode.cs" />
+    <Compile Include="GXPEngine\Core\BoxCollider.cs" />
+    <Compile Include="GXPEngine\Core\Collider.cs" />
+    <Compile Include="GXPEngine\Core\GLContext.cs" />
+    <Compile Include="GXPEngine\Core\Rectangle.cs" />
+    <Compile Include="GXPEngine\Core\Texture2D.cs" />
+    <Compile Include="GXPEngine\Core\Transformable.cs" />
+    <Compile Include="GXPEngine\Core\Vector2.cs" />
+    <Compile Include="GXPEngine\FMOD\FMOD.cs" />
+    <Compile Include="GXPEngine\Managers\CollisionManager.cs" />
+    <Compile Include="GXPEngine\Managers\UpdateManager.cs" />
+    <Compile Include="GXPEngine\OpenGL\GL.cs" />
+    <Compile Include="GXPEngine\Pivot.cs" />
+    <Compile Include="GXPEngine\AnimationSprite.cs" />
+    <Compile Include="GXPEngine\Utils\Mathf.cs" />
+    <Compile Include="GXPEngine\Utils\Input.cs" />
+    <Compile Include="GXPEngine\Utils\Key.cs" />
+    <Compile Include="GXPEngine\AddOns\MouseHandler.cs" />
+    <Compile Include="GXPEngine\Utils\Time.cs" />
+    <Compile Include="GXPEngine\Utils\Utils.cs" />
+    <Compile Include="GXPEngine\AddOns\Camera.cs" />
+    <Compile Include="GXPEngine\Managers\HierarchyManager.cs" />
+    <Compile Include="GXPEngine\AddOns\Settings.cs" />
+    <Compile Include="GXPEngine\AddOns\TiledMapParser.cs" />
+    <Compile Include="GXPEngine\AddOns\Window.cs" />
+    <Compile Include="GXPEngine\EasyDraw.cs" />
+    <Compile Include="GXPEngine\Core\Collision.cs" />
+    <Compile Include="GXPEngine\Core\SoundSystem.cs" />
+    <Compile Include="GXPEngine\FMOD\FMODSoundSystem.cs" />
+    <Compile Include="GXPEngine\SoLoud\Soloud.cs" />
+    <Compile Include="GXPEngine\SoLoud\SoloudSoundSystem.cs" />
+  </ItemGroup>
+</Project>
