@@ -1,0 +1,5 @@
+C:\Users\TechnicJelle\Documents\GitHub\CMGT-Programming-Assignments\C#\DoomGame\DoomGame\bin\Release\DoomGame.exe
+C:\Users\TechnicJelle\Documents\GitHub\CMGT-Programming-Assignments\C#\DoomGame\DoomGame\obj\x86\Release\DoomGame.csproj.AssemblyReference.cache
+C:\Users\TechnicJelle\Documents\GitHub\CMGT-Programming-Assignments\C#\DoomGame\DoomGame\obj\x86\Release\DoomGame.csproj.SuggestedBindingRedirects.cache
+C:\Users\TechnicJelle\Documents\GitHub\CMGT-Programming-Assignments\C#\DoomGame\DoomGame\obj\x86\Release\DoomGame.csproj.CoreCompileInputs.cache
+C:\Users\TechnicJelle\Documents\GitHub\CMGT-Programming-Assignments\C#\DoomGame\DoomGame\obj\x86\Release\DoomGame.exe

@@ -1,5 +1,4 @@
-﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
+﻿Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 # SharpDevelop 4.3
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DoomGame", "DoomGame\DoomGame.csproj", "{B5126D4C-7FE0-4552-BC8C-E68D529C22B2}"
@@ -16,6 +15,6 @@ Global
 		{B5126D4C-7FE0-4552-BC8C-E68D529C22B2}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = GXPEngine\GXPEngine.csproj
+		StartupItem = DoomGame\DoomGame.csproj
 	EndGlobalSection
 EndGlobal

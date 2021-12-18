@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace GXPEngine.MyGame
 {
@@ -42,6 +43,7 @@ namespace GXPEngine.MyGame
 
 			// Draw some things on a canvas:
 			_canvas = new EasyDraw(width, height);
+			_canvas.TextAlign(CenterMode.Min, CenterMode.Min);
 
 			//Render Background
 			EasyDraw background = new EasyDraw(width, height);
@@ -112,6 +114,7 @@ namespace GXPEngine.MyGame
 
 				float fDistanceToWall = 0.0f;
 				bool bHitWall = false;
+				bool bBoundary = false;
 
 				float fEyeX = Mathf.Sin(fRayAngle);
 				float fEyeY = Mathf.Cos(fRayAngle);
@@ -125,22 +128,49 @@ namespace GXPEngine.MyGame
 
 					if (nTestX < 0 || nTestX >= N_MAP_WIDTH | nTestY < 0 || nTestY >= N_MAP_HEIGHT)
 					{
+						//Ray has gone out of map bounds
 						bHitWall = true;
 						fDistanceToWall = F_DEPTH;
 					}
 					else
 					{
-						if (_map[nTestY * N_MAP_WIDTH + nTestX] == '#')
+						if (_map[nTestY * N_MAP_WIDTH + nTestX] != '#') continue;
+						bHitWall = true;
+
+						List<(float, float)> p = new List<(float, float)>(); // distance, dot product
+						for (int tx = 0; tx < 2; tx++)
 						{
-							bHitWall = true;
+							for (int ty = 0; ty < 2; ty++)
+							{
+								float vy = (float) nTestY + ty - _fPlayerY;
+								float vx = (float) nTestX + tx - _fPlayerX;
+								float d = Mathf.Sqrt(vx * vx + vy * vy);
+								float dot = (fEyeX * vx / d) + (fEyeY * vy / d);
+								p.Add((d, dot));
+							}
 						}
+
+						p.Sort((left, right) => left.Item1.CompareTo(right.Item1));
+
+						const float fBound = 0.001f;
+						if (Mathf.Acos(p[0].Item2) < fBound) bBoundary = true;
+						if (Mathf.Acos(p[1].Item2) < fBound) bBoundary = true;
+						p = null;
 					}
 				}
 
 				float fCeiling = height / 2.0f - height / fDistanceToWall;
 				float fFloor = height - fCeiling;
 
-				_canvas.Stroke((int) Map(fDistanceToWall, 0, F_DEPTH, 255, 0));
+				if (bBoundary)
+				{
+					_canvas.Stroke(0);
+				}
+				else
+				{
+					_canvas.Stroke((int) Map(fDistanceToWall, 0, F_DEPTH, 255, 0));
+				}
+
 				_canvas.Line(ix, fCeiling, ix, fFloor);
 			}
 
