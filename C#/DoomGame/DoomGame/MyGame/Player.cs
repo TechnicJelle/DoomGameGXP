@@ -2,9 +2,9 @@
 {
 	public class Player
 	{
-		public static float PlayerX;
-		public static float PlayerY;
-		public static float PlayerA;
+		public static float PlayerX { get; private set; }
+		public static float PlayerY { get; private set; }
+		public static float PlayerA { get; private set; }
 
 		private const float F_ROTATION_SPEED = 0.003f;
 		private const float F_MOVE_SPEED = 0.005f;
@@ -16,7 +16,7 @@
 			PlayerA = startAngle;
 		}
 
-		public void MoveInput()
+		public static void MoveInput()
 		{
 			if (Input.GetKey(Key.A))
 			{

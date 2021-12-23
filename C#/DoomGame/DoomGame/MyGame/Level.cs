@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace GXPEngine.MyGame
 {
@@ -8,8 +7,8 @@ namespace GXPEngine.MyGame
 		private readonly Tile[,] _tiles;
 		private readonly int _tilesWidth;
 		private readonly int _tilesHeight;
-		
-		private readonly List<(float, float)> _p = new List<(float, float)>(); // distance, dot product
+
+		private readonly (float, float)[] _p = new (float, float)[4]; // distance, dot product
 		
 		public Level(int w, int h, string mapContent)
 		{
@@ -74,11 +73,11 @@ namespace GXPEngine.MyGame
 								float vx = (float) nTestX + tx - Player.PlayerX;
 								float d = Mathf.Sqrt(vx * vx + vy * vy);
 								float dot = (fEyeX * vx / d) + (fEyeY * vy / d);
-								_p.Add((d, dot));
+								_p[(tx * 2) + ty] = (d, dot);
 							}
 						}
 
-						_p.Sort((left, right) => left.Item1.CompareTo(right.Item1));
+						Array.Sort(_p, (left, right) => left.Item1.CompareTo(right.Item1));
 
 						const float fBound = 0.001f;
 						if (Mathf.Acos(_p[0].Item2) < fBound) bBoundary = true;
