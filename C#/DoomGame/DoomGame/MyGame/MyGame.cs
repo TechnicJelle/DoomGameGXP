@@ -16,13 +16,13 @@ namespace GXPEngine.MyGame
 			Wall,
 		}
 
-		private readonly Player _player;
-		
-		public static EasyDraw Canvas;
+		private readonly EasyDraw _canvas;
 		public static Level Level;
+		private readonly Minimap _minimap;
 
 		private MyGame() : base(Width, Height, false, true, pPixelArt: true)
 		{
+			//Level
 			string map = "";
 			map += "################";
 			map += "#.#............#";
@@ -40,16 +40,14 @@ namespace GXPEngine.MyGame
 			map += "#...###........#";
 			map += "#..............#";
 			map += "################";
-
 			Level = new Level(16, 16, map);
-			_player = new Player(8.0f, 8.0f, 0.1f);
-
-			// Draw some things on a canvas:
-			Canvas = new EasyDraw(Width, Height);
-			Canvas.TextAlign(CenterMode.Min, CenterMode.Min);
-
+			
+			//Player
+			Player player = new Player(8.0f, 8.0f, 0.1f);
+			AddChild(player);
+			
 			//Render Background
-			EasyDraw background = new EasyDraw(Width, Height);
+			EasyDraw background = new EasyDraw(Width, Height, false);
 			for (int iy = 0; iy < Height; iy++)
 			{
 				if (iy < Height / 2)
@@ -66,24 +64,33 @@ namespace GXPEngine.MyGame
 
 				background.Line(0, iy, Width, iy);
 			}
-
-			// Add the canvas to the engine to display it:
 			AddChild(background);
-			AddChild(Canvas);
+
+			//Canvas
+			_canvas = new EasyDraw(Width, Height, false);
+			_canvas.TextAlign(CenterMode.Min, CenterMode.Min);
+			AddChild(_canvas);
+			
+			//Minimap
+			_minimap = new Minimap(this,0, 0, 200, 200, Level);
+			
+			//Debug overlay
+			
 			Console.WriteLine("MyGame initialized");
 		}
 
 		// For every game object, Update is called every frame, by the engine:
 		private void Update()
 		{
-			Canvas.ClearTransparent();
-
-			Player.MoveInput();
-
-			Level.Render();
+			_canvas.ClearTransparent();
 			
-			Canvas.Stroke(255);
-			Canvas.Text(currentFps.ToString(), 10, 10);
+			Player.MoveInput();
+			_minimap.Update();
+
+			Level.Render(_canvas);
+			
+			_canvas.Stroke(255);
+			_canvas.Text(currentFps.ToString(), 10, 10);
 		}
 
 		private static void Main() // Main() is the first method that's called when the program is run

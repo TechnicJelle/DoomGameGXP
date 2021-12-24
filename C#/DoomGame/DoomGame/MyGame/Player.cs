@@ -1,6 +1,6 @@
 ﻿namespace GXPEngine.MyGame
 {
-	public class Player
+	public class Player : GameObject
 	{
 		public static float PlayerX { get; private set; }
 		public static float PlayerY { get; private set; }

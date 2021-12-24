@@ -38,6 +38,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MyGame\Level.cs" />
+    <Compile Include="MyGame\Minimap.cs" />
     <Compile Include="MyGame\MyGame.cs" />
     <Compile Include="GXPEngine\AddOns\Gizmos.cs" />
     <Compile Include="GXPEngine\AddOns\SpriteBatch.cs" />
