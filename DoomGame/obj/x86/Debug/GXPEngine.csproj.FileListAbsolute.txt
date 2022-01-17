@@ -1,7 +1,0 @@
-C:\Projects\C#\CMGT-C#-Assignments\DoomGame\GXPEngine\bin\Debug\GXPEngine.exe
-C:\Projects\C#\CMGT-C#-Assignments\DoomGame\GXPEngine\bin\Debug\GXPEngine.pdb
-C:\Projects\C#\CMGT-C#-Assignments\DoomGame\GXPEngine\obj\x86\Debug\GXPEngine.csproj.AssemblyReference.cache
-C:\Projects\C#\CMGT-C#-Assignments\DoomGame\GXPEngine\obj\x86\Debug\GXPEngine.csproj.SuggestedBindingRedirects.cache
-C:\Projects\C#\CMGT-C#-Assignments\DoomGame\GXPEngine\obj\x86\Debug\GXPEngine.csproj.CoreCompileInputs.cache
-C:\Projects\C#\CMGT-C#-Assignments\DoomGame\GXPEngine\obj\x86\Debug\GXPEngine.exe
-C:\Projects\C#\CMGT-C#-Assignments\DoomGame\GXPEngine\obj\x86\Debug\GXPEngine.pdb

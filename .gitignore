@@ -1,4 +1,6 @@
-GXPEngine/obj
 .vs
-GXPEngine.userprefs
-GXPEngine/bin/Debug
+.idea
+DoomGame/obj
+*.exe
+*.pdb
+DoomGame/bin/Release
