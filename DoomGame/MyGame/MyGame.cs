@@ -41,11 +41,11 @@ namespace GXPEngine.MyGame
 			map += "#..............#";
 			map += "################";
 			Level = new Level(16, 16, map);
-			
+
 			//Player
 			Player player = new Player(8.0f, 8.0f, 0.1f);
 			AddChild(player);
-			
+
 			//Render Background
 			EasyDraw background = new EasyDraw(Width, Height, false);
 			for (int iy = 0; iy < Height; iy++)
@@ -70,12 +70,12 @@ namespace GXPEngine.MyGame
 			_canvas = new EasyDraw(Width, Height, false);
 			_canvas.TextAlign(CenterMode.Min, CenterMode.Min);
 			AddChild(_canvas);
-			
+
 			//Minimap
 			_minimap = new Minimap(this,0, 0, 200, 200, Level);
-			
+
 			//Debug overlay
-			
+
 			Console.WriteLine("MyGame initialized");
 		}
 
@@ -83,14 +83,14 @@ namespace GXPEngine.MyGame
 		private void Update()
 		{
 			_canvas.ClearTransparent();
-			
+
 			Player.MoveInput();
 			_minimap.Update();
 
-			Level.Render(_canvas);
-			
+			Level.Render(_canvas, _minimap);
+
 			_canvas.Stroke(255);
-			_canvas.Text(currentFps.ToString(), 10, 10);
+			_canvas.Text(currentFps.ToString(), 200, 10);
 		}
 
 		private static void Main() // Main() is the first method that's called when the program is run
