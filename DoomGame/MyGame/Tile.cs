@@ -8,8 +8,8 @@ namespace GXPEngine.MyGame
 		public MyGame.TileType Type { get; }
 		public bool Visible = false;
 		public float LastCalculatedDistanceToPlayer = float.MaxValue;
-		public int X { get; }
-		public int Y { get; }
+		public int Col { get; }
+		public int Row { get; }
 
 		private const uint COLOR = 0xFFFFFF;
 		private const float ALPHA = 1.0f;
@@ -17,11 +17,13 @@ namespace GXPEngine.MyGame
 		private float[] _uvs;
 		private readonly BlendMode _blendMode = null;
 
-		public Tile(MyGame.TileType t, int x, int y, string filename=null)
+		public Sprite TempSprite { get; } //Sprite for debugging purposes for on the minimap, while the 3D textures are still being implemented
+
+		public Tile(MyGame.TileType t, int col, int row, string filename=null)
 		{
 			Type = t;
-			X = x;
-			Y = y;
+			Col = col;
+			Row = row;
 			if (Type == MyGame.TileType.Empty)
 			{
 				if (filename != null)
@@ -32,9 +34,11 @@ namespace GXPEngine.MyGame
 				if (filename == null)
 					throw new Exception("Tile is a wall, but no filename was provided!");
 				InitializeFromTexture(Texture2D.GetInstance(filename, true));
+				TempSprite = new Sprite(filename, true, false);
 			}
 		}
 
+		//TODO: Finish this and make it work
 		public void RenderSide(GLContext glContext, float[] vertices) {
 			_blendMode?.enable();
 			_texture.Bind();

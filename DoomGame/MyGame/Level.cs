@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using GXPEngine.Core;
+using TiledMapParser;
 
 namespace GXPEngine.MyGame
 {
@@ -10,29 +11,60 @@ namespace GXPEngine.MyGame
 		private const float RENDER_DISTANCE = 32.0f;
 
 		private readonly Tile[,] _tiles;
-		public int TilesWidth { get; }
-		public int TilesHeight { get; }
-
-		private readonly (float, float)[] _p = new (float, float)[4]; // distance, dot product
+		public int TilesColumns { get; }
+		public int TilesRows { get; }
 
 		private List<Tile> _visibleTiles;
 
 		public Level(int w, int h, string mapContent)
 		{
-			TilesWidth = w;
-			TilesHeight = h;
-			if (mapContent.Length != TilesWidth * TilesHeight) throw new Exception();
-			_tiles = new Tile[TilesWidth, TilesHeight];
-			for (int ix = 0; ix < _tiles.GetLength(0); ix++)
-			for (int iy = 0; iy < _tiles.GetLength(1); iy++)
+			TilesColumns = w;
+			TilesRows = h;
+			if (mapContent.Length != TilesColumns * TilesRows) throw new Exception("TilesWidth * TilesHeight is not mapContent.Length");
+			_tiles = new Tile[TilesColumns, TilesRows];
+			for (int col = 0; col < TilesColumns; col++)
+			for (int row = 0; row < TilesRows; row++)
 			{
-				switch (mapContent[iy * TilesWidth + ix])
+				switch (mapContent[row * TilesRows + col])
 				{
 					case '#':
-						_tiles[ix, iy] = new Tile(MyGame.TileType.Wall, ix, iy, "square.png");
+						_tiles[col, row] = new Tile(MyGame.TileType.Wall, col, row, "checkers.png");
 						break;
 					case '.':
-						_tiles[ix, iy] = new Tile(MyGame.TileType.Empty, ix, iy);
+						_tiles[col, row] = new Tile(MyGame.TileType.Empty, col, row);
+						break;
+				}
+			}
+		}
+
+		public Level(string tiledFile)
+		{
+			Map levelData = MapParser.ReadMap(tiledFile);
+			if (levelData.Layers == null || levelData.Layers.Length <= 0)
+				throw new Exception("Tile file " + tiledFile + " does not contain a layer!");
+			Layer mainLayer = levelData.Layers[0];
+			TilesColumns = mainLayer.Width;
+			TilesRows = mainLayer.Height;
+
+			short[,] tileNumbers = mainLayer.GetTileArray();
+
+			_tiles = new Tile[TilesColumns, TilesRows];
+			for (int col = 0; col < TilesColumns; col++)
+			for (int row = 0; row < TilesRows; row++)
+			{
+				switch (tileNumbers[row, col])
+				{
+					case 0:
+						_tiles[col, row] = new Tile(MyGame.TileType.Empty, col, row);
+						break;
+					case 1:
+						_tiles[col, row] = new Tile(MyGame.TileType.Wall, col, row, "square.png");
+						break;
+					case 2:
+						_tiles[col, row] = new Tile(MyGame.TileType.Wall, col, row, "colors.png");
+						break;
+					case 3:
+						_tiles[col, row] = new Tile(MyGame.TileType.Wall, col, row, "checkers.png");
 						break;
 				}
 			}
@@ -42,18 +74,18 @@ namespace GXPEngine.MyGame
 		{
 			//Reset all visible tiles
 			_visibleTiles = new List<Tile>();
-			for (int ix = 0; ix < _tiles.GetLength(0); ix++)
-			for (int iy = 0; iy < _tiles.GetLength(1); iy++)
+			for (int col = 0; col < TilesColumns; col++)
+			for (int row = 0; row < TilesRows; row++)
 			{
-				_tiles[ix, iy].Visible = false;
+				_tiles[col, row].Visible = false;
 			}
 
 			//Find tiles to render
 			//For every x pixel, send out a ray that goes until it has hit a wall or reached the maximum render distance
-			for (int ix = 0; ix < MyGame.Width; ix+=10)
+			for (int px = 0; px < MyGame.Width; px+=10)
 			{
 				float fRayAngle = (Player.PlayerA - MyGame.FieldOfView / 2.0f) +
-				                  (ix / (float) MyGame.Width) * MyGame.FieldOfView;
+				                  (px / (float) MyGame.Width) * MyGame.FieldOfView;
 
 				float fDistanceToWall = 0.0f;
 				bool bHitWall = false;
@@ -68,7 +100,7 @@ namespace GXPEngine.MyGame
 					int nTestX = (int) (Player.Position.x + fEyeX * fDistanceToWall);
 					int nTestY = (int) (Player.Position.y + fEyeY * fDistanceToWall);
 
-					if (nTestX < 0 || nTestX >= TilesWidth | nTestY < 0 || nTestY >= TilesHeight)
+					if (nTestX < 0 || nTestX >= TilesColumns | nTestY < 0 || nTestY >= TilesRows)
 					{
 						//Ray has gone out of map bounds
 						bHitWall = true;
@@ -97,9 +129,9 @@ namespace GXPEngine.MyGame
 			}
 		}
 
-		public Tile GetTileAtPosition(int x, int y)
+		public Tile GetTileAtPosition(int col, int row)
 		{
-			return _tiles[x, y];
+			return _tiles[col, row];
 		}
 
 		private static void RenderTile(EasyDraw canvas, Minimap minimap, Tile t)
@@ -108,8 +140,8 @@ namespace GXPEngine.MyGame
 
 			Vector2 playerHeading = Vector2.FromAngle(-Player.PlayerA + Mathf.PI/2.0f);
 
-			float tileCenterX = t.X + 0.5f;
-			float tileCenterY = t.Y + 0.5f;
+			float tileCenterX = t.Col + 0.5f;
+			float tileCenterY = t.Row + 0.5f;
 			minimap.DebugFill(0, 200, 0);
 			minimap.DebugCircle(tileCenterX, tileCenterY, 4);
 
@@ -168,13 +200,13 @@ namespace GXPEngine.MyGame
 				float wSq = Mathf.Pow(Player.ViewDepth, exp);
 				int brightness = Mathf.Round(Mathf.Clamp(MyGame.Map(sq, 0, wSq, 255, 0), 0, 255));
 
-				canvas.Fill(brightness);
 				//Linear lighting:
 				// canvas.Stroke((int) MyGame.Map(t.LastCalculatedDistanceToPlayer, 0, MyGame.ViewDepth, 255, 0));
+				canvas.Fill(brightness);
 				canvas.Stroke(0);
 				canvas.StrokeWeight(2);
 				canvas.Quad(ix1, fCeiling1, ix1, fFloor1, ix2, fFloor2, ix2, fCeiling2);
-				t.RenderSide(Game.main._glContext, new[] {ix1, fCeiling1, ix1, fFloor1, ix2, fFloor2, ix2, fCeiling2});
+				// t.RenderSide(Game.main._glContext, new[] {ix1, fCeiling1, ix1, fFloor1, ix2, fFloor2, ix2, fCeiling2});
 			}
 
 			//Player Heading

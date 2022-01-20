@@ -40,8 +40,8 @@
 			};
 			game.AddChild(_layerDebug);
 
-			_w = (_layerLevel.width-1.0f) / level.TilesWidth;
-			_h = (_layerLevel.height-1.0f) / level.TilesHeight;
+			_w = (_layerLevel.width-1.0f) / level.TilesColumns;
+			_h = (_layerLevel.height-1.0f) / level.TilesRows;
 		}
 
 		public void Update()
@@ -51,15 +51,21 @@
 			_layerLevel.Stroke(0);
 			_layerLevel.StrokeWeight(1);
 			_layerLevel.ShapeAlign(CenterMode.Min, CenterMode.Min);
-			for (int iy = 0; iy < _level.TilesHeight; iy++)
-			for (int ix = 0; ix < _level.TilesWidth; ix++)
+			for (int col = 0; col < _level.TilesColumns; col++)
+			for (int row = 0; row < _level.TilesRows; row++)
 			{
-				Tile t = _level.GetTileAtPosition(ix, iy);
+				Tile t = _level.GetTileAtPosition(col, row);
 				if (t.Type != MyGame.TileType.Wall) continue;
 				_layerLevel.Fill(t.Visible ? 255 : 0);
+				_layerLevel.Rect(col * _w, row * _h, _w, _h);
 
-				_layerLevel.Rect(ix * _w, iy * _h, _w, _h);
-				//TODO: By switching these ix and iy around, the minimap is drawn in such a way that A/D rotate the view the correct way, unlike currently
+				t.TempSprite.x = col * _w + _w/2.0f;
+				t.TempSprite.y = row * _h + _h/2.0f;
+				t.TempSprite.scaleX = _w / t.TempSprite.width;
+				t.TempSprite.scaleY = _h / t.TempSprite.height;
+				_layerLevel.DrawSprite(t.TempSprite);
+				t.TempSprite.scaleX = 1.0f;
+				t.TempSprite.scaleY = 1.0f;
 			}
 
 			//layer player
@@ -71,6 +77,7 @@
 				Player.Position.x * _w,
 				Player.Position.y * _h,
 				8, 8);
+			//TODO: Make player on minimap rotate the correct way
 
 			//layer debug
 			_layerDebug.ClearTransparent();
