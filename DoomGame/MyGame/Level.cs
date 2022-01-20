@@ -29,7 +29,7 @@ namespace GXPEngine.MyGame
 				switch (mapContent[iy * TilesWidth + ix])
 				{
 					case '#':
-						_tiles[ix, iy] = new Tile(MyGame.TileType.Wall, ix, iy);
+						_tiles[ix, iy] = new Tile(MyGame.TileType.Wall, ix, iy, "square.png");
 						break;
 					case '.':
 						_tiles[ix, iy] = new Tile(MyGame.TileType.Empty, ix, iy);
@@ -174,6 +174,7 @@ namespace GXPEngine.MyGame
 				canvas.Stroke(0);
 				canvas.StrokeWeight(2);
 				canvas.Quad(ix1, fCeiling1, ix1, fFloor1, ix2, fFloor2, ix2, fCeiling2);
+				t.RenderSide(Game.main._glContext, new[] {ix1, fCeiling1, ix1, fFloor1, ix2, fFloor2, ix2, fCeiling2});
 			}
 
 			//Player Heading

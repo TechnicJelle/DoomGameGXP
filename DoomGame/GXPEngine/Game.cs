@@ -13,7 +13,7 @@ namespace GXPEngine
 	{
 		internal static Game main = null;
 
-		private GLContext _glContext;
+		public GLContext _glContext;
 
 		private UpdateManager _updateManager;
 		private CollisionManager _collisionManager;
