@@ -68,8 +68,8 @@
 			_layerPlayer.Fill(255, 0, 0);
 			//draw point on position and cone in player direction
 			_layerPlayer.Ellipse(
-				Player.PlayerX * _w,
-				Player.PlayerY * _h,
+				Player.Position.x * _w,
+				Player.Position.y * _h,
 				8, 8);
 
 			//layer debug

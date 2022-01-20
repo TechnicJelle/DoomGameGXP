@@ -8,7 +8,6 @@ namespace GXPEngine.MyGame
 		public const int Height = 720;
 
 		public const float FieldOfView = Mathf.PI / 3.0f;
-		public const float ViewDepth = 16.0f;
 
 		public enum TileType
 		{

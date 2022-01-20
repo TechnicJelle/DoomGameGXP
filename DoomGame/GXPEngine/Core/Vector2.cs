@@ -157,7 +157,7 @@ namespace GXPEngine.Core
 			return x*v.x + y*v.y;
 		}
 
-		public float Dot(float x, float y, float z) {
+		public float Dot(float x, float y) {
 			return this.x*x + this.y*y;
 		}
 
@@ -169,6 +169,7 @@ namespace GXPEngine.Core
 
 		public Vector2 Normalize() {
 			float m = Mag();
+			// ReSharper disable once CompareOfFloatsByEqualityOperator
 			if (m != 0.0 && m != 1.0) {
 				Div(m);
 			}
