@@ -43,7 +43,6 @@ namespace GXPEngine.MyGame
 				map += "################";
 				level = new Level(16, 16, map);
 			}
-#pragma warning restore CS0162
 
 			//Player
 			Player player = new Player(8.0f, 4.0f, 0.1f);
