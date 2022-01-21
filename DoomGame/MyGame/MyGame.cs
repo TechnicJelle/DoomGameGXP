@@ -9,38 +9,41 @@ namespace GXPEngine.MyGame
 
 		public const float FIELD_OF_VIEW = Mathf.PI / 3.0f;
 
-		public enum TileType
-		{
-			Empty,
-			Wall,
-		}
-
 		private readonly EasyDraw canvas;
 		public static Level level;
 		private readonly Minimap minimap;
 
+		private const bool USE_TILED = true;
+
 		private MyGame() : base(WIDTH, HEIGHT, false, true, pPixelArt: true)
 		{
 			//Level
-			// string map = "";
-			// map += "################";
-			// map += "#.#............#";
-			// map += "#.#......#######";
-			// map += "#.###..........#";
-			// map += "#..............#";
-			// map += "#..............#";
-			// map += "#...#..........#";
-			// map += "#...#..........#";
-			// map += "#..............#";
-			// map += "#........#.....#";
-			// map += "#........#.....#";
-			// map += "#..............#";
-			// map += "#..............#";
-			// map += "#...###........#";
-			// map += "#..............#";
-			// map += "################";
-			// level = new Level(16, 16, map);
-			level = new Level("Level01.tmx");
+			if (USE_TILED)
+			{
+				level = new Level("Level01.tmx");
+			}
+			else
+			{
+				string map = "";
+				map += "################";
+				map += "#.#............#";
+				map += "#.#......#######";
+				map += "#.###..........#";
+				map += "#..............#";
+				map += "#..............#";
+				map += "#...#..........#";
+				map += "#...#..........#";
+				map += "#..............#";
+				map += "#........#.....#";
+				map += "#........#.....#";
+				map += "#..............#";
+				map += "#..............#";
+				map += "#...###........#";
+				map += "#..............#";
+				map += "################";
+				level = new Level(16, 16, map);
+			}
+#pragma warning restore CS0162
 
 			//Player
 			Player player = new Player(8.0f, 4.0f, 0.1f);

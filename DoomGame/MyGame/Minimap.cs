@@ -55,17 +55,18 @@
 			for (int row = 0; row < level.tilesRows; row++)
 			{
 				Tile t = level.GetTileAtPosition(col, row);
-				if (t.type != MyGame.TileType.Wall) continue;
-				layerLevel.Fill(t.visible ? 255 : 0);
+				if (t.GetType() != typeof(TileWall)) continue;
+				TileWall tw = (TileWall) t;
+				layerLevel.Fill(tw.visible ? 255 : 0);
 				layerLevel.Rect(col * w, row * h, w, h);
 
-				t.tempSprite.x = col * w + w/2.0f;
-				t.tempSprite.y = row * h + h/2.0f;
-				t.tempSprite.scaleX = w / t.tempSprite.width;
-				t.tempSprite.scaleY = h / t.tempSprite.height;
-				layerLevel.DrawSprite(t.tempSprite);
-				t.tempSprite.scaleX = 1.0f;
-				t.tempSprite.scaleY = 1.0f;
+				tw.tempSprite.x = col * w + w/2.0f;
+				tw.tempSprite.y = row * h + h/2.0f;
+				tw.tempSprite.scaleX = w / tw.tempSprite.width;
+				tw.tempSprite.scaleY = h / tw.tempSprite.height;
+				layerLevel.DrawSprite(tw.tempSprite);
+				tw.tempSprite.scaleX = 1.0f;
+				tw.tempSprite.scaleY = 1.0f;
 			}
 
 			//layer player

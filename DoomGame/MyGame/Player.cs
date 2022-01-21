@@ -34,7 +34,7 @@ namespace GXPEngine.MyGame
 			{
 				position.x += Mathf.Sin(playerA) * F_MOVE_SPEED * Time.deltaTime;
 				position.y += Mathf.Cos(playerA) * F_MOVE_SPEED * Time.deltaTime;
-				if (MyGame.level.GetTileAtPosition((int) position.x,(int) position.y).type == MyGame.TileType.Wall)
+				if (MyGame.level.GetTileAtPosition((int) position.x,(int) position.y).GetType() == typeof(TileWall))
 				{
 					position.x -= Mathf.Sin(playerA) * F_MOVE_SPEED * Time.deltaTime;
 					position.y -= Mathf.Cos(playerA) * F_MOVE_SPEED * Time.deltaTime;
@@ -45,7 +45,7 @@ namespace GXPEngine.MyGame
 			{
 				position.x -= Mathf.Sin(playerA) * F_MOVE_SPEED * Time.deltaTime;
 				position.y -= Mathf.Cos(playerA) * F_MOVE_SPEED * Time.deltaTime;
-				if (MyGame.level.GetTileAtPosition((int) position.x,(int) position.y).type == MyGame.TileType.Wall)
+				if (MyGame.level.GetTileAtPosition((int) position.x,(int) position.y).GetType() == typeof(TileWall))
 				{
 					position.x += Mathf.Sin(playerA) * F_MOVE_SPEED * Time.deltaTime;
 					position.y += Mathf.Cos(playerA) * F_MOVE_SPEED * Time.deltaTime;

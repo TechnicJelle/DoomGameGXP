@@ -14,7 +14,7 @@ namespace GXPEngine.MyGame
 		public int tilesColumns { get; }
 		public int tilesRows { get; }
 
-		private List<Tile> visibleTiles;
+		private List<TileWall> visibleTileWalls;
 
 		public Level(int w, int h, string mapContent)
 		{
@@ -28,10 +28,10 @@ namespace GXPEngine.MyGame
 				switch (mapContent[row * tilesRows + col])
 				{
 					case '#':
-						tiles[col, row] = new Tile(MyGame.TileType.Wall, col, row, "checkers.png");
+						tiles[col, row] = new TileWall(col, row, "checkers.png");
 						break;
 					case '.':
-						tiles[col, row] = new Tile(MyGame.TileType.Empty, col, row);
+						tiles[col, row] = new Tile(col, row);
 						break;
 				}
 			}
@@ -55,16 +55,16 @@ namespace GXPEngine.MyGame
 				switch (tileNumbers[row, col])
 				{
 					case 0:
-						tiles[col, row] = new Tile(MyGame.TileType.Empty, col, row);
+						tiles[col, row] = new Tile(col, row);
 						break;
 					case 1:
-						tiles[col, row] = new Tile(MyGame.TileType.Wall, col, row, "square.png");
+						tiles[col, row] = new TileWall(col, row, "square.png");
 						break;
 					case 2:
-						tiles[col, row] = new Tile(MyGame.TileType.Wall, col, row, "colors.png");
+						tiles[col, row] = new TileWall(col, row, "colors.png");
 						break;
 					case 3:
-						tiles[col, row] = new Tile(MyGame.TileType.Wall, col, row, "checkers.png");
+						tiles[col, row] = new TileWall(col, row, "checkers.png");
 						break;
 				}
 			}
@@ -73,11 +73,13 @@ namespace GXPEngine.MyGame
 		public void Render(EasyDraw canvas, Minimap minimap)
 		{
 			//Reset all visible tiles
-			visibleTiles = new List<Tile>();
+			visibleTileWalls = new List<TileWall>();
 			for (int col = 0; col < tilesColumns; col++)
 			for (int row = 0; row < tilesRows; row++)
 			{
-				tiles[col, row].visible = false;
+				if (tiles[col, row].GetType() != typeof(TileWall)) continue;
+				TileWall tw = (TileWall) tiles[col, row];
+				tw.visible = false;
 			}
 
 			//Find tiles to render
@@ -109,12 +111,13 @@ namespace GXPEngine.MyGame
 					else
 					{
 						Tile t = GetTileAtPosition(testX, testY);
-						if (t.type == MyGame.TileType.Empty) continue;
-						if (!visibleTiles.Contains(t))
+						if (t.GetType() != typeof(TileWall)) continue;
+						TileWall tw = (TileWall) t;
+						if (!visibleTileWalls.Contains(tw))
 						{
-							t.visible = true;
-							t.lastCalculatedDistanceToPlayer = distanceToWall;
-							visibleTiles.Add(t);
+							tw.visible = true;
+							tw.lastCalculatedDistanceToPlayer = distanceToWall;
+							visibleTileWalls.Add(tw);
 						}
 
 						hitWall = true;
@@ -122,10 +125,10 @@ namespace GXPEngine.MyGame
 				}
 			}
 
-			List<Tile> sortedList = visibleTiles.OrderByDescending(t=>t.lastCalculatedDistanceToPlayer).ToList();
-			foreach (Tile tile in sortedList)
+			List<TileWall> sortedList = visibleTileWalls.OrderByDescending(tw=>tw.lastCalculatedDistanceToPlayer).ToList();
+			foreach (TileWall tw in sortedList)
 			{
-				RenderTile(canvas, minimap, tile);
+				RenderTile(canvas, minimap, tw);
 			}
 		}
 
@@ -134,14 +137,14 @@ namespace GXPEngine.MyGame
 			return tiles[col, row];
 		}
 
-		private static void RenderTile(EasyDraw canvas, Minimap minimap, Tile t)
+		private static void RenderTile(EasyDraw canvas, Minimap minimap, TileWall tw)
 		{
 			minimap.DebugNoStroke();
 
 			Vector2 playerHeading = Vector2.FromAngle(-Player.playerA + Mathf.PI/2.0f);
 
-			float tileCenterX = t.col + 0.5f;
-			float tileCenterY = t.row + 0.5f;
+			float tileCenterX = tw.col + 0.5f;
+			float tileCenterY = tw.row + 0.5f;
 			minimap.DebugFill(0, 200, 0);
 			minimap.DebugCircle(tileCenterX, tileCenterY, 4);
 
@@ -196,7 +199,7 @@ namespace GXPEngine.MyGame
 				//Drawing the side
 				//Inverse Square(ish) Law:
 				const float exp = 1.6f;
-				float sq = Mathf.Pow(t.lastCalculatedDistanceToPlayer, exp);
+				float sq = Mathf.Pow(tw.lastCalculatedDistanceToPlayer, exp);
 				float wSq = Mathf.Pow(Player.VIEW_DEPTH, exp);
 				int brightness = Mathf.Round(Mathf.Clamp(MyGame.Map(sq, 0, wSq, 255, 0), 0, 255));
 
@@ -206,7 +209,7 @@ namespace GXPEngine.MyGame
 				canvas.Stroke(0);
 				canvas.StrokeWeight(2);
 				canvas.Quad(ix1, fCeiling1, ix1, fFloor1, ix2, fFloor2, ix2, fCeiling2);
-				t.RenderSide(Game.main._glContext, new[] {ix1, fCeiling1, ix1, fFloor1, ix2, fFloor2, ix2, fCeiling2});
+				tw.RenderSide(Game.main._glContext, new[] {ix1, fCeiling1, ix1, fFloor1, ix2, fFloor2, ix2, fCeiling2});
 			}
 
 			//Player Heading
