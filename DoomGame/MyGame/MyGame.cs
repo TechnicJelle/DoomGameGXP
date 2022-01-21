@@ -4,10 +4,10 @@ namespace GXPEngine.MyGame
 {
 	public class MyGame : Game
 	{
-		public const int Width = 1280;
-		public const int Height = 720;
+		public const int WIDTH = 1280;
+		public const int HEIGHT = 720;
 
-		public const float FieldOfView = Mathf.PI / 3.0f;
+		public const float FIELD_OF_VIEW = Mathf.PI / 3.0f;
 
 		public enum TileType
 		{
@@ -15,11 +15,11 @@ namespace GXPEngine.MyGame
 			Wall,
 		}
 
-		private readonly EasyDraw _canvas;
-		public static Level Level;
-		private readonly Minimap _minimap;
+		private readonly EasyDraw canvas;
+		public static Level level;
+		private readonly Minimap minimap;
 
-		private MyGame() : base(Width, Height, false, true, pPixelArt: true)
+		private MyGame() : base(WIDTH, HEIGHT, false, true, pPixelArt: true)
 		{
 			//Level
 			// string map = "";
@@ -39,40 +39,40 @@ namespace GXPEngine.MyGame
 			// map += "#...###........#";
 			// map += "#..............#";
 			// map += "################";
-			// Level = new Level(16, 16, map);
-			Level = new Level("Level01.tmx");
+			// level = new Level(16, 16, map);
+			level = new Level("Level01.tmx");
 
 			//Player
 			Player player = new Player(8.0f, 4.0f, 0.1f);
 			AddChild(player);
 
 			//Render Background
-			EasyDraw background = new EasyDraw(Width, Height, false);
-			for (int iy = 0; iy < Height; iy++)
+			EasyDraw background = new EasyDraw(WIDTH, HEIGHT, false);
+			for (int iy = 0; iy < HEIGHT; iy++)
 			{
-				if (iy < Height / 2)
+				if (iy < HEIGHT / 2)
 				{
 					// Ceiling
-					float fac = Map(iy, 0, Height, 1.0f, 0.4f);
+					float fac = Map(iy, 0, HEIGHT, 1.0f, 0.4f);
 					background.Stroke(0, (int) (150 * fac), (int) (255 * fac));
 				}
 				else
 				{
 					//Floor
-					background.Stroke((int) Map(iy, 0, Height, 0, 64));
+					background.Stroke((int) Map(iy, 0, HEIGHT, 0, 64));
 				}
 
-				background.Line(0, iy, Width, iy);
+				background.Line(0, iy, WIDTH, iy);
 			}
 			AddChild(background);
 
 			//Canvas
-			_canvas = new EasyDraw(Width, Height, false);
-			_canvas.TextAlign(CenterMode.Min, CenterMode.Min);
-			AddChild(_canvas);
+			canvas = new EasyDraw(WIDTH, HEIGHT, false);
+			canvas.TextAlign(CenterMode.Min, CenterMode.Min);
+			AddChild(canvas);
 
 			//Minimap
-			_minimap = new Minimap(this,0, 0, 200, 200, Level);
+			minimap = new Minimap(this,0, 0, 200, 200, level);
 
 			//Debug overlay
 
@@ -82,15 +82,15 @@ namespace GXPEngine.MyGame
 		// For every game object, Update is called every frame, by the engine:
 		private void Update()
 		{
-			_canvas.ClearTransparent();
+			canvas.ClearTransparent();
 
 			Player.MoveInput();
-			_minimap.Update();
+			minimap.Update();
 
-			Level.Render(_canvas, _minimap);
+			level.Render(canvas, minimap);
 
-			_canvas.Stroke(255);
-			_canvas.Text(currentFps.ToString(), 200, 10);
+			canvas.Stroke(255);
+			canvas.Text(currentFps.ToString(), 200, 10);
 		}
 
 		private static void Main() // Main() is the first method that's called when the program is run

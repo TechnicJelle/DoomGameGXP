@@ -10,28 +10,28 @@ namespace GXPEngine.MyGame
 	{
 		private const float RENDER_DISTANCE = 32.0f;
 
-		private readonly Tile[,] _tiles;
-		public int TilesColumns { get; }
-		public int TilesRows { get; }
+		private readonly Tile[,] tiles;
+		public int tilesColumns { get; }
+		public int tilesRows { get; }
 
-		private List<Tile> _visibleTiles;
+		private List<Tile> visibleTiles;
 
 		public Level(int w, int h, string mapContent)
 		{
-			TilesColumns = w;
-			TilesRows = h;
-			if (mapContent.Length != TilesColumns * TilesRows) throw new Exception("TilesWidth * TilesHeight is not mapContent.Length");
-			_tiles = new Tile[TilesColumns, TilesRows];
-			for (int col = 0; col < TilesColumns; col++)
-			for (int row = 0; row < TilesRows; row++)
+			tilesColumns = w;
+			tilesRows = h;
+			if (mapContent.Length != tilesColumns * tilesRows) throw new Exception("TilesWidth * TilesHeight is not mapContent.Length");
+			tiles = new Tile[tilesColumns, tilesRows];
+			for (int col = 0; col < tilesColumns; col++)
+			for (int row = 0; row < tilesRows; row++)
 			{
-				switch (mapContent[row * TilesRows + col])
+				switch (mapContent[row * tilesRows + col])
 				{
 					case '#':
-						_tiles[col, row] = new Tile(MyGame.TileType.Wall, col, row, "checkers.png");
+						tiles[col, row] = new Tile(MyGame.TileType.Wall, col, row, "checkers.png");
 						break;
 					case '.':
-						_tiles[col, row] = new Tile(MyGame.TileType.Empty, col, row);
+						tiles[col, row] = new Tile(MyGame.TileType.Empty, col, row);
 						break;
 				}
 			}
@@ -43,28 +43,28 @@ namespace GXPEngine.MyGame
 			if (levelData.Layers == null || levelData.Layers.Length <= 0)
 				throw new Exception("Tile file " + tiledFile + " does not contain a layer!");
 			Layer mainLayer = levelData.Layers[0];
-			TilesColumns = mainLayer.Width;
-			TilesRows = mainLayer.Height;
+			tilesColumns = mainLayer.Width;
+			tilesRows = mainLayer.Height;
 
 			short[,] tileNumbers = mainLayer.GetTileArray();
 
-			_tiles = new Tile[TilesColumns, TilesRows];
-			for (int col = 0; col < TilesColumns; col++)
-			for (int row = 0; row < TilesRows; row++)
+			tiles = new Tile[tilesColumns, tilesRows];
+			for (int col = 0; col < tilesColumns; col++)
+			for (int row = 0; row < tilesRows; row++)
 			{
 				switch (tileNumbers[row, col])
 				{
 					case 0:
-						_tiles[col, row] = new Tile(MyGame.TileType.Empty, col, row);
+						tiles[col, row] = new Tile(MyGame.TileType.Empty, col, row);
 						break;
 					case 1:
-						_tiles[col, row] = new Tile(MyGame.TileType.Wall, col, row, "square.png");
+						tiles[col, row] = new Tile(MyGame.TileType.Wall, col, row, "square.png");
 						break;
 					case 2:
-						_tiles[col, row] = new Tile(MyGame.TileType.Wall, col, row, "colors.png");
+						tiles[col, row] = new Tile(MyGame.TileType.Wall, col, row, "colors.png");
 						break;
 					case 3:
-						_tiles[col, row] = new Tile(MyGame.TileType.Wall, col, row, "checkers.png");
+						tiles[col, row] = new Tile(MyGame.TileType.Wall, col, row, "checkers.png");
 						break;
 				}
 			}
@@ -73,56 +73,56 @@ namespace GXPEngine.MyGame
 		public void Render(EasyDraw canvas, Minimap minimap)
 		{
 			//Reset all visible tiles
-			_visibleTiles = new List<Tile>();
-			for (int col = 0; col < TilesColumns; col++)
-			for (int row = 0; row < TilesRows; row++)
+			visibleTiles = new List<Tile>();
+			for (int col = 0; col < tilesColumns; col++)
+			for (int row = 0; row < tilesRows; row++)
 			{
-				_tiles[col, row].Visible = false;
+				tiles[col, row].visible = false;
 			}
 
 			//Find tiles to render
 			//For every x pixel, send out a ray that goes until it has hit a wall or reached the maximum render distance
-			for (int px = 0; px < MyGame.Width; px+=10)
+			for (int px = 0; px < MyGame.WIDTH; px+=10)
 			{
-				float fRayAngle = (Player.PlayerA - MyGame.FieldOfView / 2.0f) +
-				                  (px / (float) MyGame.Width) * MyGame.FieldOfView;
+				float rayAngle = (Player.playerA - MyGame.FIELD_OF_VIEW / 2.0f) +
+				                  (px / (float) MyGame.WIDTH) * MyGame.FIELD_OF_VIEW;
 
-				float fDistanceToWall = 0.0f;
-				bool bHitWall = false;
+				float distanceToWall = 0.0f;
+				bool hitWall = false;
 
-				float fEyeX = Mathf.Sin(fRayAngle);
-				float fEyeY = Mathf.Cos(fRayAngle);
+				float eyeX = Mathf.Sin(rayAngle);
+				float eyeY = Mathf.Cos(rayAngle);
 
-				while (!bHitWall && fDistanceToWall < RENDER_DISTANCE)
+				while (!hitWall && distanceToWall < RENDER_DISTANCE)
 				{
-					fDistanceToWall += 0.1f;
+					distanceToWall += 0.1f;
 
-					int nTestX = (int) (Player.Position.x + fEyeX * fDistanceToWall);
-					int nTestY = (int) (Player.Position.y + fEyeY * fDistanceToWall);
+					int testX = (int) (Player.position.x + eyeX * distanceToWall);
+					int testY = (int) (Player.position.y + eyeY * distanceToWall);
 
-					if (nTestX < 0 || nTestX >= TilesColumns | nTestY < 0 || nTestY >= TilesRows)
+					if (testX < 0 || testX >= tilesColumns | testY < 0 || testY >= tilesRows)
 					{
 						//Ray has gone out of map bounds
-						bHitWall = true;
-						fDistanceToWall = RENDER_DISTANCE;
+						hitWall = true;
+						distanceToWall = RENDER_DISTANCE;
 					}
 					else
 					{
-						Tile t = GetTileAtPosition(nTestX, nTestY);
-						if (t.Type == MyGame.TileType.Empty) continue;
-						if (!_visibleTiles.Contains(t))
+						Tile t = GetTileAtPosition(testX, testY);
+						if (t.type == MyGame.TileType.Empty) continue;
+						if (!visibleTiles.Contains(t))
 						{
-							t.Visible = true;
-							t.LastCalculatedDistanceToPlayer = fDistanceToWall;
-							_visibleTiles.Add(t);
+							t.visible = true;
+							t.lastCalculatedDistanceToPlayer = distanceToWall;
+							visibleTiles.Add(t);
 						}
 
-						bHitWall = true;
+						hitWall = true;
 					}
 				}
 			}
 
-			List<Tile> sortedList = _visibleTiles.OrderByDescending(t=>t.LastCalculatedDistanceToPlayer).ToList();
+			List<Tile> sortedList = visibleTiles.OrderByDescending(t=>t.lastCalculatedDistanceToPlayer).ToList();
 			foreach (Tile tile in sortedList)
 			{
 				RenderTile(canvas, minimap, tile);
@@ -131,17 +131,17 @@ namespace GXPEngine.MyGame
 
 		public Tile GetTileAtPosition(int col, int row)
 		{
-			return _tiles[col, row];
+			return tiles[col, row];
 		}
 
 		private static void RenderTile(EasyDraw canvas, Minimap minimap, Tile t)
 		{
 			minimap.DebugNoStroke();
 
-			Vector2 playerHeading = Vector2.FromAngle(-Player.PlayerA + Mathf.PI/2.0f);
+			Vector2 playerHeading = Vector2.FromAngle(-Player.playerA + Mathf.PI/2.0f);
 
-			float tileCenterX = t.Col + 0.5f;
-			float tileCenterY = t.Row + 0.5f;
+			float tileCenterX = t.col + 0.5f;
+			float tileCenterY = t.row + 0.5f;
 			minimap.DebugFill(0, 200, 0);
 			minimap.DebugCircle(tileCenterX, tileCenterY, 4);
 
@@ -166,38 +166,38 @@ namespace GXPEngine.MyGame
 				//Minimap: Line
 				minimap.DebugStroke(0);
 				minimap.DebugStrokeWeight(1);
-				minimap.DebugLine(Player.Position.x, Player.Position.y, p1.x, p1.y);
+				minimap.DebugLine(Player.position.x, Player.position.y, p1.x, p1.y);
 				//Minimap: Blue Dot
 				minimap.DebugFill(0, 0, 255);
 				minimap.DebugCircle(p1.x, p1.y, 2);
 
 				float angle1 = Vector2.AngleBetween(playerHeading, p1);
-				int ix1 = Mathf.Round(MyGame.Width * ((angle1 - ((Player.PlayerA % (2.0f*Mathf.PI))-MyGame.FieldOfView / 2.0f)) / MyGame.FieldOfView)); //TODO: Fix
-				float fDistanceToWall1 = Vector2.Dist(Player.Position, p1);
-				float fCeiling1 = MyGame.Height / 2.0f - MyGame.Height / fDistanceToWall1;
-				float fFloor1 = MyGame.Height - fCeiling1;
+				int ix1 = Mathf.Round(MyGame.WIDTH * ((angle1 - ((Player.playerA % (2.0f*Mathf.PI))-MyGame.FIELD_OF_VIEW / 2.0f)) / MyGame.FIELD_OF_VIEW)); //TODO: Fix
+				float fDistanceToWall1 = Vector2.Dist(Player.position, p1);
+				float fCeiling1 = MyGame.HEIGHT / 2.0f - MyGame.HEIGHT / fDistanceToWall1;
+				float fFloor1 = MyGame.HEIGHT - fCeiling1;
 
 				//Tile Side - Left Point
 				Vector2 p2 = new Vector2(sideLocation.x + sideNormal.y/2.0f, sideLocation.y + sideNormal.x/2.0f);
 				//Minimap: Line
 				minimap.DebugStroke(0);
 				minimap.DebugStrokeWeight(1);
-				minimap.DebugLine(Player.Position.x, Player.Position.y, p2.x, p2.y);
+				minimap.DebugLine(Player.position.x, Player.position.y, p2.x, p2.y);
 				//Minimap: Blue Dot
 				minimap.DebugFill(0, 0, 255);
 				minimap.DebugCircle(p2.x, p2.y, 2);
 
 				float angle2 = Vector2.AngleBetween(playerHeading, p2);
-				int ix2 = Mathf.Round(MyGame.Width * ((angle2 - (Player.PlayerA % (2.0f*Mathf.PI)-MyGame.FieldOfView / 2.0f)) / MyGame.FieldOfView)); //TODO: Fix
-				float fDistanceToWall2 = Vector2.Dist(Player.Position, p2);
-				float fCeiling2 = MyGame.Height / 2.0f - MyGame.Height / fDistanceToWall2;
-				float fFloor2 = MyGame.Height - fCeiling2;
+				int ix2 = Mathf.Round(MyGame.WIDTH * ((angle2 - (Player.playerA % (2.0f*Mathf.PI)-MyGame.FIELD_OF_VIEW / 2.0f)) / MyGame.FIELD_OF_VIEW)); //TODO: Fix
+				float fDistanceToWall2 = Vector2.Dist(Player.position, p2);
+				float fCeiling2 = MyGame.HEIGHT / 2.0f - MyGame.HEIGHT / fDistanceToWall2;
+				float fFloor2 = MyGame.HEIGHT - fCeiling2;
 
 				//Drawing the side
 				//Inverse Square(ish) Law:
 				const float exp = 1.6f;
-				float sq = Mathf.Pow(t.LastCalculatedDistanceToPlayer, exp);
-				float wSq = Mathf.Pow(Player.ViewDepth, exp);
+				float sq = Mathf.Pow(t.lastCalculatedDistanceToPlayer, exp);
+				float wSq = Mathf.Pow(Player.VIEW_DEPTH, exp);
 				int brightness = Mathf.Round(Mathf.Clamp(MyGame.Map(sq, 0, wSq, 255, 0), 0, 255));
 
 				//Linear lighting:
@@ -206,13 +206,13 @@ namespace GXPEngine.MyGame
 				canvas.Stroke(0);
 				canvas.StrokeWeight(2);
 				canvas.Quad(ix1, fCeiling1, ix1, fFloor1, ix2, fFloor2, ix2, fCeiling2);
-				// t.RenderSide(Game.main._glContext, new[] {ix1, fCeiling1, ix1, fFloor1, ix2, fFloor2, ix2, fCeiling2});
+				t.RenderSide(Game.main._glContext, new[] {ix1, fCeiling1, ix1, fFloor1, ix2, fFloor2, ix2, fCeiling2});
 			}
 
 			//Player Heading
-			playerHeading.Mult(23).Add(Player.Position);
+			playerHeading.Mult(23).Add(Player.position);
 			minimap.DebugStroke(255, 0, 0);
-			minimap.DebugLine(Player.Position.x, Player.Position.y, playerHeading.x, playerHeading.y);
+			minimap.DebugLine(Player.position.x, Player.position.y, playerHeading.x, playerHeading.y);
 		}
 	}
 }

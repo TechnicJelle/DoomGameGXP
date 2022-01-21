@@ -3,130 +3,130 @@
 	public class Minimap
 	{
 		// ReSharper disable once PrivateFieldCanBeConvertedToLocalVariable
-		private readonly float _originX;
+		private readonly float originX;
 		// ReSharper disable once PrivateFieldCanBeConvertedToLocalVariable
-		private readonly float _originY;
-		private readonly EasyDraw _layerPlayer;
-		private readonly EasyDraw _layerLevel;
-		private readonly EasyDraw _layerDebug;
+		private readonly float originY;
+		private readonly EasyDraw layerPlayer;
+		private readonly EasyDraw layerLevel;
+		private readonly EasyDraw layerDebug;
 
-		private readonly float _w, _h;
-		private readonly Level _level;
+		private readonly float w, h;
+		private readonly Level level;
 
 		public Minimap(MyGame game, int x, int y, int width, int height, Level level)
 		{
-			_originX = x;
-			_originY = y;
-			_level = level;
+			originX = x;
+			originY = y;
+			this.level = level;
 
-			_layerLevel = new EasyDraw(width, height, false)
+			layerLevel = new EasyDraw(width, height, false)
 			{
-				x = _originX,
-				y = _originY,
+				x = originX,
+				y = originY,
 			};
-			game.AddChild(_layerLevel);
+			game.AddChild(layerLevel);
 
-			_layerPlayer = new EasyDraw(width, height, false)
+			layerPlayer = new EasyDraw(width, height, false)
 			{
-				x = _originX,
-				y = _originY,
+				x = originX,
+				y = originY,
 			};
-			game.AddChild(_layerPlayer);
+			game.AddChild(layerPlayer);
 
-			_layerDebug = new EasyDraw(width, height, false)
+			layerDebug = new EasyDraw(width, height, false)
 			{
-				x = _originX,
-				y = _originY,
+				x = originX,
+				y = originY,
 			};
-			game.AddChild(_layerDebug);
+			game.AddChild(layerDebug);
 
-			_w = (_layerLevel.width-1.0f) / level.TilesColumns;
-			_h = (_layerLevel.height-1.0f) / level.TilesRows;
+			w = (layerLevel.width-1.0f) / level.tilesColumns;
+			h = (layerLevel.height-1.0f) / level.tilesRows;
 		}
 
 		public void Update()
 		{
 			//layer level
-			_layerLevel.ClearTransparent();
-			_layerLevel.Stroke(0);
-			_layerLevel.StrokeWeight(1);
-			_layerLevel.ShapeAlign(CenterMode.Min, CenterMode.Min);
-			for (int col = 0; col < _level.TilesColumns; col++)
-			for (int row = 0; row < _level.TilesRows; row++)
+			layerLevel.ClearTransparent();
+			layerLevel.Stroke(0);
+			layerLevel.StrokeWeight(1);
+			layerLevel.ShapeAlign(CenterMode.Min, CenterMode.Min);
+			for (int col = 0; col < level.tilesColumns; col++)
+			for (int row = 0; row < level.tilesRows; row++)
 			{
-				Tile t = _level.GetTileAtPosition(col, row);
-				if (t.Type != MyGame.TileType.Wall) continue;
-				_layerLevel.Fill(t.Visible ? 255 : 0);
-				_layerLevel.Rect(col * _w, row * _h, _w, _h);
+				Tile t = level.GetTileAtPosition(col, row);
+				if (t.type != MyGame.TileType.Wall) continue;
+				layerLevel.Fill(t.visible ? 255 : 0);
+				layerLevel.Rect(col * w, row * h, w, h);
 
-				t.TempSprite.x = col * _w + _w/2.0f;
-				t.TempSprite.y = row * _h + _h/2.0f;
-				t.TempSprite.scaleX = _w / t.TempSprite.width;
-				t.TempSprite.scaleY = _h / t.TempSprite.height;
-				_layerLevel.DrawSprite(t.TempSprite);
-				t.TempSprite.scaleX = 1.0f;
-				t.TempSprite.scaleY = 1.0f;
+				t.tempSprite.x = col * w + w/2.0f;
+				t.tempSprite.y = row * h + h/2.0f;
+				t.tempSprite.scaleX = w / t.tempSprite.width;
+				t.tempSprite.scaleY = h / t.tempSprite.height;
+				layerLevel.DrawSprite(t.tempSprite);
+				t.tempSprite.scaleX = 1.0f;
+				t.tempSprite.scaleY = 1.0f;
 			}
 
 			//layer player
-			_layerPlayer.ClearTransparent();
-			_layerPlayer.NoStroke();
-			_layerPlayer.Fill(255, 0, 0);
+			layerPlayer.ClearTransparent();
+			layerPlayer.NoStroke();
+			layerPlayer.Fill(255, 0, 0);
 			//draw point on position and cone in player direction
-			_layerPlayer.Ellipse(
-				Player.Position.x * _w,
-				Player.Position.y * _h,
+			layerPlayer.Ellipse(
+				Player.position.x * w,
+				Player.position.y * h,
 				8, 8);
 			//TODO: Make player on minimap rotate the correct way
 
 			//layer debug
-			_layerDebug.ClearTransparent();
+			layerDebug.ClearTransparent();
 		}
 
 		public void DebugNoFill()
 		{
-			_layerDebug.NoFill();
+			layerDebug.NoFill();
 		}
 
 		public void DebugFill(int grayScale, int alpha=255)
 		{
-			_layerDebug.Fill(grayScale, alpha);
+			layerDebug.Fill(grayScale, alpha);
 		}
 
 		public void DebugFill(int red, int green, int blue, int alpha=255)
 		{
-			_layerDebug.Fill(red, green, blue, alpha);
+			layerDebug.Fill(red, green, blue, alpha);
 		}
 
 		public void DebugNoStroke()
 		{
-			_layerDebug.NoStroke();
+			layerDebug.NoStroke();
 		}
 
 		public void DebugStroke(int grayScale, int alpha=255)
 		{
-			_layerDebug.Stroke(grayScale, alpha);
+			layerDebug.Stroke(grayScale, alpha);
 		}
 
 		public void DebugStroke(int red, int green, int blue, int alpha=255)
 		{
-			_layerDebug.Stroke(red, green, blue, alpha);
+			layerDebug.Stroke(red, green, blue, alpha);
 		}
 
 		public void DebugStrokeWeight(float width)
 		{
-			_layerDebug.StrokeWeight(width);
+			layerDebug.StrokeWeight(width);
 		}
 
 
 		public void DebugLine(float x1, float y1, float x2, float y2)
 		{
-			_layerDebug.Line(x1 * _w,  y1 * _h, x2 * _w,  y2 * _h);
+			layerDebug.Line(x1 * w,  y1 * h, x2 * w,  y2 * h);
 		}
 
 		public void DebugCircle(float x, float y, float diameter)
 		{
-			_layerDebug.Ellipse(x * _w, y * _h, diameter, diameter);
+			layerDebug.Ellipse(x * w, y * h, diameter, diameter);
 		}
 	}
 }

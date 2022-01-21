@@ -5,26 +5,26 @@ namespace GXPEngine.MyGame
 {
 	public class Tile
 	{
-		public MyGame.TileType Type { get; }
-		public bool Visible = false;
-		public float LastCalculatedDistanceToPlayer = float.MaxValue;
-		public int Col { get; }
-		public int Row { get; }
+		public MyGame.TileType type { get; }
+		public bool visible = false;
+		public float lastCalculatedDistanceToPlayer = float.MaxValue;
+		public int col { get; }
+		public int row { get; }
 
 		private const uint COLOR = 0xFFFFFF;
 		private const float ALPHA = 1.0f;
-		private Texture2D _texture;
-		private float[] _uvs;
-		private readonly BlendMode _blendMode = null;
+		private Texture2D texture;
+		private float[] uvs;
+		private readonly BlendMode blendMode = null;
 
-		public Sprite TempSprite { get; } //Sprite for debugging purposes for on the minimap, while the 3D textures are still being implemented
+		public Sprite tempSprite { get; } //Sprite for debugging purposes for on the minimap, while the 3D textures are still being implemented
 
 		public Tile(MyGame.TileType t, int col, int row, string filename=null)
 		{
-			Type = t;
-			Col = col;
-			Row = row;
-			if (Type == MyGame.TileType.Empty)
+			type = t;
+			this.col = col;
+			this.row = row;
+			if (type == MyGame.TileType.Empty)
 			{
 				if (filename != null)
 					throw new Exception("Tile is empty, but a filename was provided!");
@@ -34,27 +34,27 @@ namespace GXPEngine.MyGame
 				if (filename == null)
 					throw new Exception("Tile is a wall, but no filename was provided!");
 				InitializeFromTexture(Texture2D.GetInstance(filename, true));
-				TempSprite = new Sprite(filename, true, false);
+				tempSprite = new Sprite(filename, true, false);
 			}
 		}
 
 		//TODO: Finish this and make it work
 		public void RenderSide(GLContext glContext, float[] vertices) {
-			_blendMode?.enable();
-			_texture.Bind();
+			blendMode?.enable();
+			texture.Bind();
 			glContext.SetColor((byte)((COLOR >> 16) & 0xFF),
 				(byte)((COLOR >> 8) & 0xFF),
 				(byte)(COLOR & 0xFF),
 				(byte)(ALPHA * 0xFF));
-			glContext.DrawQuad(vertices, _uvs);
+			glContext.DrawQuad(vertices, uvs);
 			glContext.SetColor(1, 1, 1, 1);
-			_texture.Unbind();
-			if (_blendMode != null) BlendMode.NORMAL.enable();
+			texture.Unbind();
+			if (blendMode != null) BlendMode.NORMAL.enable();
 		}
 
 
-		private void InitializeFromTexture (Texture2D texture) {
-			_texture = texture;
+		private void InitializeFromTexture (Texture2D tex) {
+			texture = tex;
 			SetUVs();
 		}
 
@@ -63,7 +63,7 @@ namespace GXPEngine.MyGame
 			const float right = 0.0f;
 			const float top = 1.0f;
 			const float bottom = 0.0f;
-			_uvs = new[] { left, top, right, top, right, bottom, left, bottom };
+			uvs = new[] { left, top, right, top, right, bottom, left, bottom };
 		}
 	}
 }
