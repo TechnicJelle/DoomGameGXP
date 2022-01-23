@@ -5,52 +5,44 @@ namespace GXPEngine.MyGame
 {
 	public class TileWall : Tile
 	{
-		public bool visible = false;
+		private bool privateVisible;
+		public bool visible
+		{
+			get => privateVisible;
+			set
+			{
+				privateVisible = value;
+				texture.visible = privateVisible;
+			}
+		}
+
 		public float lastCalculatedDistanceToPlayer = float.MaxValue;
 
-		private const uint COLOR = 0xFFFFFF;
-		private const float ALPHA = 1.0f;
-		private Texture2D texture;
-		private float[] uvs;
-		private readonly BlendMode blendMode = null;
-
-		public Sprite tempSprite { get; } //Sprite for debugging purposes for on the minimap, while the 3D textures are still being implemented
+		private readonly UVOffsetSprite texture;
 
 		public TileWall(int col, int row, string filename = null) : base(col, row)
 		{
 			if (filename == null)
 				throw new Exception("Tile is a wall, but no filename was provided!");
-			InitializeFromTexture(Texture2D.GetInstance(filename, true));
-			tempSprite = new Sprite(filename, true, false);
-
+			texture = new UVOffsetSprite(filename, new [] {new Vector2(0.0f, 0.0f), new Vector2(100, 0), new Vector2(0, 100), new Vector2(100, 100)});
+			Game.main.AddChild(texture); //TODO: Remove this and replace with TileWall.Render(corners) function that can be called as many times per frame as desired and renders the texture of the wall to the places that corners indicates
 		}
 
-		//TODO: Finish this and make it work
-		public void RenderSide(GLContext glContext, float[] vertices) {
-			blendMode?.enable();
-			texture.Bind();
-			glContext.SetColor((byte)((COLOR >> 16) & 0xFF),
-				(byte)((COLOR >> 8) & 0xFF),
-				(byte)(COLOR & 0xFF),
-				(byte)(ALPHA * 0xFF));
-			glContext.DrawQuad(vertices, uvs);
-			glContext.SetColor(1, 1, 1, 1);
-			texture.Unbind();
-			if (blendMode != null) BlendMode.NORMAL.enable();
+		/// <summary>
+		/// Sets the vertices.
+		/// </summary>
+		/// <param name='vertices'>
+		/// left, top, right, top, right, bottom, left, bottom
+		/// </param>
+		public void SetCorners(float[] vertices)
+		{
+			Vector2[] corners = {new Vector2(vertices[0], vertices[1]), new Vector2(vertices[2], vertices[3]), new Vector2(vertices[6], vertices[7]), new Vector2(vertices[4], vertices[5])};
+			texture.SetCorners(corners);
 		}
 
-
-		private void InitializeFromTexture (Texture2D tex) {
-			texture = tex;
-			SetUVs();
-		}
-
-		private void SetUVs() {
-			const float left = 1.0f;
-			const float right = 0.0f;
-			const float top = 1.0f;
-			const float bottom = 0.0f;
-			uvs = new[] { left, top, right, top, right, bottom, left, bottom };
+		public void Render(GLContext glContext)
+		{
+			texture.Render(glContext);
 		}
 	}
 }

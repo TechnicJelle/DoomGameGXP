@@ -22,12 +22,12 @@ namespace GXPEngine.MyGame
 		{
 			if (Input.GetKey(Key.A))
 			{
-				playerA -= F_ROTATION_SPEED * Time.deltaTime;
+				playerA += F_ROTATION_SPEED * Time.deltaTime;
 			}
 
 			if (Input.GetKey(Key.D))
 			{
-				playerA += F_ROTATION_SPEED * Time.deltaTime;
+				playerA -= F_ROTATION_SPEED * Time.deltaTime;
 			}
 
 			if (Input.GetKey(Key.W))

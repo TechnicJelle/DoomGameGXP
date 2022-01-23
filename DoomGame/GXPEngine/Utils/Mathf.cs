@@ -11,6 +11,8 @@ namespace GXPEngine
 		/// Constant PI
 		/// </summary>
 		public const float PI = (float)Math.PI;
+		public const float TWO_PI = (float)(Math.PI * 2.0);
+		public const float HALF_PI = (float)(Math.PI / 2.0);
 
 		/// <summary>
 		/// Returns the absolute value of specified number
@@ -200,12 +202,21 @@ namespace GXPEngine
 
 		/// <summary>
 		/// Clamps f in the range [min,max]:
-		/// Returns min if f<min, max if f>max, and f otherwise.
+		/// Returns min if f&lt;min, max if f&gt;max, and f otherwise.
 		/// </summary>
 		public static float Clamp(float f, float min, float max) {
 			return f < min ? min : (f > max ? max : f);
 		}
 
+		/// <summary>
+		/// Maps value that is in range (start1, stop1) to between (start2, stop2)
+		/// </summary>
+		public static float Map(float value,
+			float start1, float stop1,
+			float start2, float stop2)
+		{
+			return start2 + (stop2 - start2) * ((value - start1) / (stop1 - start1));
+		}
 	}
 }
 

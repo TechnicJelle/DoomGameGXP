@@ -1,4 +1,6 @@
-﻿namespace GXPEngine.MyGame
+﻿using GXPEngine.Core;
+
+namespace GXPEngine.MyGame
 {
 	public class Minimap
 	{
@@ -60,13 +62,14 @@
 				layerLevel.Fill(tw.visible ? 255 : 0);
 				layerLevel.Rect(col * w, row * h, w, h);
 
-				tw.tempSprite.x = col * w + w/2.0f;
-				tw.tempSprite.y = row * h + h/2.0f;
-				tw.tempSprite.scaleX = w / tw.tempSprite.width;
-				tw.tempSprite.scaleY = h / tw.tempSprite.height;
-				layerLevel.DrawSprite(tw.tempSprite);
-				tw.tempSprite.scaleX = 1.0f;
-				tw.tempSprite.scaleY = 1.0f;
+				//TODO: Put back when TileWall.Render(corners) becomes a thing
+				// tw.tempSprite.x = col * w + w/2.0f;
+				// tw.tempSprite.y = row * h + h/2.0f;
+				// tw.tempSprite.scaleX = w / tw.tempSprite.width;
+				// tw.tempSprite.scaleY = h / tw.tempSprite.height;
+				// layerLevel.DrawSprite(tw.tempSprite);
+				// tw.tempSprite.scaleX = 1.0f;
+				// tw.tempSprite.scaleY = 1.0f;
 			}
 
 			//layer player
@@ -78,7 +81,13 @@
 				Player.position.x * w,
 				Player.position.y * h,
 				8, 8);
-			//TODO: Make player on minimap rotate the correct way
+
+			//Player Heading
+			Vector2 playerHeading = Vector2.FromAngle(-Player.playerA + Mathf.HALF_PI).Mult(23).Add(Player.position);
+			layerPlayer.Stroke(255, 0, 0);
+			layerPlayer.Line(Player.position.x * w, Player.position.y * h, playerHeading.x * w, playerHeading.y * h);
+
+			//TODO: Player FOV
 
 			//layer debug
 			layerDebug.ClearTransparent();

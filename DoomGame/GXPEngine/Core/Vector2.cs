@@ -250,6 +250,12 @@ namespace GXPEngine.Core
 			return (float) Math.Acos(amt);
 		}
 
+		public static float AngleBetween2(Vector2 v1, Vector2 v2) {
+			//Thanks to https://github.com/EV4gamer for making this one!
+			float a = Mathf.Atan2(v2.y, v2.x) - Mathf.Atan2(v1.y, v1.x);
+			return (a + Mathf.TWO_PI) % Mathf.TWO_PI;
+		}
+
 		public override string ToString() {
 			return "[ " + x + ", " + y + " ]";
 		}

@@ -141,7 +141,7 @@ namespace GXPEngine.MyGame
 		{
 			minimap.DebugNoStroke();
 
-			Vector2 playerHeading = Vector2.FromAngle(-Player.playerA + Mathf.PI/2.0f);
+			Vector2 playerHeading = Vector2.FromAngle(-Player.playerA + Mathf.HALF_PI);
 
 			float tileCenterX = tw.col + 0.5f;
 			float tileCenterY = tw.row + 0.5f;
@@ -151,13 +151,14 @@ namespace GXPEngine.MyGame
 			//Loop through sides of the tile
 			for (int a = 0; a < 4; a++)
 			{
-				float temp = Mathf.PI * a / 2.0f;
+				float temp = Mathf.HALF_PI * a;
 				int x = (int)Mathf.Cos(temp);
 				int y = (int)Mathf.Sin(temp);
 
 				Vector2 sideNormal = new Vector2(x, y);
-				if (sideNormal.Dot(playerHeading) > 0) //Doesn't render tile sides that are facing away from the player
-					continue;
+				//TODO: base threshold on FOV          ↓
+				// if (sideNormal.Dot(playerHeading) > 0) //Doesn't render tile sides that are facing away from the player
+				// 	continue;
 				Vector2 sideLocation = new Vector2(tileCenterX + x/2.0f, tileCenterY + y/2.0f);
 
 				//Tile Side - Red Dot
@@ -166,42 +167,28 @@ namespace GXPEngine.MyGame
 
 				//Tile Side - Right Point
 				Vector2 p1 = new Vector2(sideLocation.x - sideNormal.y/2.0f, sideLocation.y - sideNormal.x/2.0f);
-				//Minimap: Line
-				minimap.DebugStroke(0);
-				minimap.DebugStrokeWeight(1);
-				minimap.DebugLine(Player.position.x, Player.position.y, p1.x, p1.y);
 				//Minimap: Blue Dot
 				minimap.DebugFill(0, 0, 255);
 				minimap.DebugCircle(p1.x, p1.y, 2);
-
-				float angle1 = Vector2.AngleBetween(playerHeading, p1);
-				int ix1 = Mathf.Round(MyGame.WIDTH * ((angle1 - ((Player.playerA % (2.0f*Mathf.PI))-MyGame.FIELD_OF_VIEW / 2.0f)) / MyGame.FIELD_OF_VIEW)); //TODO: Fix
-				float fDistanceToWall1 = Vector2.Dist(Player.position, p1);
-				float fCeiling1 = MyGame.HEIGHT / 2.0f - MyGame.HEIGHT / fDistanceToWall1;
+				(int ix1, float distToWall1) = WorldToScreen(minimap, p1, playerHeading);
+				float fCeiling1 = MyGame.HEIGHT / 2.0f - MyGame.HEIGHT / distToWall1;
 				float fFloor1 = MyGame.HEIGHT - fCeiling1;
 
 				//Tile Side - Left Point
 				Vector2 p2 = new Vector2(sideLocation.x + sideNormal.y/2.0f, sideLocation.y + sideNormal.x/2.0f);
-				//Minimap: Line
-				minimap.DebugStroke(0);
-				minimap.DebugStrokeWeight(1);
-				minimap.DebugLine(Player.position.x, Player.position.y, p2.x, p2.y);
 				//Minimap: Blue Dot
 				minimap.DebugFill(0, 0, 255);
 				minimap.DebugCircle(p2.x, p2.y, 2);
-
-				float angle2 = Vector2.AngleBetween(playerHeading, p2);
-				int ix2 = Mathf.Round(MyGame.WIDTH * ((angle2 - (Player.playerA % (2.0f*Mathf.PI)-MyGame.FIELD_OF_VIEW / 2.0f)) / MyGame.FIELD_OF_VIEW)); //TODO: Fix
-				float fDistanceToWall2 = Vector2.Dist(Player.position, p2);
-				float fCeiling2 = MyGame.HEIGHT / 2.0f - MyGame.HEIGHT / fDistanceToWall2;
+				(int ix2, float distToWall2) = WorldToScreen(minimap, p2, playerHeading);
+				float fCeiling2 = MyGame.HEIGHT / 2.0f - MyGame.HEIGHT / distToWall2;
 				float fFloor2 = MyGame.HEIGHT - fCeiling2;
 
 				//Drawing the side
 				//Inverse Square(ish) Law:
 				const float exp = 1.6f;
-				float sq = Mathf.Pow(tw.lastCalculatedDistanceToPlayer, exp);
+				float sq = Mathf.Pow((distToWall1 + distToWall2) / 2.0f, exp);
 				float wSq = Mathf.Pow(Player.VIEW_DEPTH, exp);
-				int brightness = Mathf.Round(Mathf.Clamp(MyGame.Map(sq, 0, wSq, 255, 0), 0, 255));
+				int brightness = Mathf.Round(Mathf.Clamp(Mathf.Map(sq, 0, wSq, 255, 0), 0, 255));
 
 				//Linear lighting:
 				// canvas.Stroke((int) MyGame.Map(t.LastCalculatedDistanceToPlayer, 0, MyGame.ViewDepth, 255, 0));
@@ -209,13 +196,30 @@ namespace GXPEngine.MyGame
 				canvas.Stroke(0);
 				canvas.StrokeWeight(2);
 				canvas.Quad(ix1, fCeiling1, ix1, fFloor1, ix2, fFloor2, ix2, fCeiling2);
-				tw.RenderSide(Game.main._glContext, new[] {ix1, fCeiling1, ix1, fFloor1, ix2, fFloor2, ix2, fCeiling2});
-			}
+				//TODO: Stop needing to draw the Quad and probably completely get rid of canvas
 
-			//Player Heading
-			playerHeading.Mult(23).Add(Player.position);
-			minimap.DebugStroke(255, 0, 0);
-			minimap.DebugLine(Player.position.x, Player.position.y, playerHeading.x, playerHeading.y);
+				//TODO: This makes it so each Wall only gets one rendered face. Needs to be updated when TileWall.Render(corners) function becomes a thing
+				tw.SetCorners(new[] {ix1, fCeiling1, ix2, fCeiling2, ix2, fFloor2, ix1, fFloor1});
+				// tw.Render(canvas.game._glContext);
+			}
+		}
+
+		private static (int, float) WorldToScreen(Minimap minimap, Vector2 p, Vector2 playerHeading)
+		{
+			minimap.DebugStroke(0);
+			minimap.DebugStrokeWeight(1f);
+
+			minimap.DebugLine(Player.position.x, Player.position.y, p.x, p.y);
+
+			Vector2 pp = Vector2.Sub(p, Player.position);
+			float distToWall = Vector2.Dist(Player.position, p);
+			// minimap.DebugLine(Player.position.x, Player.position.y, Player.position.x + pp.x, Player.position.y + pp.y);
+			float angle = Vector2.AngleBetween2(playerHeading, pp);
+			if (angle > Mathf.PI)
+				angle -= Mathf.TWO_PI; //Thanks https://github.com/EV4gamer
+
+			int ix = Mathf.Round((MyGame.WIDTH / 2.0f) + angle * (MyGame.WIDTH / MyGame.FIELD_OF_VIEW)); //Thanks https://github.com/StevenClifford!
+			return (ix, distToWall);
 		}
 	}
 }
