@@ -70,7 +70,7 @@ namespace GXPEngine.MyGame
 			}
 		}
 
-		public void Render(EasyDraw canvas, Minimap minimap)
+		public void Render(EasyDraw canvas)
 		{
 			//Reset all visible tiles
 			visibleTileWalls = new List<TileWall>();
@@ -131,7 +131,7 @@ namespace GXPEngine.MyGame
 			List<TileWall> sortedList = visibleTileWalls.OrderByDescending(tw=>tw.lastCalculatedDistanceToPlayer).ToList();
 			foreach (TileWall tw in sortedList)
 			{
-				RenderTile(canvas, minimap, tw);
+				RenderTile(canvas, tw);
 			}
 		}
 
@@ -140,16 +140,16 @@ namespace GXPEngine.MyGame
 			return tiles[col, row];
 		}
 
-		private static void RenderTile(EasyDraw canvas, Minimap minimap, TileWall tw)
+		private static void RenderTile(EasyDraw canvas, TileWall tw)
 		{
-			minimap.DebugNoStroke();
+			Minimap.DebugNoStroke();
 
 			Vector2 playerHeading = Vector2.FromAngle(Player.playerA);
 
 			float tileCenterX = tw.col + 0.5f;
 			float tileCenterY = tw.row + 0.5f;
-			minimap.DebugFill(0, 200, 0);
-			minimap.DebugCircle(tileCenterX, tileCenterY, 4);
+			Minimap.DebugFill(0, 200, 0);
+			Minimap.DebugCircle(tileCenterX, tileCenterY, 4);
 
 			//Loop through sides of the tile
 			for (int a = 0; a < 4; a++)
@@ -165,24 +165,24 @@ namespace GXPEngine.MyGame
 				Vector2 sideLocation = new Vector2(tileCenterX + x/2.0f, tileCenterY + y/2.0f);
 
 				//Tile Side - Red Dot
-				minimap.DebugFill(255, 0, 0);
-				minimap.DebugCircle(sideLocation.x, sideLocation.y, 2);
+				Minimap.DebugFill(255, 0, 0);
+				Minimap.DebugCircle(sideLocation.x, sideLocation.y, 2);
 
 				//Tile Side - Right Point
 				Vector2 p1 = new Vector2(sideLocation.x - sideNormal.y/2.0f, sideLocation.y - sideNormal.x/2.0f);
 				//Minimap: Blue Dot
-				minimap.DebugFill(0, 0, 255);
-				minimap.DebugCircle(p1.x, p1.y, 2);
-				(int ix1, float distToWall1) = WorldToScreen(minimap, p1, playerHeading);
+				Minimap.DebugFill(0, 0, 255);
+				Minimap.DebugCircle(p1.x, p1.y, 2);
+				(int ix1, float distToWall1) = WorldToScreen(p1, playerHeading);
 				float fCeiling1 = MyGame.HEIGHT / 2.0f - MyGame.HEIGHT / distToWall1;
 				float fFloor1 = MyGame.HEIGHT - fCeiling1;
 
 				//Tile Side - Left Point
 				Vector2 p2 = new Vector2(sideLocation.x + sideNormal.y/2.0f, sideLocation.y + sideNormal.x/2.0f);
 				//Minimap: Blue Dot
-				minimap.DebugFill(0, 0, 255);
-				minimap.DebugCircle(p2.x, p2.y, 2);
-				(int ix2, float distToWall2) = WorldToScreen(minimap, p2, playerHeading);
+				Minimap.DebugFill(0, 0, 255);
+				Minimap.DebugCircle(p2.x, p2.y, 2);
+				(int ix2, float distToWall2) = WorldToScreen(p2, playerHeading);
 				float fCeiling2 = MyGame.HEIGHT / 2.0f - MyGame.HEIGHT / distToWall2;
 				float fFloor2 = MyGame.HEIGHT - fCeiling2;
 
@@ -208,10 +208,10 @@ namespace GXPEngine.MyGame
 			}
 		}
 
-		private static (int, float) WorldToScreen(Minimap minimap, Vector2 p, Vector2 playerHeading)
+		private static (int, float) WorldToScreen(Vector2 p, Vector2 playerHeading)
 		{
-			minimap.DebugStroke(0);
-			minimap.DebugStrokeWeight(1f);
+			Minimap.DebugStroke(0);
+			Minimap.DebugStrokeWeight(1f);
 
 			// minimap.DebugLine(Player.position.x, Player.position.y, p.x, p.y);
 

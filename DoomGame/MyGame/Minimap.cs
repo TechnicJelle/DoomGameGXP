@@ -2,24 +2,23 @@
 
 namespace GXPEngine.MyGame
 {
-	public class Minimap
+	public static class Minimap
 	{
-		// ReSharper disable once PrivateFieldCanBeConvertedToLocalVariable
-		private readonly float originX;
-		// ReSharper disable once PrivateFieldCanBeConvertedToLocalVariable
-		private readonly float originY;
-		private readonly EasyDraw layerPlayer;
-		private readonly EasyDraw layerLevel;
-		private readonly EasyDraw layerDebug;
+		private static float originX;
+		private static float originY;
+		private static EasyDraw layerPlayer;
+		private static EasyDraw layerLevel;
+		private static EasyDraw layerDebug;
 
-		private readonly float w, h;
-		private readonly Level level;
+		private static float w;
+		private static float h;
+		private static Level level;
 
-		public Minimap(MyGame game, int x, int y, int width, int height, Level level)
+		public static void Setup(MyGame game, int x, int y, int width, int height, Level lvl)
 		{
 			originX = x;
 			originY = y;
-			this.level = level;
+			level = lvl;
 
 			layerLevel = new EasyDraw(width, height, false)
 			{
@@ -42,11 +41,11 @@ namespace GXPEngine.MyGame
 			};
 			game.AddChild(layerDebug);
 
-			w = (layerLevel.width-1.0f) / level.tilesColumns;
-			h = (layerLevel.height-1.0f) / level.tilesRows;
+			w = (layerLevel.width-1.0f) / lvl.tilesColumns;
+			h = (layerLevel.height-1.0f) / lvl.tilesRows;
 		}
 
-		public void Update()
+		public static void Update()
 		{
 			//layer level
 			layerLevel.ClearTransparent();
@@ -87,54 +86,60 @@ namespace GXPEngine.MyGame
 			layerPlayer.Stroke(255, 0, 0);
 			layerPlayer.Line(Player.position.x * w, Player.position.y * h, playerHeading.x * w, playerHeading.y * h);
 
-			//TODO: Player FOV
+			//TODO: Player FOV cone
 
 			//layer debug
 			layerDebug.ClearTransparent();
 		}
 
-		public void DebugNoFill()
+		public static void SetPosition(float x, float y)
+		{
+			originX = x;
+			originY = y;
+		}
+
+		public static void DebugNoFill()
 		{
 			layerDebug.NoFill();
 		}
 
-		public void DebugFill(int grayScale, int alpha=255)
+		public static void DebugFill(int grayScale, int alpha=255)
 		{
 			layerDebug.Fill(grayScale, alpha);
 		}
 
-		public void DebugFill(int red, int green, int blue, int alpha=255)
+		public static void DebugFill(int red, int green, int blue, int alpha=255)
 		{
 			layerDebug.Fill(red, green, blue, alpha);
 		}
 
-		public void DebugNoStroke()
+		public static void DebugNoStroke()
 		{
 			layerDebug.NoStroke();
 		}
 
-		public void DebugStroke(int grayScale, int alpha=255)
+		public static void DebugStroke(int grayScale, int alpha=255)
 		{
 			layerDebug.Stroke(grayScale, alpha);
 		}
 
-		public void DebugStroke(int red, int green, int blue, int alpha=255)
+		public static void DebugStroke(int red, int green, int blue, int alpha=255)
 		{
 			layerDebug.Stroke(red, green, blue, alpha);
 		}
 
-		public void DebugStrokeWeight(float width)
+		public static void DebugStrokeWeight(float width)
 		{
 			layerDebug.StrokeWeight(width);
 		}
 
 
-		public void DebugLine(float x1, float y1, float x2, float y2)
+		public static void DebugLine(float x1, float y1, float x2, float y2)
 		{
 			layerDebug.Line(x1 * w,  y1 * h, x2 * w,  y2 * h);
 		}
 
-		public void DebugCircle(float x, float y, float diameter)
+		public static void DebugCircle(float x, float y, float diameter)
 		{
 			layerDebug.Ellipse(x * w, y * h, diameter, diameter);
 		}

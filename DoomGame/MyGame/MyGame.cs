@@ -11,7 +11,6 @@ namespace GXPEngine.MyGame
 
 		private readonly EasyDraw canvas;
 		public static Level level;
-		private readonly Minimap minimap;
 
 		private const bool USE_TILED = true;
 
@@ -74,7 +73,7 @@ namespace GXPEngine.MyGame
 			}
 
 			//Minimap
-			minimap = new Minimap(this, 0, 0, 200, 200, level);
+			Minimap.Setup(this, 0, 0, 200, 200, level);
 
 			Console.WriteLine("MyGame initialized");
 		}
@@ -85,9 +84,9 @@ namespace GXPEngine.MyGame
 			canvas.ClearTransparent();
 
 			Player.MoveInput();
-			minimap.Update();
+			Minimap.Update();
 
-			level.Render(canvas, minimap);
+			level.Render(canvas);
 
 			canvas.Stroke(255);
 			canvas.Text(currentFps.ToString(), 200, 10);
