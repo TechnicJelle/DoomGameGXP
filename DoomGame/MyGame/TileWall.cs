@@ -40,6 +40,11 @@ namespace GXPEngine.MyGame
 			texture.SetCorners(corners);
 		}
 
+		public void SetBrightness(int brightness)
+		{
+			texture.brightness = Convert.ToByte(brightness);
+		}
+
 		public void Render(GLContext glContext)
 		{
 			texture.Render(glContext);

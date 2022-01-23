@@ -83,7 +83,7 @@ namespace GXPEngine.MyGame
 				8, 8);
 
 			//Player Heading
-			Vector2 playerHeading = Vector2.FromAngle(-Player.playerA + Mathf.HALF_PI).Mult(23).Add(Player.position);
+			Vector2 playerHeading = Vector2.FromAngle(Player.playerA).Mult(23).Add(Player.position);
 			layerPlayer.Stroke(255, 0, 0);
 			layerPlayer.Line(Player.position.x * w, Player.position.y * h, playerHeading.x * w, playerHeading.y * h);
 

@@ -89,11 +89,14 @@ namespace GXPEngine.MyGame
 				float rayAngle = (Player.playerA - MyGame.FIELD_OF_VIEW / 2.0f) +
 				                  (px / (float) MyGame.WIDTH) * MyGame.FIELD_OF_VIEW;
 
+				//TODO: Implement DDA here too
+
+
 				float distanceToWall = 0.0f;
 				bool hitWall = false;
 
-				float eyeX = Mathf.Sin(rayAngle);
-				float eyeY = Mathf.Cos(rayAngle);
+				float eyeX = Mathf.Cos(rayAngle);
+				float eyeY = Mathf.Sin(rayAngle);
 
 				while (!hitWall && distanceToWall < RENDER_DISTANCE)
 				{
@@ -141,7 +144,7 @@ namespace GXPEngine.MyGame
 		{
 			minimap.DebugNoStroke();
 
-			Vector2 playerHeading = Vector2.FromAngle(-Player.playerA + Mathf.HALF_PI);
+			Vector2 playerHeading = Vector2.FromAngle(Player.playerA);
 
 			float tileCenterX = tw.col + 0.5f;
 			float tileCenterY = tw.row + 0.5f;
@@ -200,6 +203,7 @@ namespace GXPEngine.MyGame
 
 				//TODO: This makes it so each Wall only gets one rendered face. Needs to be updated when TileWall.Render(corners) function becomes a thing
 				tw.SetCorners(new[] {ix1, fCeiling1, ix2, fCeiling2, ix2, fFloor2, ix1, fFloor1});
+				tw.SetBrightness(brightness);
 				// tw.Render(canvas.game._glContext);
 			}
 		}
@@ -209,7 +213,7 @@ namespace GXPEngine.MyGame
 			minimap.DebugStroke(0);
 			minimap.DebugStrokeWeight(1f);
 
-			minimap.DebugLine(Player.position.x, Player.position.y, p.x, p.y);
+			// minimap.DebugLine(Player.position.x, Player.position.y, p.x, p.y);
 
 			Vector2 pp = Vector2.Sub(p, Player.position);
 			float distToWall = Vector2.Dist(Player.position, p);

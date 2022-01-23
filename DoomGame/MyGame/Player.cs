@@ -22,33 +22,35 @@ namespace GXPEngine.MyGame
 		{
 			if (Input.GetKey(Key.A))
 			{
-				playerA += F_ROTATION_SPEED * Time.deltaTime;
+				playerA -= F_ROTATION_SPEED * Time.deltaTime;
 			}
 
 			if (Input.GetKey(Key.D))
 			{
-				playerA -= F_ROTATION_SPEED * Time.deltaTime;
+				playerA += F_ROTATION_SPEED * Time.deltaTime;
 			}
+
+			//TODO: Implement DDA here
 
 			if (Input.GetKey(Key.W))
 			{
-				position.x += Mathf.Sin(playerA) * F_MOVE_SPEED * Time.deltaTime;
-				position.y += Mathf.Cos(playerA) * F_MOVE_SPEED * Time.deltaTime;
+				position.x += Mathf.Cos(playerA) * F_MOVE_SPEED * Time.deltaTime;
+				position.y += Mathf.Sin(playerA) * F_MOVE_SPEED * Time.deltaTime;
 				if (MyGame.level.GetTileAtPosition((int) position.x,(int) position.y).GetType() == typeof(TileWall))
 				{
-					position.x -= Mathf.Sin(playerA) * F_MOVE_SPEED * Time.deltaTime;
-					position.y -= Mathf.Cos(playerA) * F_MOVE_SPEED * Time.deltaTime;
+					position.x -= Mathf.Cos(playerA) * F_MOVE_SPEED * Time.deltaTime;
+					position.y -= Mathf.Sin(playerA) * F_MOVE_SPEED * Time.deltaTime;
 				}
 			}
 
 			if (Input.GetKey(Key.S))
 			{
-				position.x -= Mathf.Sin(playerA) * F_MOVE_SPEED * Time.deltaTime;
-				position.y -= Mathf.Cos(playerA) * F_MOVE_SPEED * Time.deltaTime;
+				position.x -= Mathf.Cos(playerA) * F_MOVE_SPEED * Time.deltaTime;
+				position.y -= Mathf.Sin(playerA) * F_MOVE_SPEED * Time.deltaTime;
 				if (MyGame.level.GetTileAtPosition((int) position.x,(int) position.y).GetType() == typeof(TileWall))
 				{
-					position.x += Mathf.Sin(playerA) * F_MOVE_SPEED * Time.deltaTime;
-					position.y += Mathf.Cos(playerA) * F_MOVE_SPEED * Time.deltaTime;
+					position.x += Mathf.Cos(playerA) * F_MOVE_SPEED * Time.deltaTime;
+					position.y += Mathf.Sin(playerA) * F_MOVE_SPEED * Time.deltaTime;
 				}
 			}
 		}
