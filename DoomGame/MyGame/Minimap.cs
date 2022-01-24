@@ -12,37 +12,34 @@ namespace GXPEngine.MyGame
 
 		private static float w;
 		private static float h;
-		private static Level level;
 
-		public static void Setup(MyGame game, int x, int y, int width, int height, Level lvl)
+		public static void Setup(int x, int y, int width, int height)
 		{
-			originX = x;
-			originY = y;
-			level = lvl;
+			SetPosition(x, y);
 
 			layerLevel = new EasyDraw(width, height, false)
 			{
 				x = originX,
 				y = originY,
 			};
-			game.AddChild(layerLevel);
+			Game.main.AddChild(layerLevel);
 
 			layerPlayer = new EasyDraw(width, height, false)
 			{
 				x = originX,
 				y = originY,
 			};
-			game.AddChild(layerPlayer);
+			Game.main.AddChild(layerPlayer);
 
 			layerDebug = new EasyDraw(width, height, false)
 			{
 				x = originX,
 				y = originY,
 			};
-			game.AddChild(layerDebug);
+			Game.main.AddChild(layerDebug);
 
-			w = (layerLevel.width-1.0f) / lvl.tilesColumns;
-			h = (layerLevel.height-1.0f) / lvl.tilesRows;
+			w = (layerLevel.width-1.0f) / MyGame.level.tilesColumns;
+			h = (layerLevel.height-1.0f) / MyGame.level.tilesRows;
 		}
 
 		public static void Update()
@@ -52,16 +49,17 @@ namespace GXPEngine.MyGame
 			layerLevel.Stroke(0);
 			layerLevel.StrokeWeight(1);
 			layerLevel.ShapeAlign(CenterMode.Min, CenterMode.Min);
-			for (int col = 0; col < level.tilesColumns; col++)
-			for (int row = 0; row < level.tilesRows; row++)
+			for (int col = 0; col < MyGame.level.tilesColumns; col++)
+			for (int row = 0; row < MyGame.level.tilesRows; row++)
 			{
-				Tile t = level.GetTileAtPosition(col, row);
+				Tile t = MyGame.level.GetTileAtPosition(col, row);
 				if (t.GetType() != typeof(TileWall)) continue;
 				TileWall tw = (TileWall) t;
-				layerLevel.Fill(tw.visible ? 255 : 0);
+				layerLevel.Fill(255);
+				// layerLevel.Fill(MyGame.level.FindOnscreenTileWalls().Contains(tw) ? 255 : 0);
 				layerLevel.Rect(col * w, row * h, w, h);
 
-				//TODO: Put back when TileWall.Render(corners) becomes a thing
+				//TODO: Put back when TileWall gets its own minimap texture
 				// tw.tempSprite.x = col * w + w/2.0f;
 				// tw.tempSprite.y = row * h + h/2.0f;
 				// tw.tempSprite.scaleX = w / tw.tempSprite.width;
@@ -82,9 +80,9 @@ namespace GXPEngine.MyGame
 				8, 8);
 
 			//Player Heading
-			Vector2 playerHeading = Vector2.FromAngle(Player.playerA).Mult(23).Add(Player.position);
+			Vector2 playerLooking = Player.heading.Copy().Mult(23).Add(Player.position);
 			layerPlayer.Stroke(255, 0, 0);
-			layerPlayer.Line(Player.position.x * w, Player.position.y * h, playerHeading.x * w, playerHeading.y * h);
+			layerPlayer.Line(Player.position.x * w, Player.position.y * h, playerLooking.x * w, playerLooking.y * h);
 
 			//TODO: Player FOV cone
 

@@ -1,4 +1,7 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using GXPEngine.Core;
 
 namespace GXPEngine.MyGame
 {
@@ -13,11 +16,12 @@ namespace GXPEngine.MyGame
 		public static Level level;
 
 		private const bool USE_TILED = true;
+		public const bool DRAW_TEXTURED_WALLS = false;
 
 		private MyGame() : base(WIDTH, HEIGHT, false)
 		{
 			//Player
-			Player player = new Player(8.0f, 4.0f, 0.1f);
+			Player player = new Player(8.0f, 4.0f, Mathf.HALF_PI);
 			AddChild(player);
 
 			//Render Background
@@ -73,7 +77,7 @@ namespace GXPEngine.MyGame
 			}
 
 			//Minimap
-			Minimap.Setup(this, 0, 0, 200, 200, level);
+			Minimap.Setup(0, 0, 200, 200);
 
 			Console.WriteLine("MyGame initialized");
 		}
@@ -85,16 +89,60 @@ namespace GXPEngine.MyGame
 
 			Player.MoveInput();
 			Minimap.Update();
+			// TileWall.DDA(Player.position, new Vector2(Input.mouseX, Input.mouseY));
 
-			level.Render(canvas);
+			//First we get all tiles that are on screen
+			List<TileWall> onscreenTileWalls = level.FindOnscreenTileWalls();
 
-			canvas.Stroke(255);
+			//Then we loop through those tiles and see which sides are actually visible
+			List<WallSide> visibleSides = new List<WallSide>();
+			foreach (TileWall tileWall in onscreenTileWalls)
+			{
+				visibleSides.AddRange(tileWall.FindVisibleSides());
+			}
+
+			//We sort the sides by their distance to the player, to make sure they're rendered in the correct order
+			List<WallSide> sorted = visibleSides.OrderByDescending(side => side.distToPlayer).ToList();
+
+			//Then we render all those visible sides
+			foreach (WallSide side in sorted)
+			{
+				side.Render(canvas);
+			}
+
+			canvas.Fill(255);
 			canvas.Text(currentFps.ToString(), 200, 10);
+		}
+
+		private void LateUpdate() //TODO: Doesn't exist. Gotta find a different way to hot-reload the level
+		{
+			if (Input.GetKeyDown(Key.T))
+			{
+				level.LoadTiledFile("Level02.tmx");
+			}
 		}
 
 		private static void Main() // Main() is the first method that's called when the program is run
 		{
 			new MyGame().Start(); // Create a "MyGame" and start it
+		}
+
+		public static (int, float) WorldToScreen(Vector2 p)
+		{
+			Minimap.DebugStroke(0);
+			Minimap.DebugStrokeWeight(1f);
+
+			// Minimap.DebugLine(Player.position.x, Player.position.y, p.x, p.y);
+
+			Vector2 pp = Vector2.Sub(p, Player.position);
+			float dist = Vector2.Dist(Player.position, p);
+			// Minimap.DebugLine(Player.position.x, Player.position.y, Player.position.x + pp.x, Player.position.y + pp.y);
+			float angle = Vector2.AngleBetween2(Player.heading, pp);
+			if (angle > Mathf.PI)
+				angle -= Mathf.TWO_PI; //Thanks https://github.com/EV4gamer
+
+			int ix = Mathf.Round((MyGame.WIDTH / 2.0f) + angle * (MyGame.WIDTH / MyGame.FIELD_OF_VIEW)); //Thanks https://github.com/StevenClifford!
+			return (ix, dist);
 		}
 	}
 }

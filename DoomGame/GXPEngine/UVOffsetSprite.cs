@@ -1,50 +1,22 @@
-﻿using System.Collections.Generic;
-using GXPEngine.Core;
+﻿using GXPEngine.Core;
 using GXPEngine;
 
 public class UVOffsetSprite : Sprite
 {
-	public byte brightness = 255;
+	private float[] vertices;
 
-	private float offsetX;
-	private float offsetY;
-
-	private Vector2 tl;
-	private Vector2 tr;
-	private Vector2 bl;
-	private Vector2 br;
-
-	public UVOffsetSprite(string filename, IReadOnlyList<Vector2> corners) : base(filename)
+	public UVOffsetSprite(string filename, bool keepInCache=false, bool addCollider=true) : base(filename, keepInCache, addCollider)
 	{
+		SetVertices(new [] {0.0f, 0.0f, 100.0f, 0.0f, 100.0f, 100.0f, 0.0f, 100.0f});
 		texture.wrap = true;
-		tl = new Vector2(corners[0].x, corners[0].y); //top-left
-		tr = new Vector2(corners[1].x, corners[1].y); //top-right
-		bl = new Vector2(corners[2].x, corners[2].y); //bottom-left
-		br = new Vector2(corners[3].x, corners[3].y); //bottom-right
 	}
 
-	public void SetCorners(Vector2[] corners)
+	/// <param name="verts">
+	/// (left, top), (right, top), (right, bottom), (left, bottom)
+	/// </param>
+	public void SetVertices(float[] verts)
 	{
-		tl = new Vector2(corners[0].x, corners[0].y); //top-left
-		tr = new Vector2(corners[1].x, corners[1].y); //top-right
-		bl = new Vector2(corners[2].x, corners[2].y); //bottom-left
-		br = new Vector2(corners[3].x, corners[3].y); //bottom-right
-	}
-
-	public void SetOffset(float x, float y)
-	{
-		offsetX = x;
-		offsetY = y;
-
-		setUVs();
-	}
-
-	public void AddOffset(float x, float y)
-	{
-		offsetX += x;
-		offsetY += y;
-
-		setUVs();
+		vertices = verts;
 	}
 
 	protected override void setUVs()
@@ -53,11 +25,6 @@ public class UVOffsetSprite : Sprite
 		float right = _mirrorX ? 0.0f : 1.0f;
 		float top = _mirrorY ? 1.0f : 0.0f;
 		float bottom = _mirrorY ? 0.0f : 1.0f;
-
-		left += offsetX;
-		right += offsetX;
-		top += offsetY;
-		bottom += offsetY;
 		_uvs = new float[8] { left, top, right, top, right, bottom, left, bottom };
 	}
 
@@ -84,14 +51,9 @@ public class UVOffsetSprite : Sprite
 		texture.wrap = true;
 		blendMode?.enable();
 		_texture.Bind();
-		glContext.SetColor(brightness, brightness, brightness, 255);
-		float[] area = {
-			tl.x, tl.y,
-			tr.x, tr.y,
-			br.x, br.y,
-			bl.x, bl.y
-		};
-		glContext.DrawQuad(area, _uvs);
+		(byte r, byte g, byte b, byte a) tempColor  = GetColor();
+		glContext.SetColor(tempColor.r, tempColor.g, tempColor.b, tempColor.a);
+		glContext.DrawQuad(vertices, _uvs);
 		_texture.Unbind();
 		if (blendMode != null) BlendMode.NORMAL.enable();
 	}

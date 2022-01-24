@@ -294,7 +294,20 @@ namespace GXPEngine
 			byte rb = (byte)Math.Floor((b * 255));
 			color = (uint)rb + (uint)(rg << 8) + (uint)(rr << 16);
 		}
-		
+
+		public void SetColor(byte r, byte g, byte b)
+		{
+			color = (uint) r + (uint) (g << 8) + (uint) (b << 16);
+		}
+
+		protected (byte r, byte g, byte b, byte a) GetColor()
+		{
+			return ((byte) ((_color >> 16) & 0xFF),
+				(byte) ((_color >> 8) & 0xFF),
+				(byte) (_color & 0xFF),
+				(byte) (_alpha * 0xFF));
+		}
+
 		//------------------------------------------------------------------------------------------------------------------------
 		//														alpha
 		//------------------------------------------------------------------------------------------------------------------------
