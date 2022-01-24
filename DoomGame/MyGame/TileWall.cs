@@ -11,7 +11,7 @@ namespace GXPEngine.MyGame
 
 		//TODO: Add texture for on the minimap
 
-		public TileWall(int col, int row, string filename) : base()
+		public TileWall(int col, int row, string filename)
 		{
 			sides = new WallSide[4];
 			for (int i = 0; i < sides.Length; i++)
