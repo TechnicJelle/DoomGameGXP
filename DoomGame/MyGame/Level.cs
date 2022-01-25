@@ -75,6 +75,12 @@ namespace GXPEngine.MyGame
 					case 3:
 						tiles[col, row] = new TileWall(col, row, "checkers.png");
 						break;
+					case 4:
+						tiles[col, row] = new TileWall(col, row, "diagonal.png");
+						break;
+					case 5:
+						tiles[col, row] = new TileWall(col, row, "noise.png");
+						break;
 				}
 			}
 		}

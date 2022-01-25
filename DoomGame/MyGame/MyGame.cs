@@ -21,7 +21,7 @@ namespace GXPEngine.MyGame
 		private MyGame() : base(WIDTH, HEIGHT, false)
 		{
 			//Player
-			Player player = new Player(8.0f, 4.0f, Mathf.HALF_PI);
+			Player player = new Player(1.5f, 1.5f, Mathf.HALF_PI);
 			AddChild(player);
 
 			//Render Background
