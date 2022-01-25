@@ -16,7 +16,7 @@ namespace GXPEngine.MyGame
 		public static Level level;
 
 		private const bool USE_TILED = true;
-		public const bool DRAW_TEXTURED_WALLS = false;
+		public const bool DRAW_TEXTURED_WALLS = true;
 
 		private MyGame() : base(WIDTH, HEIGHT, false)
 		{
@@ -85,6 +85,16 @@ namespace GXPEngine.MyGame
 		// For every game object, Update is called every frame, by the engine:
 		private void Update()
 		{
+			if (Input.GetKeyDown(Key.T))
+			{
+				foreach (UVOffsetSprite uvOffsetSprite in game.FindObjectsOfType<UVOffsetSprite>())
+				{
+					game.RemoveChild(uvOffsetSprite);
+				}
+				level.LoadTiledFile("Level02.tmx");
+				Minimap.UpdateLevel();
+			}
+
 			canvas.ClearTransparent();
 
 			Player.MoveInput();
@@ -112,14 +122,6 @@ namespace GXPEngine.MyGame
 
 			canvas.Fill(255);
 			canvas.Text(currentFps.ToString(), 200, 10);
-		}
-
-		private void LateUpdate() //TODO: Doesn't exist. Gotta find a different way to hot-reload the level
-		{
-			if (Input.GetKeyDown(Key.T))
-			{
-				level.LoadTiledFile("Level02.tmx");
-			}
 		}
 
 		private static void Main() // Main() is the first method that's called when the program is run

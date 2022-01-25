@@ -9,7 +9,7 @@ namespace GXPEngine.MyGame
 	{
 		private readonly WallSide[] sides;
 
-		//TODO: Add texture for on the minimap
+		public Sprite minimapTexture { get; }
 
 		public TileWall(int col, int row, string filename)
 		{
@@ -18,6 +18,8 @@ namespace GXPEngine.MyGame
 			{
 				sides[i] = new WallSide(filename, i, col + 0.5f, row + 0.5f);
 			}
+
+			minimapTexture = new Sprite(filename, true, false);
 		}
 
 		/// <param name="visibility">If the entire tile is visible or not</param>
@@ -25,6 +27,7 @@ namespace GXPEngine.MyGame
 		{
 			foreach (WallSide side in sides)
 				side.SetVisibility(visibility);
+			minimapTexture.visible = visibility;
 		}
 
 		public IEnumerable<WallSide> FindVisibleSides()

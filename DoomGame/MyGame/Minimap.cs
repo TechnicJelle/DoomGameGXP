@@ -40,9 +40,12 @@ namespace GXPEngine.MyGame
 
 			w = (layerLevel.width-1.0f) / MyGame.level.tilesColumns;
 			h = (layerLevel.height-1.0f) / MyGame.level.tilesRows;
+
+			UpdateLevel();
+
 		}
 
-		public static void Update()
+		public static void UpdateLevel()
 		{
 			//layer level
 			layerLevel.ClearTransparent();
@@ -55,20 +58,24 @@ namespace GXPEngine.MyGame
 				Tile t = MyGame.level.GetTileAtPosition(col, row);
 				if (t.GetType() != typeof(TileWall)) continue;
 				TileWall tw = (TileWall) t;
-				layerLevel.Fill(255);
-				// layerLevel.Fill(MyGame.level.FindOnscreenTileWalls().Contains(tw) ? 255 : 0);
-				layerLevel.Rect(col * w, row * h, w, h);
-
-				//TODO: Put back when TileWall gets its own minimap texture
-				// tw.tempSprite.x = col * w + w/2.0f;
-				// tw.tempSprite.y = row * h + h/2.0f;
-				// tw.tempSprite.scaleX = w / tw.tempSprite.width;
-				// tw.tempSprite.scaleY = h / tw.tempSprite.height;
-				// layerLevel.DrawSprite(tw.tempSprite);
-				// tw.tempSprite.scaleX = 1.0f;
-				// tw.tempSprite.scaleY = 1.0f;
+				if (MyGame.DRAW_TEXTURED_WALLS)
+				{
+					tw.minimapTexture.x = col * w + w / 2.0f;
+					tw.minimapTexture.y = row * h + h / 2.0f;
+					tw.minimapTexture.scaleX = w / tw.minimapTexture.width;
+					tw.minimapTexture.scaleY = h / tw.minimapTexture.height;
+					layerLevel.DrawSprite(tw.minimapTexture);
+				}
+				else
+				{
+					layerLevel.Fill(255);
+					layerLevel.Rect(col * w, row * h, w, h);
+				}
 			}
+		}
 
+		public static void Update()
+		{
 			//layer player
 			layerPlayer.ClearTransparent();
 			layerPlayer.NoStroke();
