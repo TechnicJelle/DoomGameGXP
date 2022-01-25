@@ -97,6 +97,17 @@ namespace GXPEngine.MyGame
 			layerDebug.ClearTransparent();
 		}
 
+		public static void ReOverlay()
+		{
+			Game.main.RemoveChild(layerLevel);
+			Game.main.RemoveChild(layerPlayer);
+			Game.main.RemoveChild(layerDebug);
+
+			Game.main.AddChild(layerLevel);
+			Game.main.AddChild(layerPlayer);
+			Game.main.AddChild(layerDebug);
+		}
+
 		public static void SetPosition(float x, float y)
 		{
 			originX = x;

@@ -120,6 +120,8 @@ namespace GXPEngine.MyGame
 				side.Render(canvas);
 			}
 
+			Minimap.ReOverlay();
+
 			canvas.Fill(255);
 			canvas.Text(currentFps.ToString(), 200, 10);
 		}

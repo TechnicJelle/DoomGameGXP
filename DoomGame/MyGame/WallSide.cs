@@ -16,7 +16,7 @@ namespace GXPEngine.MyGame
 		public WallSide(string filename, int i, float tileCenterX, float tileCenterY)
 		{
 			texture = new UVOffsetSprite(filename, true, false);
-			if(MyGame.DRAW_TEXTURED_WALLS)
+			if (MyGame.DRAW_TEXTURED_WALLS)
 				Game.main.AddChild(texture);
 
 			float normalDir = Mathf.HALF_PI * i;
@@ -37,6 +37,8 @@ namespace GXPEngine.MyGame
 
 		public void Render(EasyDraw canvas)
 		{
+			if (MyGame.DRAW_TEXTURED_WALLS)
+				Game.main.Remove(texture);
 			Minimap.DebugNoStroke();
 
 			//Tile Side - Red Dot
@@ -76,6 +78,7 @@ namespace GXPEngine.MyGame
 				texture.visible = true;
 				texture.SetVertices(new[] {ix1, fCeiling1, ix2, fCeiling2, ix2, fFloor2, ix1, fFloor1});
 				texture.SetColor(brightness, brightness, brightness);
+				Game.main.AddChild(texture);
 			}
 			else
 			{
