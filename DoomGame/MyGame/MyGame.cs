@@ -12,12 +12,13 @@ namespace GXPEngine.MyGame
 
 		public const float FIELD_OF_VIEW = Mathf.PI / 3.0f;
 
-		private readonly EasyDraw canvas;
 		public static Level level;
 
 		private const bool USE_TILED = true;
 
-		private MyGame(bool pixelArt) : base(WIDTH, HEIGHT, false, pPixelArt: pixelArt)
+		public const bool DEBUG_MODE = false;
+
+		private MyGame(bool pixelArt) : base(WIDTH, HEIGHT, true, pPixelArt: pixelArt)
 		{
 			//Player
 			Player player = new Player(1.5f, 1.5f, Mathf.HALF_PI);
@@ -42,11 +43,6 @@ namespace GXPEngine.MyGame
 				background.Line(0, iy, WIDTH, iy);
 			}
 			AddChild(background);
-
-			//Canvas
-			canvas = new EasyDraw(WIDTH, HEIGHT, false);
-			canvas.TextAlign(CenterMode.Min, CenterMode.Min);
-			AddChild(canvas);
 
 			//Level
 			if (USE_TILED)
@@ -94,8 +90,8 @@ namespace GXPEngine.MyGame
 				Minimap.UpdateLevel();
 			}
 
-			canvas.ClearTransparent();
-			Minimap.ClearDebug();
+			if(DEBUG_MODE)
+				Minimap.ClearDebug();
 
 			Player.MoveInput();
 
@@ -119,15 +115,12 @@ namespace GXPEngine.MyGame
 			}
 
 			Minimap.ReOverlay();
-
-			canvas.Fill(255);
-			canvas.Text(currentFps.ToString(), 200, 10);
 		}
 
 		public static (int, float) WorldToScreen(Vector2 p)
 		{
-			Minimap.DebugStroke(0);
-			Minimap.DebugStrokeWeight(1f);
+			// Minimap.DebugStroke(0);
+			// Minimap.DebugStrokeWeight(1f);
 
 			// Minimap.DebugLine(Player.position.x, Player.position.y, p.x, p.y);
 

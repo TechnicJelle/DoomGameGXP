@@ -31,12 +31,15 @@ namespace GXPEngine.MyGame
 			};
 			Game.main.AddChild(layerPlayer);
 
-			layerDebug = new EasyDraw(width, height, false)
+			if (MyGame.DEBUG_MODE)
 			{
-				x = originX,
-				y = originY,
-			};
-			Game.main.AddChild(layerDebug);
+				layerDebug = new EasyDraw(width, height, false)
+				{
+					x = originX,
+					y = originY,
+				};
+				Game.main.AddChild(layerDebug);
+			}
 
 			w = (layerLevel.width-1.0f) / MyGame.level.tilesColumns;
 			h = (layerLevel.height-1.0f) / MyGame.level.tilesRows;
@@ -79,7 +82,7 @@ namespace GXPEngine.MyGame
 				8, 8);
 
 			//Player Heading
-			Vector2 playerLooking = Player.heading.Copy().Mult(23).Add(Player.position);
+			Vector2 playerLooking = Player.heading.Copy().Add(Player.position);
 			layerPlayer.Stroke(255, 0, 0);
 			layerPlayer.Line(Player.position.x * w, Player.position.y * h, playerLooking.x * w, playerLooking.y * h);
 
@@ -95,10 +98,12 @@ namespace GXPEngine.MyGame
 		{
 			Game.main.RemoveChild(layerLevel);
 			Game.main.RemoveChild(layerPlayer);
-			Game.main.RemoveChild(layerDebug);
 
 			Game.main.AddChild(layerLevel);
 			Game.main.AddChild(layerPlayer);
+
+			if (!MyGame.DEBUG_MODE) return;
+			Game.main.RemoveChild(layerDebug);
 			Game.main.AddChild(layerDebug);
 		}
 

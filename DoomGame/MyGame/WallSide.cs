@@ -37,19 +37,22 @@ namespace GXPEngine.MyGame
 		public void Refresh()
 		{
 			Game.main.Remove(texture);
-			Minimap.DebugNoStroke();
+			if (MyGame.DEBUG_MODE)
+			{
+				Minimap.DebugNoStroke();
 
-			//Tile Side - Red Dot
-			Minimap.DebugFill(255, 0, 0);
-			Minimap.DebugCircle(location.x, location.y, 4);
+				//Tile Side - Red Dot
+				Minimap.DebugFill(255, 0, 0);
+				Minimap.DebugCircle(location.x, location.y, 4);
 
-			//Minimap: Blue Dot
-			Minimap.DebugFill(0, 0, 255);
-			Minimap.DebugCircle(p1.x, p1.y, 4);
+				//Minimap: Blue Dot
+				Minimap.DebugFill(0, 0, 255);
+				Minimap.DebugCircle(p1.x, p1.y, 4);
 
-			//Minimap: Blue Dot
-			Minimap.DebugFill(0, 0, 255);
-			Minimap.DebugCircle(p2.x, p2.y, 4);
+				//Minimap: Blue Dot
+				Minimap.DebugFill(0, 0, 255);
+				Minimap.DebugCircle(p2.x, p2.y, 4);
+			}
 
 			(int ix1, float distToWall1) = MyGame.WorldToScreen(p1);
 			float fCeiling1 = MyGame.HEIGHT / 2.0f - MyGame.HEIGHT / distToWall1;
