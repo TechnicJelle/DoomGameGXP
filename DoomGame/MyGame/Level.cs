@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using GXPEngine.Core;
 using TiledMapParser;
 
 namespace GXPEngine.MyGame
@@ -99,53 +100,14 @@ namespace GXPEngine.MyGame
 
 			//Find tiles to render
 			//For every x pixel, send out a ray that goes until it has hit a wall or reached the maximum render distance
-			for (int px = 0; px < MyGame.WIDTH; px+=10)
+			for (int px = 0; px < MyGame.WIDTH; px+=3)
 			{
 				float rayAngle = (Player.angle - MyGame.FIELD_OF_VIEW / 2.0f) +
 				                  (px / (float) MyGame.WIDTH) * MyGame.FIELD_OF_VIEW;
 
-				//TODO: Implement DDA here too
-
-				// Vector2 endPoint = Vector2.FromAngle(rayAngle).Mult(RENDER_DISTANCE);
-				// Minimap.DebugStroke(0, 100);
-				// Minimap.DebugStrokeWeight(1);
-				// Minimap.DebugLine(Player.position.x, Player.position.y, Player.position.x + endPoint.x, Player.position.y + endPoint.y);
-
-				float distanceToWall = 0.0f;
-				bool hitWall = false;
-
-				float eyeX = Mathf.Cos(rayAngle);
-				float eyeY = Mathf.Sin(rayAngle);
-
-				while (!hitWall && distanceToWall < RENDER_DISTANCE)
-				{
-					distanceToWall += 0.1f;
-
-					int testX = (int) (Player.position.x + eyeX * distanceToWall);
-					int testY = (int) (Player.position.y + eyeY * distanceToWall);
-
-					if (testX < 0 || testX >= tilesColumns | testY < 0 || testY >= tilesRows)
-					{
-						//Ray has gone out of map bounds
-						hitWall = true;
-						distanceToWall = RENDER_DISTANCE;
-					}
-					else
-					{
-						Tile t = GetTileAtPosition(testX, testY);
-						if (t.GetType() != typeof(TileWall)) continue;
-						TileWall tw = (TileWall) t;
-						if (!onscreenTileWalls.Contains(tw))
-						{
-							onscreenTileWalls.Add(tw);
-						}
-
-						hitWall = true;
-						Minimap.DebugNoStroke();
-						Minimap.DebugFill(0, 255, 0);
-						Minimap.DebugCircle(testX + 0.5f, testY + 0.5f, 4);
-					}
-				}
+				(TileWall tileWall, Vector2 _, float _) = TileWall.DDA(Player.position, Vector2.FromAngle(rayAngle), RENDER_DISTANCE);
+				if (tileWall != null && !onscreenTileWalls.Contains(tileWall))
+					onscreenTileWalls.Add(tileWall);
 			}
 
 			return onscreenTileWalls;

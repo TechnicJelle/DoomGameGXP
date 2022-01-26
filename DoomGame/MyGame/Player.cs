@@ -58,9 +58,8 @@ namespace GXPEngine.MyGame
 				Minimap.UpdatePlayer();
 
 			if (moveDir == null) return;
-			(Vector2 _, float dist) = TileWall.DDA(position, moveDir);
+			(TileWall _, Vector2 _, float dist) = TileWall.DDA(position, moveDir, 1.0f);
 			position.Add(Vector2.Mult(moveDir, dist - WALL_PADDING).Limit(MOVE_SPEED * Time.deltaTime));
-
 		}
 	}
 }

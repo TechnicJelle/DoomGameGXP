@@ -16,9 +16,8 @@ namespace GXPEngine.MyGame
 		public static Level level;
 
 		private const bool USE_TILED = true;
-		public const bool DRAW_TEXTURED_WALLS = true;
 
-		private MyGame() : base(WIDTH, HEIGHT, false)
+		private MyGame(bool pixelArt) : base(WIDTH, HEIGHT, false, pPixelArt: pixelArt)
 		{
 			//Player
 			Player player = new Player(1.5f, 1.5f, Mathf.HALF_PI);
@@ -116,18 +115,13 @@ namespace GXPEngine.MyGame
 			//Then we render all those visible sides
 			foreach (WallSide side in sorted)
 			{
-				side.Render(canvas);
+				side.Refresh();
 			}
 
 			Minimap.ReOverlay();
 
 			canvas.Fill(255);
 			canvas.Text(currentFps.ToString(), 200, 10);
-		}
-
-		private static void Main() // Main() is the first method that's called when the program is run
-		{
-			new MyGame().Start(); // Create a "MyGame" and start it
 		}
 
 		public static (int, float) WorldToScreen(Vector2 p)
@@ -146,6 +140,11 @@ namespace GXPEngine.MyGame
 
 			int ix = Mathf.Round((MyGame.WIDTH / 2.0f) + angle * (MyGame.WIDTH / MyGame.FIELD_OF_VIEW)); //Thanks https://github.com/StevenClifford!
 			return (ix, dist);
+		}
+
+		private static void Main() // Main() is the first method that's called when the program is run
+		{
+			new MyGame(false).Start(); // Create a "MyGame" and start it
 		}
 	}
 }

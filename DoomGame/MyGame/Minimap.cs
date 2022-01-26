@@ -58,19 +58,11 @@ namespace GXPEngine.MyGame
 				Tile t = MyGame.level.GetTileAtPosition(col, row);
 				if (t.GetType() != typeof(TileWall)) continue;
 				TileWall tw = (TileWall) t;
-				if (MyGame.DRAW_TEXTURED_WALLS)
-				{
-					tw.minimapTexture.x = col * w + w / 2.0f;
-					tw.minimapTexture.y = row * h + h / 2.0f;
-					tw.minimapTexture.scaleX = w / tw.minimapTexture.width;
-					tw.minimapTexture.scaleY = h / tw.minimapTexture.height;
-					layerLevel.DrawSprite(tw.minimapTexture);
-				}
-				else
-				{
-					layerLevel.Fill(255);
-					layerLevel.Rect(col * w, row * h, w, h);
-				}
+				tw.minimapTexture.x = col * w + w / 2.0f;
+				tw.minimapTexture.y = row * h + h / 2.0f;
+				tw.minimapTexture.scaleX = w / tw.minimapTexture.width;
+				tw.minimapTexture.scaleY = h / tw.minimapTexture.height;
+				layerLevel.DrawSprite(tw.minimapTexture);
 			}
 		}
 

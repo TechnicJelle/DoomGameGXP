@@ -16,8 +16,7 @@ namespace GXPEngine.MyGame
 		public WallSide(string filename, int i, float tileCenterX, float tileCenterY)
 		{
 			texture = new UVOffsetSprite(filename, true, false);
-			if (MyGame.DRAW_TEXTURED_WALLS)
-				Game.main.AddChild(texture);
+			Game.main.AddChild(texture);
 
 			float normalDir = Mathf.HALF_PI * i;
 			int x = (int)Mathf.Cos(normalDir);
@@ -35,10 +34,9 @@ namespace GXPEngine.MyGame
 			texture.visible = visibility;
 		}
 
-		public void Render(EasyDraw canvas)
+		public void Refresh()
 		{
-			if (MyGame.DRAW_TEXTURED_WALLS)
-				Game.main.Remove(texture);
+			Game.main.Remove(texture);
 			Minimap.DebugNoStroke();
 
 			//Tile Side - Red Dot
@@ -73,20 +71,10 @@ namespace GXPEngine.MyGame
 			//Linear lighting:
 			// byte brightness = Convert.ToByte(Mathf.Map(distToPlayer, 0, Player.VIEW_DEPTH, 255, 0));
 
-			if (MyGame.DRAW_TEXTURED_WALLS)
-			{
-				texture.visible = true;
-				texture.SetVertices(new[] {ix1, fCeiling1, ix2, fCeiling2, ix2, fFloor2, ix1, fFloor1});
-				texture.SetColor(brightness, brightness, brightness);
-				Game.main.AddChild(texture);
-			}
-			else
-			{
-				canvas.Fill(brightness);
-				canvas.Stroke(0);
-				canvas.StrokeWeight(2);
-				canvas.Quad(ix1, fCeiling1, ix1, fFloor1, ix2, fFloor2, ix2, fCeiling2);
-			}
+			texture.visible = true;
+			texture.SetVertices(new[] {ix1, fCeiling1, ix2, fCeiling2, ix2, fFloor2, ix1, fFloor1});
+			texture.SetColor(brightness, brightness, brightness);
+			Game.main.AddChild(texture);
 		}
 	}
 }
