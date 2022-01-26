@@ -10,6 +10,7 @@ namespace GXPEngine.MyGame
 
 		private const float ROTATION_SPEED = 0.003f;
 		private const float MOVE_SPEED = 0.005f;
+		private const float WALL_PADDING = 0.3f;
 
 		public const float VIEW_DEPTH = 16.0f;
 
@@ -27,49 +28,39 @@ namespace GXPEngine.MyGame
 
 		public static void MoveInput()
 		{
+			bool moved = false; //TODO: Find a slightly better solution for this
 			if (Input.GetKey(Key.A))
 			{
 				Rotate(-ROTATION_SPEED * Time.deltaTime);
+				moved = true;
 			}
 
 			if (Input.GetKey(Key.D))
 			{
 				Rotate(ROTATION_SPEED * Time.deltaTime);
+				moved = true;
 			}
 
-			//TODO: Implement DDA here
-
+			Vector2 moveDir = null;
 			if (Input.GetKey(Key.W))
 			{
-				position.x += Mathf.Cos(angle) * MOVE_SPEED * Time.deltaTime;
-				position.y += Mathf.Sin(angle) * MOVE_SPEED * Time.deltaTime;
-				if (MyGame.level.GetTileAtPosition((int) position.x,(int) position.y).GetType() == typeof(TileWall))
-				{
-					position.x -= Mathf.Cos(angle) * MOVE_SPEED * Time.deltaTime;
-					position.y -= Mathf.Sin(angle) * MOVE_SPEED * Time.deltaTime;
-				}
-
-				// (Vector2 intersection, float dist) result =
-				// 	TileWall.DDA(position, Vector2.Add(position, Vector2.FromAngle(playerA).Mult(F_MOVE_SPEED * Time.deltaTime)), 1000.0f);
-				// if (result.intersection != null)
-				// {
-				// 	Minimap.DebugFill(255, 0, 255);
-				// 	Minimap.DebugCircle(result.intersection.x, result.intersection.y, 4);
-				// }
-				//
-				// Console.WriteLine(result);
+				moveDir = heading.Copy();
+				moved = true;
 			}
-
+			else
 			if (Input.GetKey(Key.S))
 			{
-				position.x -= Mathf.Cos(angle) * MOVE_SPEED * Time.deltaTime;
-				position.y -= Mathf.Sin(angle) * MOVE_SPEED * Time.deltaTime;
-				if (MyGame.level.GetTileAtPosition((int) position.x,(int) position.y).GetType() == typeof(TileWall))
-				{
-					position.x += Mathf.Cos(angle) * MOVE_SPEED * Time.deltaTime;
-					position.y += Mathf.Sin(angle) * MOVE_SPEED * Time.deltaTime;
-				}
+				moveDir = heading.Copy().Mult(-1.0f);
+				moved = true;
 			}
+
+			if (moved)
+				Minimap.UpdatePlayer();
+
+			if (moveDir == null) return;
+			(Vector2 _, float dist) = TileWall.DDA(position, moveDir);
+			position.Add(Vector2.Mult(moveDir, dist - WALL_PADDING).Limit(MOVE_SPEED * Time.deltaTime));
+
 		}
 	}
 }

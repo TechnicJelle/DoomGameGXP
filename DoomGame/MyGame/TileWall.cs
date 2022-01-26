@@ -37,11 +37,8 @@ namespace GXPEngine.MyGame
 
 		// ReSharper disable once InconsistentNaming
 		[SuppressMessage("ReSharper", "UseDeconstruction")]
-		public static (Vector2 intersection, float dist) DDA(Vector2 rayStart, Vector2 rayEnd, float maxDistance = 32.0f)
+		public static (Vector2 intersection, float dist) DDA(Vector2 rayStart, Vector2 rayDir, float maxDistance = 32.0f)
 		{
-			(int x, int y) cellEnd = (Mathf.Floor(rayEnd.x), Mathf.Floor(rayEnd.y));
-			Vector2 rayDir = Vector2.Sub(new Vector2(cellEnd.x, cellEnd.y), Player.position).Normalize();
-
 			Vector2 rayUnitStepSize = new Vector2(
 				Mathf.Sqrt(1 + (rayDir.y / rayDir.x) * (rayDir.y / rayDir.x)),
 				Mathf.Sqrt(1 + (rayDir.x / rayDir.y) * (rayDir.x / rayDir.y)));
@@ -93,10 +90,11 @@ namespace GXPEngine.MyGame
 				}
 
 				// Test tile at new test point
-				if (!(rayLength1D.x >= 0) || !(rayLength1D.x < MyGame.level.tilesColumns) ||
-				    !(rayLength1D.y >= 0) || !(rayLength1D.y < MyGame.level.tilesRows)) continue;
-				if (MyGame.level.GetTileAtPosition(mapCheck.x, mapCheck.y).GetType() != typeof(TileWall))
+				if (!(mapCheck.x >= 0) || !(mapCheck.x < MyGame.level.tilesColumns) ||
+				    !(mapCheck.y >= 0) || !(mapCheck.y < MyGame.level.tilesRows)) continue;
+				if (MyGame.level.GetTileAtPosition(mapCheck.x, mapCheck.y).GetType() == typeof(TileWall))
 				{
+					//TODO: Also return this tile
 					tileFound = true;
 				}
 			}
@@ -105,12 +103,8 @@ namespace GXPEngine.MyGame
 			Vector2 intersection = null;
 			if (tileFound)
 			{
-				intersection = Vector2.Add(rayStart, rayDir).Mult(distance);
-				Minimap.DebugFill(0, 0, 255);
-				Minimap.DebugCircle(intersection.x, intersection.y, 4);
+				intersection = Vector2.Add(rayStart, rayDir.Copy().Mult(distance));
 			}
-
-			Minimap.DebugLine(rayStart.x, rayStart.y, rayEnd.x, rayEnd.y);
 			return (intersection, distance);
 		}
 	}

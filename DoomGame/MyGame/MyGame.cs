@@ -96,10 +96,9 @@ namespace GXPEngine.MyGame
 			}
 
 			canvas.ClearTransparent();
+			Minimap.ClearDebug();
 
 			Player.MoveInput();
-			Minimap.Update();
-			// TileWall.DDA(Player.position, new Vector2(Input.mouseX, Input.mouseY));
 
 			//First we get all tiles that are on screen
 			List<TileWall> onscreenTileWalls = level.FindOnscreenTileWalls();

@@ -42,7 +42,7 @@ namespace GXPEngine.MyGame
 			h = (layerLevel.height-1.0f) / MyGame.level.tilesRows;
 
 			UpdateLevel();
-
+			UpdatePlayer();
 		}
 
 		public static void UpdateLevel()
@@ -74,7 +74,7 @@ namespace GXPEngine.MyGame
 			}
 		}
 
-		public static void Update()
+		public static void UpdatePlayer()
 		{
 			//layer player
 			layerPlayer.ClearTransparent();
@@ -92,8 +92,10 @@ namespace GXPEngine.MyGame
 			layerPlayer.Line(Player.position.x * w, Player.position.y * h, playerLooking.x * w, playerLooking.y * h);
 
 			//TODO: Player FOV cone
+		}
 
-			//layer debug
+		public static void ClearDebug()
+		{
 			layerDebug.ClearTransparent();
 		}
 
