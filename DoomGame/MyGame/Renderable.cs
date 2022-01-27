@@ -67,11 +67,13 @@ namespace GXPEngine.MyGame
 			}
 
 			(int ix1, float distToP1) = MyGame.WorldToScreen(p1);
-			float fCeiling1 = MyGame.HEIGHT / 2.0f - MyGame.HEIGHT / distToP1;
+			float fCeiling1 = MyGame.HEIGHT / 2.0f - MyGame.HEIGHT /
+				(distToP1 * Mathf.Cos(Vector2.Sub(p1, MyGame.currentLevel.player.position).Heading() - MyGame.currentLevel.player.angle));
 			float fFloor1 = MyGame.HEIGHT - fCeiling1;
 
 			(int ix2, float distToP2) = MyGame.WorldToScreen(p2);
-			float fCeiling2 = MyGame.HEIGHT / 2.0f - MyGame.HEIGHT / distToP2;
+			float fCeiling2 = MyGame.HEIGHT / 2.0f - MyGame.HEIGHT /
+				(distToP2 * Mathf.Cos(Vector2.Sub(p2, MyGame.currentLevel.player.position).Heading() -MyGame.currentLevel.player.angle));
 			float fFloor2 = MyGame.HEIGHT - fCeiling2;
 
 			distToPlayer = (distToP1 + distToP2) / 2.0f;
