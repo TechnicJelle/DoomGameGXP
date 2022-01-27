@@ -1,0 +1,45 @@
+//////////////
+// GAMEPLAY //
+//////////////
+
+
+///The minimap makes the game way easier
+Minimap = false
+
+////////////
+// SCREEN //
+////////////
+
+FullScreen = false
+
+AntiAliasing = false
+
+///Resolution the game runs at: 
+Width = 1280
+Height = 720
+
+///Resolution of the actual game window:
+ScreenResolutionX = 1280
+ScreenResolutionY = 720
+
+//////////////
+// CONTROLS //
+//////////////
+
+///Player WASD keys:
+Up=87
+Left=65
+Down=83
+Right=68
+
+///Player arrow keys:
+//Up=283
+//Left=285
+//Right=286
+//Down=284
+
+///////////////
+// DEV TOOLS //
+///////////////
+
+DebugMode = false

@@ -87,28 +87,35 @@ namespace GXPEngine.MyGame
 			if (levelData.Layers.Length >= 2)
 			{
 				Layer enemyLayer = levelData.Layers[1];
-				Console.WriteLine("Enemies:");
 				enemyArray = enemyLayer.GetTileArray();
+				if (Settings.DebugMode)
+				{
+					Console.WriteLine("Enemies:");
+					for (int row = 0; row < tilesRows; row++)
+					{
+						for (int col = 0; col < tilesColumns; col++)
+						{
+							Console.Write(enemyArray[col, row]);
+						}
+
+						Console.WriteLine("");
+					}
+				}
+			}
+
+			short[,] tileArray = tileLayer.GetTileArray();
+			if (Settings.DebugMode)
+			{
+				Console.WriteLine("Tiles:");
 				for (int row = 0; row < tilesRows; row++)
 				{
 					for (int col = 0; col < tilesColumns; col++)
 					{
-						Console.Write(enemyArray[col, row]);
+						Console.Write(tileArray[col, row]);
 					}
 
 					Console.WriteLine("");
 				}
-			}
-
-			Console.WriteLine("Tiles:");
-			short[,] tileArray = tileLayer.GetTileArray();
-			for (int row = 0; row < tilesRows; row++)
-			{
-				for (int col = 0; col < tilesColumns; col++)
-				{
-					Console.Write(tileArray[col, row]);
-				}
-				Console.WriteLine("");
 			}
 
 			tiles = new Tile[tilesColumns, tilesRows];
@@ -225,10 +232,10 @@ namespace GXPEngine.MyGame
 
 			//Find tiles to render
 			//For every x pixel, send out a ray that goes until it has hit a wall or reached the maximum render distance
-			for (int px = 0; px < MyGame.WIDTH; px+=3)
+			for (int px = 0; px < MyGame.staticWidth; px+=3)
 			{
 				float rayAngle = (player.angle - MyGame.FIELD_OF_VIEW / 2.0f) +
-				                  (px / (float) MyGame.WIDTH) * MyGame.FIELD_OF_VIEW;
+				                  (px / (float) MyGame.staticWidth) * MyGame.FIELD_OF_VIEW;
 
 				(TileWall tileWall, Vector2 _, float _) = TileWall.DDA(player.position, Vector2.FromAngle(rayAngle), RENDER_DISTANCE);
 				if (tileWall != null && !onscreenTileWalls.Contains(tileWall))

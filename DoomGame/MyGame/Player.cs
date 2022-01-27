@@ -30,32 +30,32 @@ namespace GXPEngine.MyGame
 		public void MoveInput(MyGame myGame = null)
 		{
 			bool moved = false; //TODO: Find a slightly better solution for this
-			if (Input.GetKey(Key.A))
+			if (Input.GetKey(Settings.Left))
 			{
 				Rotate(-ROTATION_SPEED * Time.deltaTime);
 				moved = true;
 			}
 
-			if (Input.GetKey(Key.D))
+			if (Input.GetKey(Settings.Right))
 			{
 				Rotate(ROTATION_SPEED * Time.deltaTime);
 				moved = true;
 			}
 
 			Vector2 moveDir = null;
-			if (Input.GetKey(Key.W))
+			if (Input.GetKey(Settings.Up))
 			{
 				moveDir = heading.Copy();
 				moved = true;
 			}
 			else
-			if (Input.GetKey(Key.S))
+			if (Input.GetKey(Settings.Down))
 			{
 				moveDir = heading.Copy().Mult(-1.0f);
 				moved = true;
 			}
 
-			if (moved)
+			if (moved && Settings.Minimap)
 				Minimap.UpdatePlayer();
 
 			if (moveDir == null) return;

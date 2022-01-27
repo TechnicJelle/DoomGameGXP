@@ -47,7 +47,7 @@ namespace GXPEngine.MyGame
 			};
 			Game.main.AddChild(layerEnemies);
 
-			if (MyGame.DEBUG_MODE)
+			if (Settings.DebugMode)
 			{
 				layerDebug = new EasyDraw(width, height, false)
 				{
@@ -124,7 +124,7 @@ namespace GXPEngine.MyGame
 
 		public static void ClearDebug()
 		{
-			if (MyGame.DEBUG_MODE)
+			if (Settings.DebugMode)
 				layerDebug.ClearTransparent();
 		}
 
@@ -138,7 +138,7 @@ namespace GXPEngine.MyGame
 			Game.main.AddChild(layerPlayer);
 			Game.main.AddChild(layerEnemies);
 
-			if (!MyGame.DEBUG_MODE) return;
+			if (!Settings.DebugMode) return;
 			Game.main.RemoveChild(layerDebug);
 			Game.main.AddChild(layerDebug);
 		}
@@ -204,7 +204,7 @@ namespace GXPEngine.MyGame
 			Game.main.RemoveChild(layerLevel);
 			Game.main.RemoveChild(layerPlayer);
 			Game.main.RemoveChild(layerEnemies);
-			if(MyGame.DEBUG_MODE)
+			if(Settings.DebugMode)
 				Game.main.RemoveChild(layerDebug);
 		}
 	}

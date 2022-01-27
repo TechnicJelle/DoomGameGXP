@@ -33,7 +33,8 @@ namespace GXPEngine.MyGame
 		{
 			normal = MyGame.currentLevel.player.heading.Copy().Mult(-1.0f);
 
-			Minimap.DrawEnemy(minimapTexture, position);
+			if (Settings.Minimap)
+				Minimap.DrawEnemy(minimapTexture, position);
 
 			CalculatePointsInWorldSpace();
 			base.RefreshVisuals();

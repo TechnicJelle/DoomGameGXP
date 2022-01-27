@@ -8,14 +8,14 @@ namespace GXPEngine.MyGame
 {
 	public class MyGame : Game
 	{
-		public const int WIDTH = 1280;
-		public const int HEIGHT = 720;
+		public static int staticWidth;
+		public static int staticHeight;
 		private readonly EasyDraw mainMenu;
 
 		public const float FIELD_OF_VIEW = Mathf.PI / 2.5f;
 
 		private static Level[] levels;
-		public static Level currentLevel;
+		public static Level currentLevel { get; private set; }
 		private int currentLevelIndex;
 
 		private const int MILLIS_FOR_TITLE = 3000;
@@ -24,43 +24,45 @@ namespace GXPEngine.MyGame
 
 		private const bool USE_TILED = true;
 
-		public const bool DEBUG_MODE = false;
-
 		private bool inGame;
 		private bool gameJustEnded;
 
-		private MyGame(bool pixelArt) : base(WIDTH, HEIGHT, false, pPixelArt: pixelArt)
+		private MyGame(int width, int height, bool fullScreen, int realWidth, int realHeight, bool pixelArt)
+			: base(width, height, fullScreen, true, realWidth, realHeight, pixelArt)
 		{
+			staticWidth = width;
+			staticHeight = height;
+
 			//Render Background
-			EasyDraw background = new EasyDraw(WIDTH, HEIGHT, false);
-			for (int iy = 0; iy < HEIGHT; iy++)
+			EasyDraw background = new(staticWidth, staticHeight, false);
+			for (int iy = 0; iy < staticHeight; iy++)
 			{
-				if (iy < HEIGHT / 2)
+				if (iy < staticHeight / 2)
 				{
 					// Ceiling
-					float fac = Mathf.Clamp(Mathf.Map(iy, 0, HEIGHT, 1.0f, -3), 0.0f, 1.0f);
+					float fac = Mathf.Clamp(Mathf.Map(iy, 0, staticHeight, 1.0f, -3), 0.0f, 1.0f);
 					background.Stroke(0, (int) (150 * fac), (int) (255 * fac));
 				}
 				else
 				{
 					//Floor
-					background.Stroke((int) Mathf.Clamp(Mathf.Map(iy, 0, HEIGHT, -300, 64), 0, 255));
+					background.Stroke((int) Mathf.Clamp(Mathf.Map(iy, 0, staticHeight, -300, 64), 0, 255));
 				}
 
-				background.Line(0, iy, WIDTH, iy);
+				background.Line(0, iy, staticWidth, iy);
 			}
 			AddChild(background);
 
-			mainMenu = new EasyDraw(WIDTH, HEIGHT, false);
+			mainMenu = new EasyDraw(staticWidth, staticHeight, false);
 			mainMenu.TextAlign(CenterMode.Center, CenterMode.Center);
-			mainMenu.TextSize(HEIGHT * 0.1f);
-			mainMenu.Text("TechnicJelle's DoomGame", WIDTH * 0.5f, HEIGHT * 0.2f);
+			mainMenu.TextSize(staticHeight * 0.09f);
+			mainMenu.Text("TechnicJelle's DoomGame", staticWidth * 0.5f, staticHeight * 0.2f);
 
 			AddChild(mainMenu);
 
-			title = new EasyDraw(WIDTH, HEIGHT, false);
+			title = new EasyDraw(staticWidth, staticHeight, false);
 			title.TextAlign(CenterMode.Center, CenterMode.Center);
-			title.TextSize(HEIGHT * 0.1f);
+			title.TextSize(staticHeight * 0.1f);
 
 			Sounds.LoadAllSounds();
 			Sounds.music.Play();
@@ -73,7 +75,8 @@ namespace GXPEngine.MyGame
 			RemoveChild(mainMenu);
 
 			//Minimap
-			Minimap.Setup(0, 0, 200, 200);
+			if(Settings.Minimap)
+				Minimap.Setup(0, 0, 200, 200);
 
 			//Level
 			if (USE_TILED)
@@ -112,7 +115,8 @@ namespace GXPEngine.MyGame
 
 			currentLevelIndex = 0;
 			SwitchLevel(currentLevelIndex);
-			Minimap.DrawCurrentLevel();
+			if(Settings.Minimap)
+				Minimap.DrawCurrentLevel();
 
 			inGame = true;
 		}
@@ -128,21 +132,22 @@ namespace GXPEngine.MyGame
 					title.alpha = 0;
 					gameJustEnded = false;
 					RemoveAllWarpedSprites();
-					Minimap.ClearAll();
+					if (Settings.Minimap)
+						Minimap.ClearAll();
 				}
 
-				bool overButton = Input.mouseX > WIDTH * 0.25 && Input.mouseX < WIDTH * 0.75f &&
-				                  Input.mouseY > HEIGHT * 0.7f && Input.mouseY < HEIGHT * 0.9f;
+				bool overButton = Input.mouseX > staticWidth * 0.25 && Input.mouseX < staticWidth * 0.75f &&
+				                  Input.mouseY > staticHeight * 0.7f && Input.mouseY < staticHeight * 0.9f;
 				mainMenu.Fill(overButton ? 200 : 100);
 				mainMenu.StrokeWeight(5);
 				mainMenu.Stroke(164);
-				mainMenu.Rect(WIDTH * 0.5f, HEIGHT * 0.8f, WIDTH * 0.5f, HEIGHT * 0.2f);
+				mainMenu.Rect(staticWidth * 0.5f, staticHeight * 0.8f, staticWidth * 0.5f, staticHeight * 0.2f);
 
 				mainMenu.Fill(0);
-				mainMenu.TextSize(HEIGHT * 0.16f);
-				mainMenu.Text("Start!", WIDTH * 0.5f, HEIGHT * 0.81f);
+				mainMenu.TextSize(staticHeight * 0.16f);
+				mainMenu.Text("Start!", staticWidth * 0.5f, staticHeight * 0.81f);
 
-				if (overButton && Input.GetMouseButtonDown(0))
+				if (Input.AnyKeyDown() || overButton && Input.GetMouseButtonDown(0))
 				{
 					StartGame();
 					Sounds.buttonClick.Play();
@@ -150,7 +155,7 @@ namespace GXPEngine.MyGame
 			}
 			else
 			{
-				if (DEBUG_MODE)
+				if (Settings.DebugMode)
 				{
 					if (Input.GetKeyDown(Key.T))
 					{
@@ -214,9 +219,11 @@ namespace GXPEngine.MyGame
 
 				RemoveChild(title);
 
-				Minimap.ClearDebug();
+				if (Settings.Minimap)
+					Minimap.ClearDebug();
 
-				Minimap.ClearEnemies();
+				if (Settings.Minimap)
+					Minimap.ClearEnemies();
 
 				currentLevel.player.MoveInput(this);
 				currentLevel.MoveEnemies();
@@ -250,10 +257,12 @@ namespace GXPEngine.MyGame
 				if (Time.time - millisAtTitleShow > MILLIS_FOR_TITLE)
 					title.alpha = 0;
 				AddChild(title);
-				Minimap.ReOverlay();
+
+				if (Settings.Minimap)
+					Minimap.ReOverlay();
 			}
 
-			if(DEBUG_MODE && Input.GetKeyDown(Key.P))
+			if(Settings.DebugMode && Input.GetKeyDown(Key.P))
 				Console.WriteLine(GetDiagnostics());
 		}
 
@@ -268,7 +277,7 @@ namespace GXPEngine.MyGame
 		private void SetTitle(string titleText)
 		{
 			title.ClearTransparent();
-			title.Text(titleText, WIDTH * 0.5f, HEIGHT * 0.5f);
+			title.Text(titleText, staticWidth * 0.5f, staticHeight * 0.5f);
 			title.alpha = 1;
 			millisAtTitleShow = Time.time;
 		}
@@ -287,7 +296,7 @@ namespace GXPEngine.MyGame
 			if (angle > Mathf.PI)
 				angle -= Mathf.TWO_PI; //Thanks https://github.com/EV4gamer
 
-			int ix = Mathf.Round((WIDTH / 2.0f) + angle * (WIDTH / FIELD_OF_VIEW)); //Thanks https://github.com/StevenClifford!
+			int ix = Mathf.Round((staticWidth / 2.0f) + angle * (staticWidth / FIELD_OF_VIEW)); //Thanks https://github.com/StevenClifford!
 			return (ix, dist);
 		}
 
@@ -310,14 +319,21 @@ namespace GXPEngine.MyGame
 			currentLevelIndex = index;
 			currentLevel = levels[currentLevelIndex];
 			currentLevel.SetVisibility(true);
-			Minimap.UpdateLevel();
-			Minimap.UpdatePlayer();
+
+			if (Settings.Minimap)
+			{
+				Minimap.UpdateLevel();
+				Minimap.UpdatePlayer();
+			}
+
 			SetTitle(currentLevel.title);
 		}
 
 		private static void Main() // Main() is the first method that's called when the program is run
 		{
-			new MyGame(true).Start(); // Create a "MyGame" and start it
+			Settings.Load();
+			new MyGame(Settings.Width, Settings.Height, Settings.FullScreen, Settings.ScreenResolutionX, Settings.ScreenResolutionY, !Settings.AntiAliasing)
+				.Start(); // Create a "MyGame" and start it
 		}
 	}
 }
