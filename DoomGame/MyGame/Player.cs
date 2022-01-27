@@ -2,11 +2,11 @@
 
 namespace GXPEngine.MyGame
 {
-	public class Player : GameObject
+	public class Player
 	{
-		public static Vector2 position { get; private set; }
-		public static float angle { get; private set; }
-		public static Vector2 heading { get; private set; }
+		public Vector2 position { get; }
+		public float angle { get; private set; }
+		public Vector2 heading { get; private set; }
 
 		private const float ROTATION_SPEED = 0.003f;
 		private const float MOVE_SPEED = 0.005f;
@@ -17,16 +17,17 @@ namespace GXPEngine.MyGame
 		public Player(float startX, float startY, float startAngle)
 		{
 			position = new Vector2(startX, startY);
+			angle = 0.0f;
 			Rotate(startAngle);
 		}
 
-		private static void Rotate(float amt)
+		private void Rotate(float amt)
 		{
 			angle += amt;
 			heading = Vector2.FromAngle(angle);
 		}
 
-		public static void MoveInput()
+		public void MoveInput(MyGame myGame = null)
 		{
 			bool moved = false; //TODO: Find a slightly better solution for this
 			if (Input.GetKey(Key.A))
@@ -58,8 +59,10 @@ namespace GXPEngine.MyGame
 				Minimap.UpdatePlayer();
 
 			if (moveDir == null) return;
-			(TileWall _, Vector2 _, float dist) = TileWall.DDA(position, moveDir, 1.0f);
+			(TileWall tileWall, Vector2 _, float dist) = TileWall.DDA(position, moveDir, 1.0f);
 			position.Add(Vector2.Mult(moveDir, dist - WALL_PADDING).Limit(MOVE_SPEED * Time.deltaTime));
+			if(tileWall != null && tileWall.GetType() == typeof(TileNext) && dist < WALL_PADDING * 1.1f)
+				myGame?.NextLevel();
 		}
 	}
 }

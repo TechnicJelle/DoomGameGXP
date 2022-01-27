@@ -23,7 +23,7 @@ namespace GXPEngine.MyGame
 			float xMove = Utils.Random(-MOVE_STEP, MOVE_STEP) * Time.deltaTime;
 			float yMove = Utils.Random(-MOVE_STEP, MOVE_STEP) * Time.deltaTime;
 
-			if (MyGame.level.GetTileAtPosition(Mathf.Floor(position.x + xMove), Mathf.Floor(position.y + yMove)).GetType()
+			if (MyGame.currentLevel.GetTileAtPosition(Mathf.Floor(position.x + xMove), Mathf.Floor(position.y + yMove)).GetType()
 			    == typeof(TileWall)) return;
 			position.x += xMove;
 			position.y += yMove;
@@ -31,7 +31,7 @@ namespace GXPEngine.MyGame
 
 		public override void RefreshVisuals()
 		{
-			normal = Player.heading.Copy().Mult(-1.0f);
+			normal = MyGame.currentLevel.player.heading.Copy().Mult(-1.0f);
 
 			Minimap.DrawEnemy(minimapTexture, position);
 

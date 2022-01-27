@@ -85,6 +85,8 @@
     <Compile Include="MyGame\Player.cs" />
     <Compile Include="MyGame\Renderable.cs" />
     <Compile Include="MyGame\Tile.cs" />
+    <Compile Include="MyGame\TileNext.cs" />
+    <Compile Include="MyGame\TileStart.cs" />
     <Compile Include="MyGame\TileWall.cs" />
     <Compile Include="MyGame\WallSide.cs" />
   </ItemGroup>

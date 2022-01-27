@@ -12,7 +12,9 @@ namespace GXPEngine.MyGame
 
 		public const float FIELD_OF_VIEW = Mathf.PI / 3.0f;
 
-		public static Level level;
+		private static List<Level> levels;
+		public static Level currentLevel;
+		private int currentLevelIndex = 0;
 
 		private const bool USE_TILED = true;
 
@@ -20,10 +22,6 @@ namespace GXPEngine.MyGame
 
 		private MyGame(bool pixelArt) : base(WIDTH, HEIGHT, false, pPixelArt: pixelArt)
 		{
-			//Player
-			Player player = new Player(1.5f, 1.5f, Mathf.HALF_PI);
-			AddChild(player);
-
 			//Render Background
 			EasyDraw background = new EasyDraw(WIDTH, HEIGHT, false);
 			for (int iy = 0; iy < HEIGHT; iy++)
@@ -44,23 +42,31 @@ namespace GXPEngine.MyGame
 			}
 			AddChild(background);
 
+			//Minimap
+			Minimap.Setup(0, 0, 200, 200);
+
 			//Level
+			levels = new List<Level>();
 			if (USE_TILED)
 			{
-				level = new Level("Level01.tmx");
+				levels.AddRange(new []{
+					new Level("Level01.tmx"),
+					new Level("Level02.tmx"),
+					new Level("Level03.tmx"),
+				});
 			}
 			else
 			{
 				string map = "";
 				map += "################";
-				map += "#.#............#";
+				map += "#.#...........E#";
 				map += "#.#......#######";
 				map += "#.###..........#";
 				map += "#..............#";
 				map += "#..............#";
 				map += "#...#..........#";
 				map += "#...#..........#";
-				map += "#..............#";
+				map += "#......P.......#";
 				map += "#........#.....#";
 				map += "#........#.....#";
 				map += "#..............#";
@@ -68,11 +74,11 @@ namespace GXPEngine.MyGame
 				map += "#...###........#";
 				map += "#..............#";
 				map += "################";
-				level = new Level(16, 16, map);
+				levels.Add(new Level(16, 16, map));
 			}
 
-			//Minimap
-			Minimap.Setup(0, 0, 200, 200);
+			currentLevel = levels[0];
+			Minimap.DrawCurrentLevel();
 
 			Console.WriteLine("MyGame initialized");
 		}
@@ -82,12 +88,8 @@ namespace GXPEngine.MyGame
 		{
 			if (Input.GetKeyDown(Key.T))
 			{
-				foreach (UVOffsetSprite uvOffsetSprite in game.FindObjectsOfType<UVOffsetSprite>())
-				{
-					game.RemoveChild(uvOffsetSprite);
-				}
-				level.LoadTiledFile("Level02.tmx");
-				Minimap.UpdateLevel();
+				YeetChildren();
+				currentLevel.LoadTiledFile("Level02.tmx");
 			}
 
 			if(DEBUG_MODE)
@@ -95,14 +97,14 @@ namespace GXPEngine.MyGame
 
 			Minimap.ClearEnemies();
 
-			Player.MoveInput();
-			level.MoveEnemies();
+			currentLevel.player.MoveInput(this);
+			currentLevel.MoveEnemies();
 
 			//Make the render pool
 			List<Renderable> visibleRenderables = new List<Renderable>();
 
 			//First we get all tiles that are on screen
-			List<TileWall> onscreenTileWalls = level.FindOnscreenTileWalls();
+			List<TileWall> onscreenTileWalls = currentLevel.FindOnscreenTileWalls();
 
 			//Then we loop through those tiles and see which sides are actually visible
 			foreach (TileWall tileWall in onscreenTileWalls)
@@ -112,7 +114,7 @@ namespace GXPEngine.MyGame
 			}
 
 			//Enemies need to be rendered too, of course
-			visibleRenderables.AddRange(level.FindVisibleEnemies());
+			visibleRenderables.AddRange(currentLevel.FindVisibleEnemies());
 
 			//We sort the renderables by their distance to the player, to make sure they're rendered in the correct order
 			List<Renderable> sorted = visibleRenderables.OrderByDescending(renderable => renderable.distToPlayer).ToList();
@@ -128,6 +130,14 @@ namespace GXPEngine.MyGame
 				Console.WriteLine(GetDiagnostics());
 		}
 
+		private void YeetChildren()
+		{
+			foreach (UVOffsetSprite uvOffsetSprite in game.FindObjectsOfType<UVOffsetSprite>())
+			{
+				game.RemoveChild(uvOffsetSprite);
+			}
+		}
+
 		public static (int, float) WorldToScreen(Vector2 p)
 		{
 			// Minimap.DebugStroke(0);
@@ -135,15 +145,28 @@ namespace GXPEngine.MyGame
 
 			// Minimap.DebugLine(Player.position.x, Player.position.y, p.x, p.y);
 
-			Vector2 pp = Vector2.Sub(p, Player.position);
-			float dist = Vector2.Dist(Player.position, p);
+			Vector2 pp = Vector2.Sub(p, currentLevel.player.position);
+			float dist = Vector2.Dist(currentLevel.player.position, p);
 			// Minimap.DebugLine(Player.position.x, Player.position.y, Player.position.x + pp.x, Player.position.y + pp.y);
-			float angle = Vector2.AngleBetween2(Player.heading, pp);
+			float angle = Vector2.AngleBetween2(currentLevel.player.heading, pp);
 			if (angle > Mathf.PI)
 				angle -= Mathf.TWO_PI; //Thanks https://github.com/EV4gamer
 
-			int ix = Mathf.Round((MyGame.WIDTH / 2.0f) + angle * (MyGame.WIDTH / MyGame.FIELD_OF_VIEW)); //Thanks https://github.com/StevenClifford!
+			int ix = Mathf.Round((WIDTH / 2.0f) + angle * (WIDTH / FIELD_OF_VIEW)); //Thanks https://github.com/StevenClifford!
 			return (ix, dist);
+		}
+
+		public void NextLevel()
+		{
+			SwitchLevel(currentLevelIndex++);
+		}
+
+		private void SwitchLevel(int index)
+		{
+			YeetChildren();
+			currentLevel = levels[index];
+			currentLevel.SetVisibility(true);
+			Minimap.UpdateLevel();
 		}
 
 		private static void Main() // Main() is the first method that's called when the program is run

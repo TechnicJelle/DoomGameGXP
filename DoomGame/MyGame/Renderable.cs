@@ -27,7 +27,7 @@ namespace GXPEngine.MyGame
 		public bool AlignsWithPlayer(float threshold = 0.5f) //TODO: base this threshold on the FOV
 		{
 			if (normal == null) return true;
-			return normal.Dot(Player.heading) < threshold;
+			return normal.Dot(MyGame.currentLevel.player.heading) < threshold;
 		}
 
 		public void SetVisibility(bool visibility)

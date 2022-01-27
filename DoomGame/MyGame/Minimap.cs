@@ -48,9 +48,11 @@ namespace GXPEngine.MyGame
 				};
 				Game.main.AddChild(layerDebug);
 			}
+		}
 
-			w = (layerLevel.width-1.0f) / MyGame.level.tilesColumns;
-			h = (layerLevel.height-1.0f) / MyGame.level.tilesRows;
+		public static void DrawCurrentLevel() {
+			w = (layerLevel.width-1.0f) / MyGame.currentLevel.tilesColumns;
+			h = (layerLevel.height-1.0f) / MyGame.currentLevel.tilesRows;
 
 			UpdateLevel();
 			UpdatePlayer();
@@ -59,11 +61,11 @@ namespace GXPEngine.MyGame
 		public static void UpdateLevel()
 		{
 			layerLevel.ClearTransparent();
-			for (int col = 0; col < MyGame.level.tilesColumns; col++)
-			for (int row = 0; row < MyGame.level.tilesRows; row++)
+			for (int col = 0; col < MyGame.currentLevel.tilesColumns; col++)
+			for (int row = 0; row < MyGame.currentLevel.tilesRows; row++)
 			{
-				Tile t = MyGame.level.GetTileAtPosition(col, row);
-				if (t.GetType() != typeof(TileWall)) continue;
+				Tile t = MyGame.currentLevel.GetTileAtPosition(col, row);
+				if (t.GetType() == typeof(Tile)) continue;
 				TileWall tw = (TileWall) t;
 				DrawSprite(layerLevel, tw.minimapTexture, col + 0.5f, row + 0.5f);
 			}
@@ -89,14 +91,14 @@ namespace GXPEngine.MyGame
 			layerPlayer.NoStroke();
 			layerPlayer.Fill(255, 0, 0);
 			layerPlayer.Ellipse(
-				Player.position.x * w,
-				Player.position.y * h,
+				MyGame.currentLevel.player.position.x * w,
+				MyGame.currentLevel.player.position.y * h,
 				8, 8);
 
 			//Player Heading
-			Vector2 playerLooking = Player.heading.Copy().Add(Player.position);
+			Vector2 playerLooking = MyGame.currentLevel.player.heading.Copy().Add(MyGame.currentLevel.player.position);
 			layerPlayer.Stroke(255, 0, 0);
-			layerPlayer.Line(Player.position.x * w, Player.position.y * h, playerLooking.x * w, playerLooking.y * h);
+			layerPlayer.Line(MyGame.currentLevel.player.position.x * w, MyGame.currentLevel.player.position.y * h, playerLooking.x * w, playerLooking.y * h);
 
 			//TODO: Player FOV cone
 		}

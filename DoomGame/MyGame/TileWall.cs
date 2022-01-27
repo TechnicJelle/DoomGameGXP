@@ -88,10 +88,10 @@ namespace GXPEngine.MyGame
 				}
 
 				// Test tile at new test point
-				if (!(mapCheck.x >= 0) || !(mapCheck.x < MyGame.level.tilesColumns) ||
-				    !(mapCheck.y >= 0) || !(mapCheck.y < MyGame.level.tilesRows)) continue;
-				Tile target = MyGame.level.GetTileAtPosition(mapCheck.x, mapCheck.y);
-				if (target.GetType() != typeof(TileWall)) continue;
+				if (!(mapCheck.x >= 0) || !(mapCheck.x < MyGame.currentLevel.tilesColumns) ||
+				    !(mapCheck.y >= 0) || !(mapCheck.y < MyGame.currentLevel.tilesRows)) continue;
+				Tile target = MyGame.currentLevel.GetTileAtPosition(mapCheck.x, mapCheck.y);
+				if (target.GetType() == typeof(Tile)) continue;
 				result = (TileWall) target;
 				tileFound = true;
 			}
