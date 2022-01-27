@@ -54,6 +54,9 @@ namespace GXPEngine.MyGame
 
 			AddChild(mainMenu);
 
+			Sounds.LoadAllSounds();
+			Sounds.music.Play();
+
 			Console.WriteLine("MyGame initialized");
 		}
 
@@ -133,6 +136,7 @@ namespace GXPEngine.MyGame
 				if (overButton && Input.GetMouseButtonDown(0))
 				{
 					StartGame();
+					Sounds.buttonClick.Play();
 				}
 			}
 			else
@@ -262,6 +266,7 @@ namespace GXPEngine.MyGame
 
 		public void NextLevel()
 		{
+			Sounds.elevator.Play();
 			currentLevelIndex++;
 			if (currentLevelIndex >= levels.Length)
 			{

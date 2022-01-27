@@ -84,6 +84,7 @@
     <Compile Include="GXPEngine\SoLoud\SoloudSoundSystem.cs" />
     <Compile Include="MyGame\Player.cs" />
     <Compile Include="MyGame\Renderable.cs" />
+    <Compile Include="MyGame\Sounds.cs" />
     <Compile Include="MyGame\Tile.cs" />
     <Compile Include="MyGame\TileNext.cs" />
     <Compile Include="MyGame\TileStart.cs" />
