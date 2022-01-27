@@ -68,7 +68,8 @@ namespace GXPEngine.MyGame
 
 		public static void UpdateLevel()
 		{
-			layerLevel.ClearTransparent();
+			// layerLevel.ClearTransparent();
+			layerLevel.Clear(63);
 			for (int col = 0; col < MyGame.currentLevel.tilesColumns; col++)
 			for (int row = 0; row < MyGame.currentLevel.tilesRows; row++)
 			{

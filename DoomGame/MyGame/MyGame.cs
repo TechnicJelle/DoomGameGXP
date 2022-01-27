@@ -280,7 +280,8 @@ namespace GXPEngine.MyGame
 		private void SwitchLevel(int index)
 		{
 			RemoveAllWarpedSprites();
-			currentLevel = levels[index];
+			currentLevelIndex = index;
+			currentLevel = levels[currentLevelIndex];
 			currentLevel.SetVisibility(true);
 			Minimap.UpdateLevel();
 			Minimap.UpdatePlayer();

@@ -112,7 +112,7 @@ namespace GXPEngine.MyGame
 			List<Enemy> tempEnemies = new List<Enemy>();
 			Vector2 start = null;
 			for (int row = 0; row < tilesRows; row++)
-			for (int col = 0; col < tilesColumns; col++)
+			for (int col = 0; col < tilesColumns; col++) //TODO: Replace these switches with auto-loaders that parse the tileset files
 			{
 				switch (tileArray[col, row])
 				{
@@ -141,6 +141,12 @@ namespace GXPEngine.MyGame
 						tiles[col, row] = new TileStart(col, row);
 						start = new Vector2(col + 0.5f, row + 0.5f);
 						break;
+					case 8:
+						tiles[col, row] = new TileWall(col, row, "plasterBrick.png");
+						break;
+					case 9:
+						tiles[col, row] = new TileWall(col, row, "plasterWindow.png");
+						break;
 					default:
 						throw new Exception("Found unexpected items in tileArray: " + tileArray[col, row]);
 				}
@@ -149,10 +155,10 @@ namespace GXPEngine.MyGame
 				{
 					case 0:
 						break;
-					case 8:
+					case 10:
 						tempEnemies.Add(new Enemy("triangle.png", col + 0.5f, row + 0.5f));
 						break;
-					case 9:
+					case 11:
 						tempEnemies.Add(new Enemy("circle.png", col + 0.5f, row + 0.5f));
 						break;
 					default:
