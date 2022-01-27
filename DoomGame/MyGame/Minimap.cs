@@ -1,4 +1,5 @@
 ﻿using GXPEngine.Core;
+#pragma warning disable CS0162
 
 namespace GXPEngine.MyGame
 {
@@ -14,8 +15,15 @@ namespace GXPEngine.MyGame
 		private static float w;
 		private static float h;
 
+		private static bool firstLaunch = true;
+
 		public static void Setup(int x, int y, int width, int height)
 		{
+			if (!firstLaunch)
+				ClearAll();
+			else
+				firstLaunch = false;
+
 			SetPosition(x, y);
 
 			layerLevel = new EasyDraw(width, height, false)
@@ -115,7 +123,8 @@ namespace GXPEngine.MyGame
 
 		public static void ClearDebug()
 		{
-			layerDebug.ClearTransparent();
+			if (MyGame.DEBUG_MODE)
+				layerDebug.ClearTransparent();
 		}
 
 		public static void ReOverlay()
@@ -133,7 +142,7 @@ namespace GXPEngine.MyGame
 			Game.main.AddChild(layerDebug);
 		}
 
-		public static void SetPosition(float x, float y)
+		private static void SetPosition(float x, float y)
 		{
 			originX = x;
 			originY = y;
@@ -174,7 +183,6 @@ namespace GXPEngine.MyGame
 			layerDebug.StrokeWeight(width);
 		}
 
-
 		public static void DebugLine(float x1, float y1, float x2, float y2)
 		{
 			layerDebug.Line(x1 * w,  y1 * h, x2 * w,  y2 * h);
@@ -183,6 +191,20 @@ namespace GXPEngine.MyGame
 		public static void DebugCircle(float x, float y, float diameter)
 		{
 			layerDebug.Ellipse(x * w, y * h, diameter, diameter);
+		}
+
+		public static void ClearAll()
+		{
+			layerLevel.ClearTransparent();
+			layerPlayer.ClearTransparent();
+			ClearEnemies();
+			ClearDebug();
+
+			Game.main.RemoveChild(layerLevel);
+			Game.main.RemoveChild(layerPlayer);
+			Game.main.RemoveChild(layerEnemies);
+			if(MyGame.DEBUG_MODE)
+				Game.main.RemoveChild(layerDebug);
 		}
 	}
 }

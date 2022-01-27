@@ -70,7 +70,7 @@ namespace GXPEngine.MyGame
 			}
 		}
 
-		public void LoadTiledFile(string tiledFile)
+		private void LoadTiledFile(string tiledFile)
 		{
 			Map levelData = MapParser.ReadMap(tiledFile);
 			if (levelData.Layers == null || levelData.Layers.Length < 1)
