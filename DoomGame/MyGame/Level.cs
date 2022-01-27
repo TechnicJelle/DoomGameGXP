@@ -18,6 +18,18 @@ namespace GXPEngine.MyGame
 
 		public string title { get; }
 
+		/// <summary>
+		/// Load in a level from a string
+		/// </summary>
+		/// <param name="w">Width of the level</param>
+		/// <param name="h">Height of the level</param>
+		/// <param name="mapContent">String with the level contents
+		/// <li># is a WallTile</li>
+		/// <li>. is an empty Tile</li>
+		/// <li>P is a TileStart</li>
+		/// <li>E is a TileNext</li>
+		/// </param>
+		/// <exception cref="Exception">When the level isn't right</exception>
 		public Level(int w, int h, string mapContent)
 		{
 			tilesColumns = w;
@@ -52,12 +64,21 @@ namespace GXPEngine.MyGame
 			player.MoveInput();
 		}
 
-		public Level(string tiledFile, string ttl)
+		/// <summary>
+		/// Load in a level from a Tiled file
+		/// </summary>
+		/// <param name="tiledFile">Path and name of the Tiled file that belongs with this level</param>
+		/// <param name="title">Title that shows up on screen when the level starts</param>
+		public Level(string tiledFile, string title)
 		{
-			title = ttl;
+			this.title = title;
 			LoadTiledFile(tiledFile);
 		}
 
+		/// <summary>
+		/// Shows/Hides the entire level
+		/// </summary>
+		/// <param name="visibility"></param>
 		public void SetVisibility(bool visibility)
 		{
 			foreach (Tile tile in tiles)

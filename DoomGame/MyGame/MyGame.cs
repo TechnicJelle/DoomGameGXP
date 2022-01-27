@@ -55,6 +55,7 @@ namespace GXPEngine.MyGame
 			}
 			AddChild(background);
 
+			//Render main menu
 			mainMenu = new EasyDraw(staticWidth, staticHeight, false);
 			mainMenu.TextAlign(CenterMode.Center, CenterMode.Center);
 			mainMenu.TextSize(staticHeight * 0.09f);
@@ -62,10 +63,12 @@ namespace GXPEngine.MyGame
 
 			AddChild(mainMenu);
 
+			//Set up the title shower
 			title = new EasyDraw(staticWidth, staticHeight, false);
 			title.TextAlign(CenterMode.Center, CenterMode.Center);
 			title.TextSize(staticHeight * 0.1f);
 
+			//Prepare the music
 			Sounds.LoadAllSounds();
 			Sounds.music.Play();
 
