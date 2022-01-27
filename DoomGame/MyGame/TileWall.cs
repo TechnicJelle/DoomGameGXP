@@ -27,12 +27,11 @@ namespace GXPEngine.MyGame
 		{
 			foreach (WallSide side in sides)
 				side.SetVisibility(visibility);
-			minimapTexture.visible = visibility;
 		}
 
 		public IEnumerable<WallSide> FindVisibleSides()
 		{
-			return sides.Where(side => !(side.normal.Dot(Player.heading) > 0.5f)); //TODO: base this threshold on the FOV
+			return sides.Where(side => side.AlignsWithPlayer());
 		}
 
 		// ReSharper disable once InconsistentNaming

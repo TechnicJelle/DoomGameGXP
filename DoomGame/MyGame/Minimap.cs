@@ -6,8 +6,9 @@ namespace GXPEngine.MyGame
 	{
 		private static float originX;
 		private static float originY;
-		private static EasyDraw layerPlayer;
 		private static EasyDraw layerLevel;
+		private static EasyDraw layerPlayer;
+		private static EasyDraw layerEnemies;
 		private static EasyDraw layerDebug;
 
 		private static float w;
@@ -31,6 +32,13 @@ namespace GXPEngine.MyGame
 			};
 			Game.main.AddChild(layerPlayer);
 
+			layerEnemies = new EasyDraw(width, height, false)
+			{
+				x = originX,
+				y = originY,
+			};
+			Game.main.AddChild(layerEnemies);
+
 			if (MyGame.DEBUG_MODE)
 			{
 				layerDebug = new EasyDraw(width, height, false)
@@ -50,32 +58,36 @@ namespace GXPEngine.MyGame
 
 		public static void UpdateLevel()
 		{
-			//layer level
 			layerLevel.ClearTransparent();
-			layerLevel.Stroke(0);
-			layerLevel.StrokeWeight(1);
-			layerLevel.ShapeAlign(CenterMode.Min, CenterMode.Min);
 			for (int col = 0; col < MyGame.level.tilesColumns; col++)
 			for (int row = 0; row < MyGame.level.tilesRows; row++)
 			{
 				Tile t = MyGame.level.GetTileAtPosition(col, row);
 				if (t.GetType() != typeof(TileWall)) continue;
 				TileWall tw = (TileWall) t;
-				tw.minimapTexture.x = col * w + w / 2.0f;
-				tw.minimapTexture.y = row * h + h / 2.0f;
-				tw.minimapTexture.scaleX = w / tw.minimapTexture.width;
-				tw.minimapTexture.scaleY = h / tw.minimapTexture.height;
-				layerLevel.DrawSprite(tw.minimapTexture);
+				DrawSprite(layerLevel, tw.minimapTexture, col + 0.5f, row + 0.5f);
 			}
+		}
+
+		private static void DrawSprite(Canvas layer, Sprite sprite, float x, float y)
+		{
+			sprite.x = x * w;
+			sprite.y = y * h;
+			float tempSpriteScaleX = sprite.scaleX;
+			float tempSpriteScaleY = sprite.scaleY;
+			sprite.scaleX = w / sprite.width;
+			sprite.scaleY = h / sprite.height;
+			layer.DrawSprite(sprite);
+			sprite.scaleX = tempSpriteScaleX;
+			sprite.scaleY = tempSpriteScaleY;
 		}
 
 		public static void UpdatePlayer()
 		{
-			//layer player
 			layerPlayer.ClearTransparent();
+
 			layerPlayer.NoStroke();
 			layerPlayer.Fill(255, 0, 0);
-			//draw point on position and cone in player direction
 			layerPlayer.Ellipse(
 				Player.position.x * w,
 				Player.position.y * h,
@@ -89,6 +101,16 @@ namespace GXPEngine.MyGame
 			//TODO: Player FOV cone
 		}
 
+		public static void ClearEnemies()
+		{
+			layerEnemies.ClearTransparent();
+		}
+
+		public static void DrawEnemy(Sprite sprite, Vector2 position)
+		{
+			DrawSprite(layerEnemies, sprite, position.x, position.y);
+		}
+
 		public static void ClearDebug()
 		{
 			layerDebug.ClearTransparent();
@@ -98,9 +120,11 @@ namespace GXPEngine.MyGame
 		{
 			Game.main.RemoveChild(layerLevel);
 			Game.main.RemoveChild(layerPlayer);
+			Game.main.RemoveChild(layerEnemies);
 
 			Game.main.AddChild(layerLevel);
 			Game.main.AddChild(layerPlayer);
+			Game.main.AddChild(layerEnemies);
 
 			if (!MyGame.DEBUG_MODE) return;
 			Game.main.RemoveChild(layerDebug);

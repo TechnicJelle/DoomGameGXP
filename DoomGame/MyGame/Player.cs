@@ -12,7 +12,7 @@ namespace GXPEngine.MyGame
 		private const float MOVE_SPEED = 0.005f;
 		private const float WALL_PADDING = 0.3f;
 
-		public const float VIEW_DEPTH = 16.0f;
+		public const float VIEW_DEPTH = 4.0f;
 
 		public Player(float startX, float startY, float startAngle)
 		{

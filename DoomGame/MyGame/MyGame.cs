@@ -18,7 +18,7 @@ namespace GXPEngine.MyGame
 
 		public const bool DEBUG_MODE = false;
 
-		private MyGame(bool pixelArt) : base(WIDTH, HEIGHT, true, pPixelArt: pixelArt)
+		private MyGame(bool pixelArt) : base(WIDTH, HEIGHT, false, pPixelArt: pixelArt)
 		{
 			//Player
 			Player player = new Player(1.5f, 1.5f, Mathf.HALF_PI);
@@ -31,13 +31,13 @@ namespace GXPEngine.MyGame
 				if (iy < HEIGHT / 2)
 				{
 					// Ceiling
-					float fac = Mathf.Map(iy, 0, HEIGHT, 1.0f, 0.4f);
+					float fac = Mathf.Clamp(Mathf.Map(iy, 0, HEIGHT, 1.0f, -3), 0.0f, 1.0f);
 					background.Stroke(0, (int) (150 * fac), (int) (255 * fac));
 				}
 				else
 				{
 					//Floor
-					background.Stroke((int) Mathf.Map(iy, 0, HEIGHT, 0, 64));
+					background.Stroke((int) Mathf.Clamp(Mathf.Map(iy, 0, HEIGHT, -300, 64), 0, 255));
 				}
 
 				background.Line(0, iy, WIDTH, iy);
@@ -93,28 +93,39 @@ namespace GXPEngine.MyGame
 			if(DEBUG_MODE)
 				Minimap.ClearDebug();
 
+			Minimap.ClearEnemies();
+
 			Player.MoveInput();
+			level.MoveEnemies();
+
+			//Make the render pool
+			List<Renderable> visibleRenderables = new List<Renderable>();
 
 			//First we get all tiles that are on screen
 			List<TileWall> onscreenTileWalls = level.FindOnscreenTileWalls();
 
 			//Then we loop through those tiles and see which sides are actually visible
-			List<WallSide> visibleSides = new List<WallSide>();
 			foreach (TileWall tileWall in onscreenTileWalls)
 			{
-				visibleSides.AddRange(tileWall.FindVisibleSides());
+				//And we add those visible sides to the rendering pool
+				visibleRenderables.AddRange(tileWall.FindVisibleSides());
 			}
 
-			//We sort the sides by their distance to the player, to make sure they're rendered in the correct order
-			List<WallSide> sorted = visibleSides.OrderByDescending(side => side.distToPlayer).ToList();
+			//Enemies need to be rendered too, of course
+			visibleRenderables.AddRange(level.FindVisibleEnemies());
 
-			//Then we render all those visible sides
-			foreach (WallSide side in sorted)
+			//We sort the renderables by their distance to the player, to make sure they're rendered in the correct order
+			List<Renderable> sorted = visibleRenderables.OrderByDescending(renderable => renderable.distToPlayer).ToList();
+
+			//Then we refresh all those renderables
+			foreach (Renderable renderable in sorted)
 			{
-				side.Refresh();
+				renderable.RefreshVisuals();
 			}
 
 			Minimap.ReOverlay();
+			if(Input.GetKeyDown(Key.P))
+				Console.WriteLine(GetDiagnostics());
 		}
 
 		public static (int, float) WorldToScreen(Vector2 p)
@@ -137,7 +148,7 @@ namespace GXPEngine.MyGame
 
 		private static void Main() // Main() is the first method that's called when the program is run
 		{
-			new MyGame(false).Start(); // Create a "MyGame" and start it
+			new MyGame(true).Start(); // Create a "MyGame" and start it
 		}
 	}
 }
