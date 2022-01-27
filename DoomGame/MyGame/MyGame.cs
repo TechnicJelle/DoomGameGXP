@@ -12,7 +12,7 @@ namespace GXPEngine.MyGame
 		public static int staticHeight;
 		private readonly EasyDraw mainMenu;
 
-		public const float FIELD_OF_VIEW = Mathf.PI / 2.5f;
+		public static float fieldOfView;
 
 		private static Level[] levels;
 		public static Level currentLevel { get; private set; }
@@ -32,6 +32,8 @@ namespace GXPEngine.MyGame
 		{
 			staticWidth = width;
 			staticHeight = height;
+
+			fieldOfView = Settings.FieldOfViewDegrees * Mathf.PI / 180.0f;
 
 			//Render Background
 			EasyDraw background = new(staticWidth, staticHeight, false);
@@ -296,7 +298,7 @@ namespace GXPEngine.MyGame
 			if (angle > Mathf.PI)
 				angle -= Mathf.TWO_PI; //Thanks https://github.com/EV4gamer
 
-			int ix = Mathf.Round((staticWidth / 2.0f) + angle * (staticWidth / FIELD_OF_VIEW)); //Thanks https://github.com/StevenClifford!
+			int ix = Mathf.Round((staticWidth / 2.0f) + angle * (staticWidth / fieldOfView)); //Thanks https://github.com/StevenClifford!
 			return (ix, dist);
 		}
 

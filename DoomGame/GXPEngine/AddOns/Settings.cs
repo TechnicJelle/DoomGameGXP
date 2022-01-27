@@ -53,6 +53,7 @@ public class Settings
 	// Screen
 	public static bool FullScreen = false;
 	public static bool AntiAliasing = false;
+	public static float FieldOfViewDegrees = 10.0f;
 	public static int Width = 1280;
 	public static int Height = 720;
 	public static int ScreenResolutionX = 1280;

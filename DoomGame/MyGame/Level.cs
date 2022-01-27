@@ -210,7 +210,7 @@ namespace GXPEngine.MyGame
 			Vector2 toTarget = Vector2.Sub(target, MyGame.currentLevel.player.position);
 			float angleBetween = Vector2.AngleBetween(MyGame.currentLevel.player.heading, toTarget);
 
-			if (angleBetween > MyGame.FIELD_OF_VIEW / 1.5f) //TODO: Find better value for this
+			if (angleBetween > MyGame.fieldOfView / 1.5f) //TODO: Find better value for this
 				return false; //Skip all enemies that are outside of the FOV + an extra margin
 
 			(TileWall _, Vector2 _, float dist) = TileWall.DDA(MyGame.currentLevel.player.position, toTarget.Copy().Normalize(),
@@ -234,8 +234,8 @@ namespace GXPEngine.MyGame
 			//For every x pixel, send out a ray that goes until it has hit a wall or reached the maximum render distance
 			for (int px = 0; px < MyGame.staticWidth; px+=3)
 			{
-				float rayAngle = (player.angle - MyGame.FIELD_OF_VIEW / 2.0f) +
-				                  (px / (float) MyGame.staticWidth) * MyGame.FIELD_OF_VIEW;
+				float rayAngle = (player.angle - MyGame.fieldOfView / 2.0f) +
+				                  (px / (float) MyGame.staticWidth) * MyGame.fieldOfView;
 
 				(TileWall tileWall, Vector2 _, float _) = TileWall.DDA(player.position, Vector2.FromAngle(rayAngle), RENDER_DISTANCE);
 				if (tileWall != null && !onscreenTileWalls.Contains(tileWall))
