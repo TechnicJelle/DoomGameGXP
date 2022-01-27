@@ -34,10 +34,25 @@ namespace GXPEngine.MyGame
 			return sides.Where(side => side.AlignsWithPlayer());
 		}
 
-		// ReSharper disable once InconsistentNaming
+		/// <summary>
+		/// Function to shoot out a ray from one position to another and see if it hits a tile and where.<br/>
+		/// DDA is short for Digital Differential Analyzer and it's used as a replacement for the standard way of ray-casting, which is taking tons of tiny little steps.
+		/// This is slow, of course, but it is also inaccurate, because there is a chance that that step size can skip over something!
+		/// DDA is an algorithm that is both way faster and also perfectly accurate!
+		/// </summary>
+		/// <param name="rayStart"> Vector2 position in world space of the start of the ray-to-be-cast </param>
+		/// <param name="rayDir">NORMALIZED vector of the direction you want the ray-to-be-cast to go in</param>
+		/// <param name="maxDistance">Optional argument to prevent the ray from going too far (also in world space)</param>
+		/// <returns>
+		/// <li>A reference to the TileWall object the ray hit (null if nothing was hit)</li>
+		/// <li>A Vector2 with the exact position of the intersection of the ray with the hit TileWall (null if nothing was hit)</li>
+		/// <li>A distance float with the distance the ray travelled, so if a TileWall was hit, it's the distance to the intersection point, but if nothing was this, it's around the same as the given maxDistance</li>
+		/// </returns>
 		[SuppressMessage("ReSharper", "UseDeconstruction")]
+		// ReSharper disable once InconsistentNaming
 		public static (TileWall tileWall, Vector2 intersection, float dist) DDA(Vector2 rayStart, Vector2 rayDir, float maxDistance = 100.0f)
 		{
+			//From https://www.youtube.com/watch?v=NbSee-XM7WA
 			Vector2 rayUnitStepSize = new Vector2(Mathf.Abs(1.0f / rayDir.x), Mathf.Abs(1.0f / rayDir.y));
 
 			(int x, int y) mapCheck = ((int)rayStart.x, (int)rayStart.y);
