@@ -16,6 +16,8 @@ namespace GXPEngine.MyGame
 
 		public Player player { get; private set; }
 
+		public string title { get; }
+
 		public Level(int w, int h, string mapContent)
 		{
 			tilesColumns = w;
@@ -50,8 +52,9 @@ namespace GXPEngine.MyGame
 			player.MoveInput();
 		}
 
-		public Level(string tiledFile)
+		public Level(string tiledFile, string ttl)
 		{
+			title = ttl;
 			LoadTiledFile(tiledFile);
 		}
 
@@ -111,6 +114,7 @@ namespace GXPEngine.MyGame
 			tiles = new Tile[tilesColumns, tilesRows];
 			List<Enemy> tempEnemies = new List<Enemy>();
 			Vector2 start = null;
+			int starts = 0;
 			for (int row = 0; row < tilesRows; row++)
 			for (int col = 0; col < tilesColumns; col++) //TODO: Replace these switches with auto-loaders that parse the tileset files
 			{
@@ -140,6 +144,7 @@ namespace GXPEngine.MyGame
 					case 7:
 						tiles[col, row] = new TileStart(col, row);
 						start = new Vector2(col + 0.5f, row + 0.5f);
+						starts++;
 						break;
 					case 8:
 						tiles[col, row] = new TileWall(col, row, "plasterBrick.png");
@@ -148,7 +153,7 @@ namespace GXPEngine.MyGame
 						tiles[col, row] = new TileWall(col, row, "plasterWindow.png");
 						break;
 					default:
-						throw new Exception("Found unexpected items in tileArray: " + tileArray[col, row]);
+						throw new Exception("Level '" + title + "' Found unexpected items in tileArray: " + tileArray[col, row]);
 				}
 
 				switch (enemyArray[col, row])
@@ -162,13 +167,13 @@ namespace GXPEngine.MyGame
 						tempEnemies.Add(new Enemy("circle.png", col + 0.5f, row + 0.5f));
 						break;
 					default:
-						throw new Exception("Found unexpected items in enemyArray: " + enemyArray[col, row]);
+						throw new Exception("Level '" + title + "' Found unexpected items in enemyArray: " + enemyArray[col, row]);
 				}
 			}
 
 			enemies = tempEnemies.ToArray();
-			if (start == null)
-				throw new Exception("Level does not contain a starting point!");
+			if (start == null || starts != 1)
+				throw new Exception("Level '" + title + "' does not contain exactly one starting point!");
 			player = new Player(start.x, start.y, Mathf.HALF_PI);
 			player.MoveInput();
 			SetVisibility(false);

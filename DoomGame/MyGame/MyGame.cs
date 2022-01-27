@@ -18,6 +18,10 @@ namespace GXPEngine.MyGame
 		public static Level currentLevel;
 		private int currentLevelIndex;
 
+		private const int MILLIS_FOR_TITLE = 3000;
+		private readonly EasyDraw title;
+		private int millisAtTitleShow;
+
 		private const bool USE_TILED = true;
 
 		public const bool DEBUG_MODE = false;
@@ -54,6 +58,10 @@ namespace GXPEngine.MyGame
 
 			AddChild(mainMenu);
 
+			title = new EasyDraw(WIDTH, HEIGHT, false);
+			title.TextAlign(CenterMode.Center, CenterMode.Center);
+			title.TextSize(HEIGHT * 0.1f);
+
 			Sounds.LoadAllSounds();
 			Sounds.music.Play();
 
@@ -72,9 +80,9 @@ namespace GXPEngine.MyGame
 			{
 				levels = new[]
 				{
-					new Level("Level01.tmx"),
-					new Level("Level02.tmx"),
-					new Level("Level03.tmx"),
+					new Level("Level01.tmx", "Floor 3/3"),
+					new Level("Level02.tmx", "Floor 2/3"),
+					new Level("Level03.tmx", "Floor 1/3"),
 				};
 			}
 			else
@@ -117,6 +125,7 @@ namespace GXPEngine.MyGame
 				if (gameJustEnded)
 				{
 					AddChild(mainMenu);
+					title.alpha = 0;
 					gameJustEnded = false;
 					RemoveAllWarpedSprites();
 					Minimap.ClearAll();
@@ -141,63 +150,69 @@ namespace GXPEngine.MyGame
 			}
 			else
 			{
-				if (Input.GetKeyDown(Key.T))
+				if (DEBUG_MODE)
 				{
-					NextLevel();
-				} else if (Input.GetKeyDown(Key.ONE))
-				{
-					StartGame();
-					SwitchLevel(0);
+					if (Input.GetKeyDown(Key.T))
+					{
+						NextLevel();
+					}
+					else if (Input.GetKeyDown(Key.ONE))
+					{
+						StartGame();
+						SwitchLevel(0);
+					}
+					else if (Input.GetKeyDown(Key.TWO))
+					{
+						StartGame();
+						SwitchLevel(1);
+					}
+					else if (Input.GetKeyDown(Key.THREE))
+					{
+						StartGame();
+						SwitchLevel(2);
+					}
+					else if (Input.GetKeyDown(Key.FOUR))
+					{
+						StartGame();
+						SwitchLevel(3);
+					}
+					else if (Input.GetKeyDown(Key.FIVE))
+					{
+						StartGame();
+						SwitchLevel(4);
+					}
+					else if (Input.GetKeyDown(Key.SIX))
+					{
+						StartGame();
+						SwitchLevel(5);
+					}
+					else if (Input.GetKeyDown(Key.SEVEN))
+					{
+						StartGame();
+						SwitchLevel(6);
+					}
+					else if (Input.GetKeyDown(Key.EIGHT))
+					{
+						StartGame();
+						SwitchLevel(7);
+					}
+					else if (Input.GetKeyDown(Key.NINE))
+					{
+						StartGame();
+						SwitchLevel(8);
+					}
+					else if (Input.GetKeyDown(Key.ZERO))
+					{
+						StartGame();
+						SwitchLevel(9);
+					}
+					else if (Input.GetKeyDown(Key.PLUS))
+					{
+						NextLevel();
+					}
 				}
-				else if (Input.GetKeyDown(Key.TWO))
-				{
-					StartGame();
-					SwitchLevel(1);
-				}
-				else if (Input.GetKeyDown(Key.THREE))
-				{
-					StartGame();
-					SwitchLevel(2);
-				}
-				else if (Input.GetKeyDown(Key.FOUR))
-				{
-					StartGame();
-					SwitchLevel(3);
-				}
-				else if (Input.GetKeyDown(Key.FIVE))
-				{
-					StartGame();
-					SwitchLevel(4);
-				}
-				else if (Input.GetKeyDown(Key.SIX))
-				{
-					StartGame();
-					SwitchLevel(5);
-				}
-				else if (Input.GetKeyDown(Key.SEVEN))
-				{
-					StartGame();
-					SwitchLevel(6);
-				}
-				else if (Input.GetKeyDown(Key.EIGHT))
-				{
-					StartGame();
-					SwitchLevel(7);
-				}
-				else if (Input.GetKeyDown(Key.NINE))
-				{
-					StartGame();
-					SwitchLevel(8);
-				}
-				else if (Input.GetKeyDown(Key.ZERO))
-				{
-					StartGame();
-					SwitchLevel(9);
-				}
-				else if (Input.GetKeyDown(Key.PLUS))
-				{
-					NextLevel();
-				}
+
+				RemoveChild(title);
 
 				Minimap.ClearDebug();
 
@@ -231,10 +246,14 @@ namespace GXPEngine.MyGame
 					renderable.RefreshVisuals();
 				}
 
+				title.alpha = Mathf.Clamp(Mathf.Map(Time.time - millisAtTitleShow, 0, MILLIS_FOR_TITLE, 2, 0), 0, 1);
+				if (Time.time - millisAtTitleShow > MILLIS_FOR_TITLE)
+					title.alpha = 0;
+				AddChild(title);
 				Minimap.ReOverlay();
 			}
 
-			if(Input.GetKeyDown(Key.P))
+			if(DEBUG_MODE && Input.GetKeyDown(Key.P))
 				Console.WriteLine(GetDiagnostics());
 		}
 
@@ -244,6 +263,14 @@ namespace GXPEngine.MyGame
 			{
 				game.RemoveChild(uvOffsetSprite);
 			}
+		}
+
+		private void SetTitle(string titleText)
+		{
+			title.ClearTransparent();
+			title.Text(titleText, WIDTH * 0.5f, HEIGHT * 0.5f);
+			title.alpha = 1;
+			millisAtTitleShow = Time.time;
 		}
 
 		public static (int, float) WorldToScreen(Vector2 p)
@@ -285,6 +312,7 @@ namespace GXPEngine.MyGame
 			currentLevel.SetVisibility(true);
 			Minimap.UpdateLevel();
 			Minimap.UpdatePlayer();
+			SetTitle(currentLevel.title);
 		}
 
 		private static void Main() // Main() is the first method that's called when the program is run
