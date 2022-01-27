@@ -40,7 +40,7 @@ namespace GXPEngine.MyGame
 		{
 			Vector2 rayUnitStepSize = new Vector2(Mathf.Abs(1.0f / rayDir.x), Mathf.Abs(1.0f / rayDir.y));
 
-			(int x, int y) mapCheck = (Mathf.Floor(rayStart.x), Mathf.Floor(rayStart.y));
+			(int x, int y) mapCheck = ((int)rayStart.x, (int)rayStart.y);
 			Vector2 rayLength1D = new Vector2();
 
 			(int x, int y) step;

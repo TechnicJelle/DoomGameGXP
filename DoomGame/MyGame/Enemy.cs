@@ -23,7 +23,7 @@ namespace GXPEngine.MyGame
 			float xMove = Utils.Random(-MOVE_STEP, MOVE_STEP) * Time.deltaTime;
 			float yMove = Utils.Random(-MOVE_STEP, MOVE_STEP) * Time.deltaTime;
 
-			if (MyGame.currentLevel.GetTileAtPosition(Mathf.Floor(position.x + xMove), Mathf.Floor(position.y + yMove)).GetType()
+			if (MyGame.currentLevel.GetTileAtPosition((int)(position.x + xMove), (int)(position.y + yMove)).GetType()
 			    == typeof(TileWall)) return;
 			position.x += xMove;
 			position.y += yMove;
