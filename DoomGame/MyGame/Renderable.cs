@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using GXPEngine.Core;
 #pragma warning disable CS0162
 
@@ -6,7 +7,7 @@ namespace GXPEngine.MyGame
 {
 	public class Renderable
 	{
-		private readonly UVOffsetSprite texture;
+		private readonly WarpedSprite texture;
 
 		protected Vector2 normal { get; set; }
 		protected Vector2 position { get; set; }
@@ -16,7 +17,7 @@ namespace GXPEngine.MyGame
 
 		protected Renderable(string filename)
 		{
-			texture = new UVOffsetSprite(filename, true, false);
+			texture = new WarpedSprite(filename, true);
 			Game.main.AddChild(texture);
 
 			position = new Vector2(1, 1);
@@ -90,7 +91,11 @@ namespace GXPEngine.MyGame
 			// byte brightness = Convert.ToByte(Mathf.Map(distToPlayer, 0, Player.VIEW_DEPTH, 255, 0));
 
 			texture.visible = true;
-			texture.SetVertices(new[] {ix1, fCeiling1, ix2, fCeiling2, ix2, fFloor2, ix1, fFloor1});
+
+			//This method recalculates the screen positions of the WarpedSprite's four vertices after which it'll get drawn by the engine
+			//The inputs are the screen pixel coordinates of the four corners of the quad. I know these are correct,
+			// because they are drawn to the correct screen position with the previous implementation, only the triangles were distorted there
+			texture.SetPoints(new List<Vector2> {new(ix1, fCeiling1), new(ix2, fCeiling2), new(ix2, fFloor2), new(ix1, fFloor1)});
 			texture.SetColor(brightness, brightness, brightness);
 			Game.main.AddChild(texture);
 		}

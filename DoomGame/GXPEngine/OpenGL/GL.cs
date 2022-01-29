@@ -12,9 +12,10 @@ namespace GXPEngine.OpenGL {
 		//----------------------------------------------------------------------------------------------------------------------
 		public const int TEXTURE_2D					= 0x0DE1;
 		public const int BLEND						= 0x0BE2;
-		public const int MODELVIEW					= 0x1700;		
+		public const int MODELVIEW					= 0x1700;
 		public const int PROJECTION					= 0x1701;
 		public const int COLOR_BUFFER_BIT			= 0x4000;
+		public const int TRIANGLE_FAN               = 0x0006;
 		public const int QUADS						= 0x0007;
 		public const int TRIANGLES					= 0x0004;
 		public const int LINES						= 0x0001;
@@ -98,6 +99,8 @@ namespace GXPEngine.OpenGL {
 
 		[DllImport("opengl32.dll", EntryPoint="glTexCoord2f")]
 		public static extern void TexCoord2f(float u, float v);
+		[DllImport("opengl32.dll", EntryPoint = "glTexCoord4f")]
+		public static extern void TexCoord4f(float s, float t, float r, float q); //Not sure if this is correct
 		[DllImport("opengl32.dll", EntryPoint="glVertex2f")]
 		public static extern void Vertex2f(float x, float y);
 		[DllImport("opengl32.dll", EntryPoint="glVertex3f")]

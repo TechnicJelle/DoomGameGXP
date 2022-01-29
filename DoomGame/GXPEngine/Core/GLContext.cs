@@ -2,6 +2,7 @@
 #define STRETCH_ON_RESIZE
 
 using System;
+using System.Collections.Generic;
 using GXPEngine.OpenGL;
 
 namespace GXPEngine.Core {
@@ -281,6 +282,23 @@ namespace GXPEngine.Core {
 			GL.DrawArrays(GL.QUADS, 0, 4);
 			GL.DisableClientState(GL.VERTEX_ARRAY);
 			GL.DisableClientState(GL.TEXTURE_COORD_ARRAY);			
+		}
+
+		public void DrawWarpedQuad(List<Vector2> uv, List<Vector2> pos, List<float> w, int points, (byte r, byte g, byte b, byte a) color)
+		{
+			//Inspiration: https://github.com/OneLoneCoder/olcPixelGameEngine/blob/ccedd4ecf993cd882b92846cb88a7ff8630bc150/olcPixelGameEngine.h#L3363
+			GL.EnableClientState(GL.TEXTURE_COORD_ARRAY);
+			GL.EnableClientState(GL.VERTEX_ARRAY);
+			GL.Begin(GL.TRIANGLE_FAN);
+			for (int n = 0; n < points; n++)
+			{
+				GL.Color4ub(color.r, color.g, color.b, color.a);
+				GL.TexCoord4f(uv[n].x, uv[n].y, 0.0f, w[n]);
+				GL.Vertex2f(pos[n].x, pos[n].y);
+			}
+			GL.End();
+			GL.DisableClientState(GL.VERTEX_ARRAY);
+			GL.DisableClientState(GL.TEXTURE_COORD_ARRAY);
 		}
 		
 		//------------------------------------------------------------------------------------------------------------------------

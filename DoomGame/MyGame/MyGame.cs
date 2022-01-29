@@ -273,9 +273,9 @@ namespace GXPEngine.MyGame
 
 		private void RemoveAllWarpedSprites()
 		{
-			foreach (UVOffsetSprite uvOffsetSprite in game.FindObjectsOfType<UVOffsetSprite>())
+			foreach (WarpedSprite warpedSprite in game.FindObjectsOfType<WarpedSprite>())
 			{
-				game.RemoveChild(uvOffsetSprite);
+				game.RemoveChild(warpedSprite);
 			}
 		}
 

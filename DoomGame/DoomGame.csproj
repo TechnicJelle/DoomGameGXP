@@ -38,7 +38,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="GXPEngine\UVOffsetSprite.cs" />
+    <Compile Include="GXPEngine\WarpedSprite.cs" />
     <Compile Include="MyGame\Enemy.cs" />
     <Compile Include="MyGame\Level.cs" />
     <Compile Include="MyGame\Minimap.cs" />
