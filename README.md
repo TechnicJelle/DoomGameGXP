@@ -22,6 +22,6 @@ Also visible in this GIF are the textures on the minimap and the hot-reloading f
 ![](.github/TexturedWalls.gif)
 
 ## Modifications made in response to code reviews from peers
-- DDA Explanation (c45417f899148e795a2580724a68c698a95f6c53)
-- Added option to turn off the minimap (1b3504d35ed8745b698903e07395aeef654ea8a9)
-- Added extra comments to some methods (066980ecbbf82c06ae5b8c479799aee96e05d01b)
+- DDA Explanation ([c45417f](https://github.com/TechnicJelle/DoomGame/commit/c45417f899148e795a2580724a68c698a95f6c53))
+- Added option to turn off the minimap ([1b3504d](https://github.com/TechnicJelle/DoomGame/commit/1b3504d35ed8745b698903e07395aeef654ea8a9))
+- Added extra comments to some methods ([066980e](https://github.com/TechnicJelle/DoomGame/commit/066980ecbbf82c06ae5b8c479799aee96e05d01b))
