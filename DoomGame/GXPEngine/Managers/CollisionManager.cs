@@ -17,16 +17,16 @@ namespace GXPEngine
 		/// Set this to true if you only want to include trigger colliders in OnCollision (=more efficient).
 		/// </summary>
 		public static bool TriggersOnlyOnCollision = false;
-		
+
 		private delegate void CollisionDelegate(GameObject gameObject);
-		
+
 		//------------------------------------------------------------------------------------------------------------------------
 		//														ColliderInfo
 		//------------------------------------------------------------------------------------------------------------------------
 		private struct ColliderInfo {
 			public GameObject gameObject;
 			public CollisionDelegate onCollision;
-			
+
 			//------------------------------------------------------------------------------------------------------------------------
 			//														ColliderInfo()
 			//------------------------------------------------------------------------------------------------------------------------
@@ -35,11 +35,11 @@ namespace GXPEngine
 				this.onCollision = onCollision;
 			}
 		}
-	
+
 		private List<GameObject> colliderList = new List<GameObject>();
 		private List<ColliderInfo> activeColliderList = new List<ColliderInfo>();
 		private Dictionary<GameObject, ColliderInfo> _collisionReferences = new Dictionary<GameObject, ColliderInfo>();
-			
+
 		private bool collisionLoopActive = false;
 
 		//------------------------------------------------------------------------------------------------------------------------
@@ -48,7 +48,7 @@ namespace GXPEngine
 		public CollisionManager ()
 		{
 		}
-		
+
 		//------------------------------------------------------------------------------------------------------------------------
 		//														Step()
 		//------------------------------------------------------------------------------------------------------------------------
@@ -56,7 +56,7 @@ namespace GXPEngine
 			collisionLoopActive = SafeCollisionLoop;
 			for (int i=activeColliderList.Count-1; i>= 0; i--) {
 				ColliderInfo info = activeColliderList[i];
-				for (int j=colliderList.Count-1; j>=0; j--) {					
+				for (int j=colliderList.Count-1; j>=0; j--) {
 					if (j >= colliderList.Count) continue; //fix for removal in loop
 					GameObject other = colliderList[j];
 					if (other.collider == null || !(other.collider.isTrigger || !TriggersOnlyOnCollision)) continue;
@@ -79,7 +79,7 @@ namespace GXPEngine
 		{
 			List<GameObject> list = new List<GameObject>();
 			for (int j=colliderList.Count-1; j>=0; j--) {
-				if (j >= colliderList.Count) continue; //fix for removal in loop				
+				if (j >= colliderList.Count) continue; //fix for removal in loop
 				GameObject other = colliderList[j];
 				if (other.collider == null || (other.collider.isTrigger && !includeTriggers) || (!other.collider.isTrigger && !includeSolid)) continue;
 				if (gameObject != other) {
@@ -90,7 +90,7 @@ namespace GXPEngine
 			}
 			return list.ToArray();
 		}
-		
+
 		//------------------------------------------------------------------------------------------------------------------------
 		//														Add()
 		//------------------------------------------------------------------------------------------------------------------------
@@ -117,7 +117,7 @@ namespace GXPEngine
 				validateCase(gameObject);
 			}
 		}
-		
+
 		//------------------------------------------------------------------------------------------------------------------------
 		//														validateCase()
 		//------------------------------------------------------------------------------------------------------------------------
@@ -127,7 +127,7 @@ namespace GXPEngine
 				throw new Exception("'OnCollision' function was not binded. Please check its case (capital O?)");
 			}
 		}
-		
+
 		//------------------------------------------------------------------------------------------------------------------------
 		//														Remove()
 		//------------------------------------------------------------------------------------------------------------------------

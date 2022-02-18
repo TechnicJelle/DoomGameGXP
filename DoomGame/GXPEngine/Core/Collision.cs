@@ -1,9 +1,9 @@
-﻿namespace GXPEngine.Core 
-{	
+﻿namespace GXPEngine.Core
+{
 	/// <summary>
 	/// A class that contains info about collisions, such as returned by the MoveUntilCollision method.
 	/// </summary>
-	public class Collision 
+	public class Collision
 	{
 		public GameObject self,other;
 		public Vector2 normal;
@@ -11,7 +11,7 @@
 		public float timeOfImpact;
 		public float penetrationDepth;
 
-		public Collision(GameObject pSelf, GameObject pOther, Vector2 pNormal, Vector2 pPoint, float pTimeOfImpact, float pPenetrationDepth) 
+		public Collision(GameObject pSelf, GameObject pOther, Vector2 pNormal, Vector2 pPoint, float pTimeOfImpact, float pPenetrationDepth)
 		{
 			self = pSelf;
 			other = pOther;
@@ -29,6 +29,6 @@
 		public Collision(GameObject pSelf, GameObject pOther, Vector2 pNormal, Vector2 pPoint, float pPenetrationDepth) :
 			this (pSelf, pOther, pNormal, pPoint, 0, pPenetrationDepth)
 		{
-		}			
+		}
 	}
 }

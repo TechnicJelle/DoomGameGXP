@@ -3,16 +3,16 @@ using System.Security;
 using System.Runtime.InteropServices;
 
 namespace GXPEngine.OpenGL {
-	
+
 	public class GL
 	{
-		
+
 		//----------------------------------------------------------------------------------------------------------------------
 		//														openGL
 		//----------------------------------------------------------------------------------------------------------------------
 		public const int TEXTURE_2D					= 0x0DE1;
 		public const int BLEND						= 0x0BE2;
-		public const int MODELVIEW					= 0x1700;		
+		public const int MODELVIEW					= 0x1700;
 		public const int PROJECTION					= 0x1701;
 		public const int COLOR_BUFFER_BIT			= 0x4000;
 		public const int QUADS						= 0x0007;
@@ -111,7 +111,7 @@ namespace GXPEngine.OpenGL {
 		[DllImport("opengl32.dll", EntryPoint="glTexParameteri")]
 		public static extern void TexParameteri(int target, int name, int value);
 		[DllImport("opengl32.dll", EntryPoint="glTexImage2D")]
-		public static extern void TexImage2D(int target, int level, int internalFormat, int width, int height, 
+		public static extern void TexImage2D(int target, int level, int internalFormat, int width, int height,
 		                                     int border, int format, int type, IntPtr pixels);
 		[DllImport("opengl32.dll", EntryPoint="glDeleteTextures")]
 		public static extern void DeleteTextures(int count, int[] textures);
@@ -127,10 +127,10 @@ namespace GXPEngine.OpenGL {
 		public static extern void Scissor(int x, int y, int width, int height);
 		[DllImport("opengl32.dll", EntryPoint="glVertexPointer")]
 		public static extern void VertexPointer(int size, int type, int stride, float[] pointer);
-		
+
 		[DllImport("opengl32.dll", EntryPoint="glTexCoordPointer")]
 		public static extern void TexCoordPointer(int size, int type, int stride, float[] pointer);
-		
+
 		[DllImport("opengl32.dll", EntryPoint="glDrawElements")]
 		public static extern void DrawElements(int mode, int count, int type, int[] indices);
 		[DllImport("opengl32.dll", EntryPoint="glEnableClientState")]
@@ -152,7 +152,7 @@ namespace GXPEngine.OpenGL {
 		//----------------------------------------------------------------------------------------------------------------------
 		//														GLFW
 		//----------------------------------------------------------------------------------------------------------------------
-		
+
 		public const int GLFW_OPENED 					= 0x00020001;
 		public const int GLFW_WINDOWED             		= 0x00010001;
 		public const int GLFW_FULLSCREEN           		= 0x00010002;
@@ -166,45 +166,45 @@ namespace GXPEngine.OpenGL {
 		public delegate void GLFWKeyCallback(int key, int action);
 		[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 		public delegate void GLFWMouseButtonCallback(int button, int action);
-		
-		[DllImport("lib/glfw.dll")]
+
+		[DllImport("../../lib/glfw.dll")]
 		public static extern void glfwSetTime (double time);
-		[DllImport("lib/glfw.dll")]
+		[DllImport("../../lib/glfw.dll")]
 		public static extern double glfwGetTime ();
 
-		[DllImport("lib/glfw.dll")]
+		[DllImport("../../lib/glfw.dll")]
 		public static extern void glfwPollEvents();
-		[DllImport("lib/glfw.dll")]
+		[DllImport("../../lib/glfw.dll")]
 		public static extern int glfwGetWindowParam(int param);
-		[DllImport("lib/glfw.dll")]
+		[DllImport("../../lib/glfw.dll")]
 		public static extern void glfwInit();
-		[DllImport("lib/glfw.dll")]
+		[DllImport("../../lib/glfw.dll")]
 		public static extern void glfwOpenWindow(int width, int height, int r, int g, int b, int a, int depth, int stencil, int mode);
-		[DllImport("lib/glfw.dll")]
+		[DllImport("../../lib/glfw.dll")]
 		public static extern void glfwSetWindowTitle(string title);
-		[DllImport("lib/glfw.dll")]
+		[DllImport("../../lib/glfw.dll")]
 		public static extern void glfwSwapInterval(bool mode);
-		[DllImport("lib/glfw.dll")]
+		[DllImport("../../lib/glfw.dll")]
 		public static extern void glfwSetWindowSizeCallback(GLFWWindowSizeCallback callback);
-		[DllImport("lib/glfw.dll")]
+		[DllImport("../../lib/glfw.dll")]
 		public static extern void glfwCloseWindow();
-		[DllImport("lib/glfw.dll")]
-		public static extern void glfwTerminate();				
-		[DllImport("lib/glfw.dll")]
+		[DllImport("../../lib/glfw.dll")]
+		public static extern void glfwTerminate();
+		[DllImport("../../lib/glfw.dll")]
 		public static extern void glfwSwapBuffers();
-		[DllImport("lib/glfw.dll")]
+		[DllImport("../../lib/glfw.dll")]
 		public static extern bool glfwGetKey(int key);
-		[DllImport("lib/glfw.dll")]
+		[DllImport("../../lib/glfw.dll")]
 		public static extern void glfwSetKeyCallback(GLFWKeyCallback callback);
-		[DllImport("lib/glfw.dll")]
+		[DllImport("../../lib/glfw.dll")]
 		public static extern void glfwOpenWindowHint(int name, int value);
-		[DllImport("lib/glfw.dll")]
+		[DllImport("../../lib/glfw.dll")]
 		public static extern bool glfwGetMousePos(out int x, out int y);
-		[DllImport("lib/glfw.dll")]
+		[DllImport("../../lib/glfw.dll")]
 		public static extern void glfwSetMouseButtonCallback(GLFWMouseButtonCallback callback);
-		[DllImport("lib/glfw.dll")]
+		[DllImport("../../lib/glfw.dll")]
 		public static extern void glfwEnable(int property);
-		[DllImport("lib/glfw.dll")]
+		[DllImport("../../lib/glfw.dll")]
 		public static extern void glfwDisable(int property);
 	}
 }

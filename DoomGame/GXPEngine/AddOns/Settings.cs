@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
+using GXPEngine.MyGame;
 
 /* Here is an example of a possible settings file (create a file settings.txt in bin/Debug, and copy the next lines to it):
 
@@ -43,7 +44,7 @@ namespace GXPEngine;
 public class Settings
 {
 	// Settings that are related to this class and the parsing process:
-	private const string SETTINGS_FILE_NAME = "settings.txt"; // should be in bin/Debug or bin/Release. Use "MySubFolder/settings.txt" for subfolders.
+	private static readonly string SettingsFileName = TechUtils.LoadAsset("settings.txt");
 	private const bool SHOW_SETTINGS_PARSING = false; // If true, settings parsing progress is printed to console
 	private const bool THROW_EXCEPTION_ON_MISSING_SETTING = true;
 
@@ -86,12 +87,12 @@ public class Settings
 	{
 		if (SHOW_SETTINGS_PARSING) Console.WriteLine("Reading settings from file");
 
-		if (!File.Exists(SETTINGS_FILE_NAME)) {
+		if (!File.Exists(SettingsFileName)) {
 			Warn("No settings file found");
 			return;
 		}
 
-		StreamReader reader = new StreamReader(SETTINGS_FILE_NAME);
+		StreamReader reader = new StreamReader(SettingsFileName);
 
 		string line = reader.ReadLine();
 		while (line != null)

@@ -15,7 +15,7 @@ namespace TiledMapParser {
 		public readonly Map map;
 
 		/// <summary>
-		/// All generated objects will be added as child of this object. 
+		/// All generated objects will be added as child of this object.
 		/// If null, game will be used as parent object.
 		/// </summary>
 		public GameObject rootObject;
@@ -27,10 +27,10 @@ namespace TiledMapParser {
 		/// Set this to true if this TiledLoader should automatically create instances of a custom classes,
 		/// when LoadObjectLayers is called.
 		/// In this case, the [Type] value of the Tiled object is used as class name (case sensitive!).
-		/// For image objects this requires that your class inherits from AnimationSprite, and 
+		/// For image objects this requires that your class inherits from AnimationSprite, and
 		///  has a constructor with parameters (string imageFile, int columns, int rows, TiledObject object).
-		/// For shape objects this requires that your class inherits from Sprite, and 
-		///  has a constructor with parameters (TiledObject object). 
+		/// For shape objects this requires that your class inherits from Sprite, and
+		///  has a constructor with parameters (TiledObject object).
 		/// For text objects this option is ignored.
 		/// Your class should be in the global namespace.
 		/// If false, basic AnimationSprites are created.
@@ -45,7 +45,7 @@ namespace TiledMapParser {
 		/// </summary>
 		public float defaultOriginY;
 		/// <summary>
-		/// Whether text elements will use high quality antialiasing 
+		/// Whether text elements will use high quality antialiasing
 		/// (at the cost of about 4x more memory usage).
 		/// </summary>
 		public bool highQualityText;
@@ -54,8 +54,8 @@ namespace TiledMapParser {
 		/// <summary>
 		/// This event is fired for each Tiled Object while reading object layers from the Tiled file.
 		/// It is fired whenever an AnimationSprite or text element (EasyDraw) is generated from a Tiled object.
-		/// It is fired with sprite=null whenever a Tiled object without text or image data is read, or 
-		/// when a Tiled object with one of the types in the manualObjects list is read (use this 
+		/// It is fired with sprite=null whenever a Tiled object without text or image data is read, or
+		/// when a Tiled object with one of the types in the manualObjects list is read (use this
 		/// in combination with SetPositionRotationScaleOrigin to create your own objects such as a player
 		/// that inherits from Sprite).
 		/// </summary>
@@ -104,7 +104,7 @@ namespace TiledMapParser {
 		Assembly _callingAssembly;
 
 		/// <summary>
-		/// Creates a new TiledLoader and loads the Tiled file given by filename. 
+		/// Creates a new TiledLoader and loads the Tiled file given by filename.
 		/// (The path should be relative to the current folder, typically bin/Debug or bin/Release.)
 		/// Sets various public state variables for the Tiled loader.
 		/// Call LoadTileLayers, LoadImageLayers and LoadObjectLayers to create GXPEngine sprites from the
@@ -118,10 +118,10 @@ namespace TiledMapParser {
 		/// <param name="highQualityText">start value for highQualityText.</param>
 		/// <param name="autoInstance">start value for autoInstance.</param>
 		/// <param name="callback">A method to be called by the OnObjectCreated event.</param>
-		public TiledLoader(string filename,  
+		public TiledLoader(string filename,
 			GameObject rootObject = null, bool addColliders = true,
-			float defaultOriginX = 0.5f, float defaultOriginY = 0.5f, 
-			bool highQualityText = true, bool autoInstance=false, ObjectCreateCallback callback=null) 
+			float defaultOriginX = 0.5f, float defaultOriginY = 0.5f,
+			bool highQualityText = true, bool autoInstance=false, ObjectCreateCallback callback=null)
 		{
 
 			_foldername=Path.GetDirectoryName(filename);
@@ -146,7 +146,7 @@ namespace TiledMapParser {
 
 		/// <summary>
 		/// Register names to the list of manually created objects.
-		/// When a Tiled Object with such a type is found, this loader will not create a sprite, 
+		/// When a Tiled Object with such a type is found, this loader will not create a sprite,
 		/// but only fire an event, such that you can create a specific type of game object yourself.
 		/// </summary>
 		/// <param name="typeName"></param>
@@ -162,7 +162,7 @@ namespace TiledMapParser {
 		//--------------------------------------------------------------------------------------------
 
 		/// <summary>
-		/// Creates an EasyDraw for displaying text, based on the configuration parameters of a 
+		/// Creates an EasyDraw for displaying text, based on the configuration parameters of a
 		/// Tiled object. (Including font, text alignment, color)
 		/// </summary>
 		/// <param name="obj">The Tiled (text) object</param>
@@ -268,7 +268,7 @@ namespace TiledMapParser {
 		}
 
 		//--------------------------------------------------------------------------------------------
-		// REGION: public methods for reading layers from the Tiled file and creating 
+		// REGION: public methods for reading layers from the Tiled file and creating
 		// GXPEngine objects from them. These methods use the state variables from TiledLoader
 		// (rootObject, addColliders, defaultOrigins, highQualityText, autoInstance).
 		//--------------------------------------------------------------------------------------------
@@ -337,7 +337,7 @@ namespace TiledMapParser {
 		//--------------------------------------------------------------------------------------------
 		// REGION: private methods (for reading single layers from the Tiled file).
 		//--------------------------------------------------------------------------------------------
-			   
+
 		void LoadObjectGroup(int index, bool autoInstance=false) {
 			if (map.ObjectGroups.Length<=index) return;
 			ObjectGroup group = map.ObjectGroups[index];

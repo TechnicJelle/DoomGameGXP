@@ -11,10 +11,10 @@ namespace GXPEngine
 		protected Texture2D _texture;
 		protected Rectangle _bounds;
 		protected float[] _uvs;
-		
+
 		private uint _color = 0xFFFFFF;
 		private float _alpha = 1.0f;
-		
+
 		protected bool _mirrorX = false;
 		protected bool _mirrorY = false;
 
@@ -29,7 +29,7 @@ namespace GXPEngine
 		/// </param>
 		/// <param name="addCollider">
 		/// If <c>true</c>, this sprite will have a collider that will be added to the collision manager.
-		/// </param> 
+		/// </param>
 		public Sprite (System.Drawing.Bitmap bitmap, bool addCollider=true) : base(addCollider)
 		{
 			if (Game.main == null) {
@@ -67,12 +67,12 @@ namespace GXPEngine
 		/// The name of the file that should be loaded.
 		/// </param>
 		/// <param name="keepInCache">
-		/// If <c>true</c>, the sprite's texture will be kept in memory for the entire lifetime of the game. 
+		/// If <c>true</c>, the sprite's texture will be kept in memory for the entire lifetime of the game.
 		/// This takes up more memory, but removes load times.
-		/// </param> 
+		/// </param>
 		/// <param name="addCollider">
 		/// If <c>true</c>, this sprite will have a collider that will be added to the collision manager.
-		/// </param> 
+		/// </param>
 		public Sprite (string filename, bool keepInCache=false, bool addCollider=true) : base(addCollider)
 		{
 			if (Game.main == null) {
@@ -128,7 +128,7 @@ namespace GXPEngine
 		public Texture2D texture {
 			get { return _texture; }
 		}
-		
+
 		//------------------------------------------------------------------------------------------------------------------------
 		//														width
 		//------------------------------------------------------------------------------------------------------------------------
@@ -144,7 +144,7 @@ namespace GXPEngine
 				if (_texture != null && _texture.width != 0) scaleX = value / ((float)_texture.width);
 			}
 		}
-		
+
 		//------------------------------------------------------------------------------------------------------------------------
 		//														height
 		//------------------------------------------------------------------------------------------------------------------------
@@ -181,9 +181,9 @@ namespace GXPEngine
 				if (test == false) {
 					if (blendMode != null) blendMode.enable ();
 					_texture.Bind();
-					glContext.SetColor((byte)((_color >> 16) & 0xFF), 
-					                   (byte)((_color >> 8) & 0xFF), 
-					                   (byte)(_color & 0xFF), 
+					glContext.SetColor((byte)((_color >> 16) & 0xFF),
+					                   (byte)((_color >> 8) & 0xFF),
+					                   (byte)(_color & 0xFF),
 					                   (byte)(_alpha * 0xFF));
 					glContext.DrawQuad(GetArea(), _uvs);
 					glContext.SetColor(1, 1, 1, 1);
@@ -192,7 +192,7 @@ namespace GXPEngine
 				}
 			}
 		}
-		
+
 		//------------------------------------------------------------------------------------------------------------------------
 		//														GetArea()
 		//------------------------------------------------------------------------------------------------------------------------
@@ -204,7 +204,7 @@ namespace GXPEngine
 				_bounds.left, _bounds.bottom
 			};
 		}
-		
+
 		//------------------------------------------------------------------------------------------------------------------------
 		//														GetExtents()
 		//------------------------------------------------------------------------------------------------------------------------
@@ -222,7 +222,7 @@ namespace GXPEngine
 			ret[3] = TransformPoint(_bounds.left, _bounds.bottom);
 			return ret;			
 		}
-		
+
 		//------------------------------------------------------------------------------------------------------------------------
 		//														SetOrigin()
 		//------------------------------------------------------------------------------------------------------------------------
@@ -239,7 +239,7 @@ namespace GXPEngine
 			_bounds.x = -x;
 			_bounds.y = -y;
 		}
-		
+
 		//------------------------------------------------------------------------------------------------------------------------
 		//														Mirror
 		//------------------------------------------------------------------------------------------------------------------------
@@ -257,7 +257,7 @@ namespace GXPEngine
 			_mirrorY = mirrorY;
 			setUVs();
 		}
-				
+
 		//------------------------------------------------------------------------------------------------------------------------
 		//														color
 		//------------------------------------------------------------------------------------------------------------------------
@@ -312,7 +312,7 @@ namespace GXPEngine
 		//														alpha
 		//------------------------------------------------------------------------------------------------------------------------
 		/// <summary>
-		/// Gets or sets the alpha value of the sprite. 
+		/// Gets or sets the alpha value of the sprite.
 		/// Setting this value allows you to make the sprite (semi-)transparent.
 		/// The alpha value should be in the range 0...1, where 0 is fully transparent and 1 is fully opaque.
 		/// </summary>
@@ -320,7 +320,7 @@ namespace GXPEngine
 			get { return _alpha; }
 			set { _alpha = value; }
 		}
-		
+
 	}
 }
 

@@ -1,16 +1,16 @@
 using System.Drawing;
 using System.Drawing.Text;
 
-namespace GXPEngine 
+namespace GXPEngine
 {
 	public enum CenterMode {Min, Center, Max}
 
 	/// <summary>
 	/// Creates an easy-to-use layer on top of .NET's System.Drawing methods.
-	/// The API is inspired by Processing: internal states are maintained for font, fill/stroke color, etc., 
+	/// The API is inspired by Processing: internal states are maintained for font, fill/stroke color, etc.,
 	/// and everything works with simple methods that have many overloads.
 	/// </summary>
-	public class EasyDraw : Canvas 
+	public class EasyDraw : Canvas
 	{
 		static Font defaultFont = new Font ("Noto Sans", 15);
 
@@ -55,7 +55,7 @@ namespace GXPEngine
 			Initialize ();
 		}
 
-		void Initialize() 
+		void Initialize()
 		{
 			pen = new Pen (Color.White, 1);
 			brush = new SolidBrush (Color.White);
@@ -74,7 +74,7 @@ namespace GXPEngine
 		/// Change the font that is used when rendering text (using the Text method).
 		/// </summary>
 		/// <param name="newFont">The new font (see also Utils.LoadFont)</param>
-		public void TextFont(Font newFont) 
+		public void TextFont(Font newFont)
 		{
 			font = newFont;
 		}
@@ -85,7 +85,7 @@ namespace GXPEngine
 		/// <param name="fontName">The name of the system font (e.g. "Arial", "Verdana", "Vivaldi")</param>
 		/// <param name="pointSize">font size in points</param>
 		/// <param name="style">font style (e.g. FontStyle.Italic|FontStyle.Bold )</param>
-		public void TextFont(string fontName, float pointSize, FontStyle style = FontStyle.Regular) 
+		public void TextFont(string fontName, float pointSize, FontStyle style = FontStyle.Regular)
 		{
 			font = new Font (fontName, pointSize, style);
 		}
@@ -94,21 +94,21 @@ namespace GXPEngine
 		/// Change the size of the current font.
 		/// </summary>
 		/// <param name="pointSize">The font size in points</param>
-		public void TextSize(float pointSize) 
+		public void TextSize(float pointSize)
 		{
 			font = new Font (font.OriginalFontName, pointSize, font.Style);
 		}
 
 		//////////// Setting Alignment for text, ellipses and rects
-		
+
 		/// <summary>
-		/// Sets the horizontal and vertical alignment of text. 
+		/// Sets the horizontal and vertical alignment of text.
 		/// For instance, when choosing CenterMode.Min for both and calling Text, the x and y coordinates give the top left corner of the
-		/// rendered text. 
+		/// rendered text.
 		/// </summary>
 		/// <param name="horizontal">Horizontal alignment</param>
 		/// <param name="vertical">Vertical alignment</param>
-		public void TextAlign(CenterMode horizontal, CenterMode vertical) 
+		public void TextAlign(CenterMode horizontal, CenterMode vertical)
 		{
 			HorizontalTextAlign = horizontal;
 			VerticalTextAlign = vertical;
@@ -116,12 +116,12 @@ namespace GXPEngine
 
 		/// <summary>
 		/// Sets the horizontal and vertical alignment of shapes.
-		/// For instance, when choosing CenterMode.Min for both and calling Ellipse, 
+		/// For instance, when choosing CenterMode.Min for both and calling Ellipse,
 		/// the x and y coordinates give the top left corner of the drawn ellipse.
 		/// </summary>
 		/// <param name="horizontal">Horizontal alignment</param>
 		/// <param name="vertical">Vertical alignment</param>
-		public void ShapeAlign(CenterMode horizontal, CenterMode vertical) 
+		public void ShapeAlign(CenterMode horizontal, CenterMode vertical)
 		{
 			HorizontalShapeAlign = horizontal;
 			VerticalShapeAlign = vertical;
@@ -132,7 +132,7 @@ namespace GXPEngine
 		/// <summary>
 		/// Draw shapes without outline
 		/// </summary>
-		public void NoStroke() 
+		public void NoStroke()
 		{
 			_stroke=false;
 		}
@@ -142,7 +142,7 @@ namespace GXPEngine
 		/// </summary>
 		/// <param name="newColor">the color of the outline</param>
 		/// <param name="alpha">the opacity of the outline (from 0=transparent to 255=opaque)</param>
-		public void Stroke(Color newColor, int alpha=255) 
+		public void Stroke(Color newColor, int alpha=255)
 		{
 			pen.Color = Color.FromArgb (alpha, newColor);
 			_stroke = true;
@@ -153,7 +153,7 @@ namespace GXPEngine
 		/// </summary>
 		/// <param name="grayScale">A grayscale value (from 0=black to 255=white)</param>
 		/// <param name="alpha">the opacity of the outline (from 0=transparent to 255=opaque)</param>
-		public void Stroke(int grayScale, int alpha=255) 
+		public void Stroke(int grayScale, int alpha=255)
 		{
 			pen.Color = Color.FromArgb (alpha, grayScale, grayScale, grayScale);
 			_stroke = true;
@@ -166,7 +166,7 @@ namespace GXPEngine
 		/// <param name="green">The green value of the color (from 0 to 255)</param>
 		/// <param name="blue">The blue value of the color (from 0 to 255)</param>
 		/// <param name="alpha">The opacity of the outline (from 0=transparent to 255=opaque)</param>
-		public void Stroke(int red, int green, int blue, int alpha=255) 
+		public void Stroke(int red, int green, int blue, int alpha=255)
 		{
 			pen.Color = Color.FromArgb (alpha, red, green, blue);
 			_stroke = true;
@@ -176,7 +176,7 @@ namespace GXPEngine
 		/// Sets the width of the outline for drawing shapes. (Default value: 1)
 		/// </summary>
 		/// <param name="width">The width (in pixels)</param>
-		public void StrokeWeight(float width) 
+		public void StrokeWeight(float width)
 		{
 			pen.Width = width;
 			_stroke = true;
@@ -187,7 +187,7 @@ namespace GXPEngine
 		/// <summary>
 		/// Draw shapes without fill color.
 		/// </summary>
-		public void NoFill() 
+		public void NoFill()
 		{
 			_fill = false;
 		}
@@ -197,7 +197,7 @@ namespace GXPEngine
 		/// </summary>
 		/// <param name="newColor">the fill color</param>
 		/// <param name="alpha">the fill opacity (from 0=transparent to 255=opaque)</param>
-		public void Fill(Color newColor, int alpha=255) 
+		public void Fill(Color newColor, int alpha=255)
 		{
 			brush.Color = Color.FromArgb (alpha, newColor);
 			_fill = true;
@@ -208,7 +208,7 @@ namespace GXPEngine
 		/// </summary>
 		/// <param name="grayScale">gray scale value (from 0=black to 255=white)</param>
 		/// <param name="alpha">the fill opacity (from 0=transparent to 255=opaque)</param>
-		public void Fill(int grayScale, int alpha=255) 
+		public void Fill(int grayScale, int alpha=255)
 		{
 			brush.Color = Color.FromArgb (alpha, grayScale, grayScale, grayScale);
 			_fill = true;
@@ -221,7 +221,7 @@ namespace GXPEngine
 		/// <param name="green">The green value of the color (from 0 to 255)</param>
 		/// <param name="blue">The blue value of the color (from 0 to 255)</param>
 		/// <param name="alpha">The fill opacity (from 0=transparent to 255=opaque)</param>
-		public void Fill(int red, int green, int blue, int alpha=255) 
+		public void Fill(int red, int green, int blue, int alpha=255)
 		{
 			brush.Color = Color.FromArgb (alpha, red, green, blue);
 			_fill = true;
@@ -233,7 +233,7 @@ namespace GXPEngine
 		/// Clear the canvas with a given color
 		/// </summary>
 		/// <param name="newColor">the clear color</param>
-		public void Clear(Color newColor) 
+		public void Clear(Color newColor)
 		{
 			graphics.Clear (newColor);
 		}
@@ -242,7 +242,7 @@ namespace GXPEngine
 		/// Clear the canvas with a grayscale
 		/// </summary>
 		/// <param name="grayScale">the grayscale value (between 0=black and 255=white)</param>
-		public void Clear(int grayScale) 
+		public void Clear(int grayScale)
 		{
 			graphics.Clear(Color.FromArgb(255, grayScale, grayScale, grayScale));
 		}
@@ -254,13 +254,13 @@ namespace GXPEngine
 		/// <param name="green">The green value of the clear color (from 0 to 255)</param>
 		/// <param name="blue">The blue value of the clear color (from 0 to 255)</param>
 		/// <param name="alpha">The opacity of the clear color (from 0=transparent to 255=opaque)</param>
-		public void Clear(int red, int green, int blue, int alpha=255) 
+		public void Clear(int red, int green, int blue, int alpha=255)
 		{
 			graphics.Clear(Color.FromArgb (alpha, red, green, blue));
 		}
 
 		/// <summary>
-		/// Clear the canvas with a transparent color. 
+		/// Clear the canvas with a transparent color.
 		/// Note that this will fully clear the canvas, but will make the sprites behind the canvas visible.
 		/// </summary>
 		public void ClearTransparent() {
@@ -276,21 +276,21 @@ namespace GXPEngine
 		/// <param name="text">The text to be rendered</param>
 		/// <param name="x">The x coordinate to draw the text, using canvas (pixel) coordinates</param>
 		/// <param name="y">The y coordinate to draw the text, using canvas (pixel) coordinates</param>
-		public void Text(string text, float x, float y) 
+		public void Text(string text, float x, float y)
 		{
 			float twidth,theight;
 			TextDimensions (text, out twidth, out theight);
-			if (HorizontalTextAlign == CenterMode.Max) 
+			if (HorizontalTextAlign == CenterMode.Max)
 			{
 				x -= twidth;
-			} else if (HorizontalTextAlign == CenterMode.Center) 
-			{ 
+			} else if (HorizontalTextAlign == CenterMode.Center)
+			{
 				x -= twidth / 2;
 			}
-			if (VerticalTextAlign == CenterMode.Max) 
+			if (VerticalTextAlign == CenterMode.Max)
 			{
 				y -= theight;
-			} else if (VerticalTextAlign == CenterMode.Center) 
+			} else if (VerticalTextAlign == CenterMode.Center)
 			{
 				y -= theight / 2;
 			}
@@ -335,7 +335,7 @@ namespace GXPEngine
 		/// </summary>
 		/// <param name="text">input string</param>
 		/// <returns>width in pixels</returns>
-		public float TextWidth(string text) 
+		public float TextWidth(string text)
 		{
 			SizeF size = graphics.MeasureString (text, font);
 			return size.Width;
@@ -346,7 +346,7 @@ namespace GXPEngine
 		/// </summary>
 		/// <param name="text">input string</param>
 		/// <returns>height in pixels</returns>
-		public float TextHeight(string text) 
+		public float TextHeight(string text)
 		{
 			SizeF size = graphics.MeasureString (text, font);
 			return size.Height;
@@ -358,7 +358,7 @@ namespace GXPEngine
 		/// <param name="text">input string</param>
 		/// <param name="width">width in pixels</param>
 		/// <param name="height">height in pixels</param>
-		public void TextDimensions(string text, out float width, out float height) 
+		public void TextDimensions(string text, out float width, out float height)
 		{
 			SizeF size = graphics.MeasureString (text, font);
 			width = size.Width;
@@ -366,9 +366,9 @@ namespace GXPEngine
 		}
 
 		//////////// Draw Shapes
-		 
+
 		/// <summary>
-		/// Draw an (axis aligned) rectangle with given width and height, using the current stroke and fill settings. 
+		/// Draw an (axis aligned) rectangle with given width and height, using the current stroke and fill settings.
 		/// Uses the current ShapeAlign values to position the rectangle relative to the point (x,y)
 		/// </summary>
 		/// <param name="x">x position in canvas coordinates</param>
@@ -386,7 +386,7 @@ namespace GXPEngine
 		}
 
 		/// <summary>
-		/// Draw an (axis aligned) ellipse (or circle) with given width and height, using the current stroke and fill settings. 
+		/// Draw an (axis aligned) ellipse (or circle) with given width and height, using the current stroke and fill settings.
 		/// Uses the current ShapeAlign values to position the rectangle relative to the point (x,y)
 		/// </summary>
 		/// <param name="x">x position in canvas coordinates</param>
@@ -404,7 +404,7 @@ namespace GXPEngine
 		}
 
 		/// <summary>
-		/// Draws an arc (=segment of an ellipse), where width and height give the ellipse size, and 
+		/// Draws an arc (=segment of an ellipse), where width and height give the ellipse size, and
 		/// start angle and sweep angle can be given (in degrees, clockwise). Uses the current stroke and fill settings.
 		/// Uses the current ShapeAlign values to position the ellipse relative to the point (x,y)
 		/// </summary>
@@ -452,8 +452,8 @@ namespace GXPEngine
 		}
 
 		/// <summary>
-		/// Draw a polygon shape between any number of points, using the current stroke and fill settings. 
-		/// This requires passing in an even number of float coordinates, 
+		/// Draw a polygon shape between any number of points, using the current stroke and fill settings.
+		/// This requires passing in an even number of float coordinates,
 		/// where the odd parameters are x coordinates and even parameters are y coordinates.
 		/// </summary>
 		public void Polygon(params float[] pt) {
@@ -465,7 +465,7 @@ namespace GXPEngine
 		}
 
 		/// <summary>
-		/// Draw a polygon shape between any number of points, using the current stroke and fill settings. 
+		/// Draw a polygon shape between any number of points, using the current stroke and fill settings.
 		/// </summary>
 		public void Polygon(PointF[] pts) {
 			if (_fill) {
@@ -477,17 +477,17 @@ namespace GXPEngine
 		}
 
 		protected void ShapeAlign(ref float x, ref float y, float width, float height) {
-			if (HorizontalShapeAlign == CenterMode.Max) 
+			if (HorizontalShapeAlign == CenterMode.Max)
 			{
 				x -= width;
-			} else if (HorizontalShapeAlign == CenterMode.Center) 
-			{ 
+			} else if (HorizontalShapeAlign == CenterMode.Center)
+			{
 				x -= width / 2;
 			}
-			if (VerticalShapeAlign == CenterMode.Max) 
+			if (VerticalShapeAlign == CenterMode.Max)
 			{
 				y -= height;
-			} else if (VerticalShapeAlign == CenterMode.Center) 
+			} else if (VerticalShapeAlign == CenterMode.Center)
 			{
 				y -= height / 2;
 			}

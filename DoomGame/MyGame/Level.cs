@@ -96,7 +96,7 @@ namespace GXPEngine.MyGame
 
 		private void LoadTiledFile(string tiledFile)
 		{
-			Map levelData = MapParser.ReadMap(tiledFile);
+			Map levelData = MapParser.ReadMap(TechUtils.LoadAsset(tiledFile));
 			if (levelData.Layers == null || levelData.Layers.Length < 1)
 				throw new Exception("Tile file " + tiledFile + " does not contain a layer!");
 			Layer tileLayer = levelData.Layers[0];

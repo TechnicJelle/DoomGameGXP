@@ -132,7 +132,7 @@ namespace GXPEngine
 	public enum MouseEventType {
 		MouseDown,
 		MouseDownOnTarget,
-		MouseUp, 
+		MouseUp,
 		MouseUpOnTarget,
 		MouseMove,
 		MouseMoveOnTarget,

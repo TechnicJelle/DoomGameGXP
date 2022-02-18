@@ -1,4 +1,4 @@
-//////////////
+﻿//////////////
 // GAMEPLAY //
 //////////////
 
@@ -16,7 +16,7 @@ AntiAliasing = false
 
 FieldOfViewDegrees = 60.0
 
-///Resolution the game runs at: 
+///Resolution the game runs at:
 Width = 1280
 Height = 720
 

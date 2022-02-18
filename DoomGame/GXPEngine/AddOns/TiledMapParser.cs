@@ -10,11 +10,11 @@ namespace TiledMapParser
 	/// to get an object of type Map.
 	/// This object, together with its nested objects, contains most of the information contained in the Tiled file.
 	/// 
-	/// The nesting of objects mimics the structure of the Tiled file exactly. 
-	/// (For instance, a Map can contain multiple (tile) Layers, ObjectgroupLayers, ImageLayers, which 
+	/// The nesting of objects mimics the structure of the Tiled file exactly.
+	/// (For instance, a Map can contain multiple (tile) Layers, ObjectgroupLayers, ImageLayers, which
 	/// all can have a PropertyList, etc.)
 	/// 
-	/// You should extend this class yourself if you want to read more information from the Tiled file 
+	/// You should extend this class yourself if you want to read more information from the Tiled file
 	/// (such as geometry objects). See
 	///   http://docs.mapeditor.org/en/stable/reference/tmx-map-format/
 	/// for details.
@@ -98,7 +98,7 @@ namespace TiledMapParser
 		/// A helper function that returns the tile set that belongs to the tile ID read from the layer data:
 		/// </summary>
 		public TileSet GetTileSet(int tileID) {
-			if (tileID < 0) 
+			if (tileID < 0)
 				return null;
 			int index = 0;
 			while (TileSets[index].FirstGId + TileSets[index].TileCount <= tileID) {
@@ -135,7 +135,7 @@ namespace TiledMapParser
 		//// When multiple tilesets are used, this is the total number of previous tiles + 1.
 		/// </summary>
 		[XmlAttribute("firstgid")]
-		public int FirstGId;	
+		public int FirstGId;
 
 		[XmlAttribute("name")]
 		public string Name;
@@ -290,7 +290,7 @@ namespace TiledMapParser
 		}
 
 		/// <summary>
-		/// Returns the tile data from this layer as a 2-dimensional array of shorts. 
+		/// Returns the tile data from this layer as a 2-dimensional array of shorts.
 		/// It's a column-major array, so use [column,row] as indices.
 		/// 
 		/// This method does a lot of string parsing and memory allocation, so use it only once,
@@ -304,10 +304,10 @@ namespace TiledMapParser
 		}
 
 		/// <summary>
-		/// Returns the tile data from this layer as a 2-dimensional array of uints. 
+		/// Returns the tile data from this layer as a 2-dimensional array of uints.
 		/// It's a column-major array, so use [column,row] as indices.
 		/// 
-		/// Use the methods GetRotation, GetMirrorX and GetTileFrame from TiledUtils to 
+		/// Use the methods GetRotation, GetMirrorX and GetTileFrame from TiledUtils to
 		/// convert the uints to rotated and mirrored animation sprites.
 		/// 
 		/// This method does a lot of string parsing and memory allocation, so use it only once,
@@ -461,7 +461,7 @@ namespace TiledMapParser
 		public float Y;
 		[XmlElement("text")]
 		public Text textField;
-		
+
 		/// <summary>
 		/// Call this method to initialize the MirrorX, MirrorY and ImageID fields.
 		/// (The GID value read from the file encodes all of this information.)
@@ -528,7 +528,7 @@ namespace TiledMapParser
 		}
 
 		/// <summary>
-		/// This method converts a raw tile number read from a tile layer to a pure image ID, 
+		/// This method converts a raw tile number read from a tile layer to a pure image ID,
 		/// that can be used with Map.GetTileSet.
 		/// </summary>
 		public static int GetTileFrame(uint tileID) {

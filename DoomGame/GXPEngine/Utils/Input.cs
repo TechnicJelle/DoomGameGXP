@@ -17,7 +17,7 @@ namespace GXPEngine
 		public static bool GetKey(int key) {
 			return GLContext.GetKey(key);
 		}
-		
+
 		/// <summary>
 		/// Returns 'true' if specified key was pressed down during the current frame
 		/// </summary>
@@ -27,7 +27,7 @@ namespace GXPEngine
 		public static bool GetKeyDown(int key) {
 			return GLContext.GetKeyDown(key);
 		}
-		
+
 		/// <summary>
 		/// Returns 'true' if specified key was released during the current frame
 		/// </summary>
@@ -37,7 +37,7 @@ namespace GXPEngine
 		public static bool GetKeyUp(int key) {
 			return GLContext.GetKeyUp(key);
 		}
-		
+
 		/// <summary>
 		/// Returns true if any key is currently pressed.
 		/// </summary>
@@ -64,7 +64,7 @@ namespace GXPEngine
 		public static bool GetMouseButton(int button) {
 			return GLContext.GetMouseButton(button);
 		}
-		
+
 		/// <summary>
 		/// Returns 'true' if specified mousebutton was pressed down during the current frame
 		/// </summary>
@@ -91,14 +91,14 @@ namespace GXPEngine
 		{
 			return GLContext.GetMouseButtonUp(button); /*courtesy of LeonB*/
 		}
-		
+
 		/// <summary>
 		/// Gets the current mouse x position in pixels.
 		/// </summary>
 		public static int mouseX {
 			get { return GLContext.mouseX; }
 		}
-		
+
 		/// <summary>
 		/// Gets the current mouse y position in pixels.
 		/// </summary>

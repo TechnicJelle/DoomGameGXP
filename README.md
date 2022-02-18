@@ -1,8 +1,14 @@
 # DoomGame
 Doom-ish clone made in the Saxion GXP Engine
 
-Check the [GitHub repo](https://github.com/TechnicJelle/DoomGame) for the most up-to-date version!
+Check the [GitHub repo](https://github.com/TechnicJelle/DoomGame) often for updates!
 
+# ⚠ Further Updates!
+Because the GXP Engine was really not meant for this kind of stuff, the development of new features is pretty difficult, so I am planning on rewriting this whole game in C++ using the [PixelGameEngine](https://github.com/OneLoneCoder/olcPixelGameEngine). \
+I'll still implement the last three items on the [TODO](https://github.com/TechnicJelle/DoomGameGXP/projects/1?fullscreen=true) (Wall warping & Enemy interaction), but after that I'll start the other project, which I'll link to down below here once it's ready.
+
+
+## Progress GIFs
 ### The switch to a horror game
 ![](.github/scarey.gif)
 

@@ -12,16 +12,16 @@ namespace GXPEngine
 
 		static Time() {
 		}
-		
+
 		/// <summary>
 		/// Returns the current system time in milliseconds
 		/// </summary>
 		public static int now {
 			get { return System.Environment.TickCount; }
 		}
-		
+
 		/// <summary>
-		/// Returns this time in milliseconds since the program started		
+		/// Returns this time in milliseconds since the program started
 		/// </summary>
 		/// <value>
 		/// The time.
@@ -29,7 +29,7 @@ namespace GXPEngine
 		public static int time {
 			get { return (int)(OpenGL.GL.glfwGetTime()*1000); }
 		}
-		
+
 		/// <summary>
 		/// Returns the time in milliseconds that has passed since the previous frame
 		/// </summary>

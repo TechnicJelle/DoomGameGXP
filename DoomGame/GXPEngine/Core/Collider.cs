@@ -17,20 +17,20 @@ namespace GXPEngine.Core
 		public Collider ()
 		{
 		}
-		
+
 		//------------------------------------------------------------------------------------------------------------------------
 		//														HitTest()
-		//------------------------------------------------------------------------------------------------------------------------		
+		//------------------------------------------------------------------------------------------------------------------------
 		/// <summary>
 		/// Returns <c>true</c> if this collider is currently overlapping with the collider other.
 		/// </summary>
 		public virtual bool HitTest (Collider other) {
 			return false;
 		}
-		
+
 		//------------------------------------------------------------------------------------------------------------------------
 		//														HitTest()
-		//------------------------------------------------------------------------------------------------------------------------		
+		//------------------------------------------------------------------------------------------------------------------------
 		/// <summary>
 		/// Returns <c>true</c> if this collider is currently overlapping with the point x,y.
 		/// </summary>
@@ -40,7 +40,7 @@ namespace GXPEngine.Core
 
 		/// <summary>
 		/// If this collider would collide with collider other after moving by vx,vy,
-		/// then this method returns the time of impact of the collision, which is a number between 
+		/// then this method returns the time of impact of the collision, which is a number between
 		/// 0 (=immediate collision, or already overlapping) and 1 (=collision after moving exactly by vx,vy).
 		/// Otherwise, a number larger than 1 (e.g. float.MaxValue) is returned.
 		/// In addition, the collision normal is returned, in case of a collision.
@@ -57,7 +57,7 @@ namespace GXPEngine.Core
 
 		/// <summary>
 		/// If this collider and the collider other are overlapping, this method returns useful collision info such as
-		/// the collision normal, the point of impact, and the penetration depth, 
+		/// the collision normal, the point of impact, and the penetration depth,
 		/// contained in a Collision object (the time of impact field will always be zero).
 		/// 
 		/// If they are not overlapping, this method returns null.
@@ -65,7 +65,7 @@ namespace GXPEngine.Core
 		public virtual Collision GetCollisionInfo (Collider other)
 		{
 			return null;
-		}			
+		}
 	}
 }
 

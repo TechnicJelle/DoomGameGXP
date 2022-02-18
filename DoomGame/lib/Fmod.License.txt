@@ -1,4 +1,4 @@
-FMOD Studio, copyright © Firelight Technologies Pty, Ltd., 1994-2014.
+﻿FMOD Studio, copyright © Firelight Technologies Pty, Ltd., 1994-2014.
 
 FMOD NON-COMMERCIAL LICENSE
 ------------------------------------

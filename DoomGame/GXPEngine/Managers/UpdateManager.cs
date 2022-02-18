@@ -7,17 +7,17 @@ namespace GXPEngine.Managers
 	public class UpdateManager
 	{
 		private delegate void UpdateDelegate();
-		
+
 		private UpdateDelegate _updateDelegates;
 		private Dictionary<GameObject, UpdateDelegate> _updateReferences = new Dictionary<GameObject, UpdateDelegate>();
-		
+
 		//------------------------------------------------------------------------------------------------------------------------
 		//														UpdateManager()
 		//------------------------------------------------------------------------------------------------------------------------
 		public UpdateManager ()
 		{
 		}
-		
+
 		//------------------------------------------------------------------------------------------------------------------------
 		//														Step()
 		//------------------------------------------------------------------------------------------------------------------------
@@ -42,7 +42,7 @@ namespace GXPEngine.Managers
 				validateCase(gameObject);
 			}
 		}
-		
+
 		//------------------------------------------------------------------------------------------------------------------------
 		//														validateCase()
 		//------------------------------------------------------------------------------------------------------------------------
@@ -67,7 +67,7 @@ namespace GXPEngine.Managers
 		public void Remove(GameObject gameObject) {
 			if (_updateReferences.ContainsKey(gameObject)) {
 				UpdateDelegate onUpdate = _updateReferences[gameObject];
-				if (onUpdate != null) _updateDelegates -= onUpdate;			
+				if (onUpdate != null) _updateDelegates -= onUpdate;
 				_updateReferences.Remove(gameObject);
 			}
 		}

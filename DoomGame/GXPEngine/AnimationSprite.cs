@@ -20,7 +20,7 @@ namespace GXPEngine
 		protected byte _animationDelay = 1;
 
 		private float _animationFrameCounter = 0;
-		
+
 		//------------------------------------------------------------------------------------------------------------------------
 		//														AnimSprite()
 		//------------------------------------------------------------------------------------------------------------------------
@@ -43,23 +43,23 @@ namespace GXPEngine
 		/// Optionally, indicate a number of frames. When left blank, defaults to width*height.
 		/// </param>
 		/// <param name="keepInCache">
-		/// If <c>true</c>, the sprite's texture will be kept in memory for the entire lifetime of the game. 
+		/// If <c>true</c>, the sprite's texture will be kept in memory for the entire lifetime of the game.
 		/// This takes up more memory, but removes load times.
-		/// </param> 
+		/// </param>
 		/// <param name="addCollider">
 		/// If <c>true</c>, this sprite will have a collider that will be added to the collision manager.
-		/// </param> 
+		/// </param>
 		public AnimationSprite (string filename, int cols, int rows, int frames=-1, bool keepInCache=false, bool addCollider=true) : base(filename,keepInCache,addCollider)
 		{
 			name = filename;
 			initializeAnimFrames(cols, rows, frames);
 		}
-		
+
 		/// <summary>
 		/// Initializes a new instance of the <see cref="GXPEngine.AnimSprite"/> class.
 		/// </summary>
 		/// <param name='bitmap'>
-		/// The Bitmap object to be used to create the sprite. 
+		/// The Bitmap object to be used to create the sprite.
 		/// Texture sizes should be a power of two: 1, 2, 4, 8, 16, 32, 64 etc.
 		/// The width and height don't need to be the same.
 		/// If you want to load transparent sprites, use .PNG with transparency.
@@ -75,17 +75,17 @@ namespace GXPEngine
 		/// </param>
 		/// <param name="addCollider">
 		/// If <c>true</c>, this sprite will have a collider that will be added to the collision manager.
-		/// </param> 
+		/// </param>
 		public AnimationSprite (System.Drawing.Bitmap bitmap, int cols, int rows, int frames=-1, bool addCollider=true) : base(bitmap,addCollider)
 		{
 			name = "BMP " + bitmap.Width + "x" + bitmap.Height;
 			initializeAnimFrames(cols, rows, frames);
 		}
-			
+
 		//------------------------------------------------------------------------------------------------------------------------
 		//														initializeAnimFrames()
 		//------------------------------------------------------------------------------------------------------------------------
-		protected void initializeAnimFrames(int cols, int rows, int frames=-1) 
+		protected void initializeAnimFrames(int cols, int rows, int frames=-1)
 		{
 			if (frames < 0) frames = rows * cols;
 			if (frames > rows * cols) frames = rows * cols;
@@ -117,7 +117,7 @@ namespace GXPEngine
 				if (_texture != null && _texture.width != 0) scaleX = value / ((float)_texture.width * _frameWidth);
 			}
 		}
-		
+
 		//------------------------------------------------------------------------------------------------------------------------
 		//														height
 		//------------------------------------------------------------------------------------------------------------------------
@@ -151,7 +151,7 @@ namespace GXPEngine
 			_currentFrame = frame;
 			setUVs();
 		}
-				
+
 		//------------------------------------------------------------------------------------------------------------------------
 		//														setUVs
 		//------------------------------------------------------------------------------------------------------------------------
@@ -212,7 +212,7 @@ namespace GXPEngine
 		/// <summary>
 		/// Sets the animation cycle: the NextFrame method will go from startFrame to startFrame + numFrames - 1,
 		/// and then jump back to the startFrame.
-		/// If animationDelay is smaller than 255, then the Animate method will stay on 
+		/// If animationDelay is smaller than 255, then the Animate method will stay on
 		/// the same animation frame for this many game frames (so larger value = slower animation).
 		/// If switchFrame is true then the currentFrame will be set in the given range, if it isn't already.
 		/// </summary>
@@ -248,9 +248,9 @@ namespace GXPEngine
 		/// <summary>
 		/// If the current animation frame has been shown for [_animationDelay] game frames, this
 		/// jumps to the next animation frame in the cycle.
-		/// Call this method every update, and use it in combination with SetCycle to 
+		/// Call this method every update, and use it in combination with SetCycle to
 		/// create a timed sprite animation.
-		/// Smaller values for deltaFrameTime slow down the animation. 
+		/// Smaller values for deltaFrameTime slow down the animation.
 		/// </summary>
 		public void Animate(float deltaFrameTime=1) {
 			_animationFrameCounter+=deltaFrameTime;
@@ -270,7 +270,7 @@ namespace GXPEngine
 		public void AnimateFixed() {
 			Animate(game.targetFps * Time.deltaTime / 1000f);
 		}
-		
+
 		//------------------------------------------------------------------------------------------------------------------------
 		//														currentFrame
 		//------------------------------------------------------------------------------------------------------------------------
@@ -281,7 +281,7 @@ namespace GXPEngine
 			get { return _currentFrame; }
 			set { SetFrame (value); }
 		}
-		
+
 		//------------------------------------------------------------------------------------------------------------------------
 		//														frameCount
 		//------------------------------------------------------------------------------------------------------------------------

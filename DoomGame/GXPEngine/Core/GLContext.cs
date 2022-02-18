@@ -10,9 +10,9 @@ namespace GXPEngine.Core {
 		public static WindowSize instance = new WindowSize();
 		public int width, height;
 	}
-	
+
 	public class GLContext {
-		
+
 		const int MAXKEYS = 65535;
 		const int MAXBUTTONS = 255;
 
@@ -27,10 +27,10 @@ namespace GXPEngine.Core {
 
 		public static int mouseX = 0;
 		public static int mouseY = 0;
-		
+
 		private Game _owner;
         private static SoundSystem _soundSystem;
-		
+
 		private int _targetFrameRate = 60;
 		private long _lastFrameTime = 0;
 		private long _lastFPSTime = 0;
@@ -48,14 +48,14 @@ namespace GXPEngine.Core {
 			_owner = owner;
 			_lastFPS = _targetFrameRate;
 		}
-		
+
 		//------------------------------------------------------------------------------------------------------------------------
 		//														Width
 		//------------------------------------------------------------------------------------------------------------------------
 		public int width {
 			get { return WindowSize.instance.width; }
 		}
-		
+
 		//------------------------------------------------------------------------------------------------------------------------
 		//														Height
 		//------------------------------------------------------------------------------------------------------------------------
@@ -76,7 +76,7 @@ namespace GXPEngine.Core {
                 return _soundSystem;
             }
         }
-		
+
 		//------------------------------------------------------------------------------------------------------------------------
 		//														setupWindow()
 		//------------------------------------------------------------------------------------------------------------------------
@@ -87,22 +87,22 @@ namespace GXPEngine.Core {
 			_realToLogicWidthRatio = (double)realWidth / width;
 			_realToLogicHeightRatio = (double)realHeight / height;
 			_vsyncEnabled = vSync;
-			
+
 			GL.glfwInit();
-			
+
 			GL.glfwOpenWindowHint(GL.GLFW_FSAA_SAMPLES, 8);
 			GL.glfwOpenWindow(realWidth, realHeight, 8, 8, 8, 8, 24, 0, (fullScreen?GL.GLFW_FULLSCREEN:GL.GLFW_WINDOWED));
 			GL.glfwSetWindowTitle("Game");
 			GL.glfwSwapInterval(vSync);
-			
+
 			GL.glfwSetKeyCallback(
 				(int _key, int _mode) => {
 				bool press = (_mode == 1);
-				if (press) { keydown[_key] = true; anyKeyDown = true; keyPressedCount++; } 
+				if (press) { keydown[_key] = true; anyKeyDown = true; keyPressedCount++; }
 				else { keyup[_key] = true; keyPressedCount--; }
 				keys[_key] = press;
 			});
-			
+
 			GL.glfwSetMouseButtonCallback(
 				(int _button, int _mode) => {
 				bool press = (_mode == 1);
@@ -112,8 +112,8 @@ namespace GXPEngine.Core {
 			});
 
 			GL.glfwSetWindowSizeCallback((int newWidth, int newHeight) => {
-				GL.Viewport(0, 0, newWidth, newHeight);	
-				GL.Enable(GL.MULTISAMPLE);	
+				GL.Viewport(0, 0, newWidth, newHeight);
+				GL.Enable(GL.MULTISAMPLE);
 				GL.Enable (GL.TEXTURE_2D);
 				GL.Enable( GL.BLEND );
 				GL.BlendFunc( GL.SRC_ALPHA, GL.ONE_MINUS_SRC_ALPHA );
@@ -129,7 +129,7 @@ namespace GXPEngine.Core {
 				_realToLogicWidthRatio = (double)newWidth / WindowSize.instance.width;
 				_realToLogicHeightRatio = (double)newHeight / WindowSize.instance.height;
 #endif
-				// Here's where the conversion from logical width/height to real width/height happens: 
+				// Here's where the conversion from logical width/height to real width/height happens:
 				GL.Ortho(0.0f, newWidth / _realToLogicWidthRatio, newHeight / _realToLogicHeightRatio, 0.0f, 0.0f, 1000.0f);
 #if !STRETCH_ON_RESIZE
 				lock (WindowSize.instance) {
@@ -153,7 +153,7 @@ namespace GXPEngine.Core {
 #endif
 			_soundSystem.Init();
 		}
-		
+
 		//------------------------------------------------------------------------------------------------------------------------
 		//														ShowCursor()
 		//------------------------------------------------------------------------------------------------------------------------
@@ -170,7 +170,7 @@ namespace GXPEngine.Core {
 			_vsyncEnabled = enableVSync;
 			GL.glfwSwapInterval(_vsyncEnabled);
 		}
-		
+
 		//------------------------------------------------------------------------------------------------------------------------
 		//														SetScissor()
 		//------------------------------------------------------------------------------------------------------------------------
@@ -182,14 +182,14 @@ namespace GXPEngine.Core {
 			}
 
 			GL.Scissor(
-				(int)(x*_realToLogicWidthRatio), 
-				(int)(y*_realToLogicHeightRatio), 
-				(int)(width*_realToLogicWidthRatio), 
+				(int)(x*_realToLogicWidthRatio),
+				(int)(y*_realToLogicHeightRatio),
+				(int)(width*_realToLogicWidthRatio),
 				(int)(height*_realToLogicHeightRatio)
 			);
 			//GL.Scissor(x, y, width, height);
 		}
-		
+
 		//------------------------------------------------------------------------------------------------------------------------
 		//														Close()
 		//------------------------------------------------------------------------------------------------------------------------
@@ -199,7 +199,7 @@ namespace GXPEngine.Core {
 			GL.glfwTerminate();
 			System.Environment.Exit(0);
 		}
-		
+
 		//------------------------------------------------------------------------------------------------------------------------
 		//														Run()
 		//------------------------------------------------------------------------------------------------------------------------
@@ -208,7 +208,7 @@ namespace GXPEngine.Core {
 			do {
 				if (_vsyncEnabled || (Time.time - _lastFrameTime > (1000 / _targetFrameRate))) {
 					_lastFrameTime = Time.time;
-					
+
 					//actual fps count tracker
 					_frameCount++;
 					if (Time.time - _lastFPSTime > 1000) {
@@ -216,23 +216,23 @@ namespace GXPEngine.Core {
 						_lastFPSTime = Time.time;
 						_frameCount = 0;
 					}
-					
+
 					UpdateMouseInput();
 					_owner.Step();
                     _soundSystem.Step();
-					
+
 					ResetHitCounters();
 					Display();
-					
+
 					Time.newFrame ();
 					GL.glfwPollEvents();
 				}
-				
-				
+
+
 			} while (GL.glfwGetWindowParam(GL.GLFW_ACTIVE) == 1);
 		}
-		
-		
+
+
 		//------------------------------------------------------------------------------------------------------------------------
 		//														display()
 		//------------------------------------------------------------------------------------------------------------------------
@@ -247,14 +247,14 @@ namespace GXPEngine.Core {
 			GL.glfwSwapBuffers();
 			if (GetKey(Key.ESCAPE)) this.Close();
 		}
-		
+
 		//------------------------------------------------------------------------------------------------------------------------
 		//														SetColor()
 		//------------------------------------------------------------------------------------------------------------------------
 		public void SetColor (byte r, byte g, byte b, byte a) {
 			GL.Color4ub(r, g, b, a);
 		}
-		
+
 		//------------------------------------------------------------------------------------------------------------------------
 		//														PushMatrix()
 		//------------------------------------------------------------------------------------------------------------------------
@@ -262,14 +262,14 @@ namespace GXPEngine.Core {
 			GL.PushMatrix ();
 			GL.MultMatrixf (matrix);
 		}
-		
+
 		//------------------------------------------------------------------------------------------------------------------------
 		//														PopMatrix()
 		//------------------------------------------------------------------------------------------------------------------------
 		public void PopMatrix() {
 			GL.PopMatrix ();
 		}
-		
+
 		//------------------------------------------------------------------------------------------------------------------------
 		//														DrawQuad()
 		//------------------------------------------------------------------------------------------------------------------------
@@ -282,28 +282,28 @@ namespace GXPEngine.Core {
 			GL.DisableClientState(GL.VERTEX_ARRAY);
 			GL.DisableClientState(GL.TEXTURE_COORD_ARRAY);			
 		}
-		
+
 		//------------------------------------------------------------------------------------------------------------------------
 		//														GetKey()
 		//------------------------------------------------------------------------------------------------------------------------
 		public static bool GetKey(int key) {
 			return keys[key];
 		}
-		
+
 		//------------------------------------------------------------------------------------------------------------------------
 		//														GetKeyDown()
 		//------------------------------------------------------------------------------------------------------------------------
 		public static bool GetKeyDown(int key) {
 			return keydown[key];
 		}
-		
+
 		//------------------------------------------------------------------------------------------------------------------------
 		//														GetKeyUp()
 		//------------------------------------------------------------------------------------------------------------------------
 		public static bool GetKeyUp(int key) {
 			return keyup[key];
 		}
-		
+
 		public static bool AnyKey() {
 			return keyPressedCount > 0;
 		}
@@ -318,7 +318,7 @@ namespace GXPEngine.Core {
 		public static bool GetMouseButton(int button) {
 			return buttons[button];
 		}
-		
+
 		//------------------------------------------------------------------------------------------------------------------------
 		//														GetMouseButtonDown()
 		//------------------------------------------------------------------------------------------------------------------------
@@ -343,7 +343,7 @@ namespace GXPEngine.Core {
 			Array.Clear (mouseup, 0, MAXBUTTONS);
 			anyKeyDown = false;
 		}
-		
+
 		//------------------------------------------------------------------------------------------------------------------------
 		//														UpdateMouseInput()
 		//------------------------------------------------------------------------------------------------------------------------
@@ -352,11 +352,11 @@ namespace GXPEngine.Core {
 			mouseX = (int)(mouseX / _realToLogicWidthRatio);
 			mouseY = (int)(mouseY / _realToLogicHeightRatio);
 		}
-		
+
 		public int currentFps {
 			get { return _lastFPS; }
 		}
-		
+
 		public int targetFps {
 			get { return _targetFrameRate; }
 			set {
@@ -367,7 +367,7 @@ namespace GXPEngine.Core {
 				}
 			}
 		}
-		
-	}	
-	
+
+	}
+
 }

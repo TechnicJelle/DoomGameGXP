@@ -90,6 +90,7 @@
     <Compile Include="MyGame\TileNext.cs" />
     <Compile Include="MyGame\TileStart.cs" />
     <Compile Include="MyGame\TileWall.cs" />
+    <Compile Include="MyGame\TechUtils.cs" />
     <Compile Include="MyGame\WallSide.cs" />
   </ItemGroup>
 </Project>

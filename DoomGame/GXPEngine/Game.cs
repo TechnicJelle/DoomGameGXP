@@ -35,8 +35,8 @@ namespace GXPEngine
 		public event RenderDelegate OnAfterRender;
 
 		/// <summary>
-		/// Sprites will be rendered if and only if they overlap with this rectangle. 
-		/// Default value: (0,0,game.width,game.height). 
+		/// Sprites will be rendered if and only if they overlap with this rectangle.
+		/// Default value: (0,0,game.width,game.height).
 		/// You only need to change this when rendering to subwindows (e.g. split screen).
 		/// </summary>
 		/// <value>The render range.</value>
@@ -57,7 +57,7 @@ namespace GXPEngine
 		public readonly bool PixelArt;
 
 		private Rectangle _renderRange;
-		
+
 		//------------------------------------------------------------------------------------------------------------------------
 		//														Game()
 		//------------------------------------------------------------------------------------------------------------------------
@@ -75,7 +75,7 @@ namespace GXPEngine
 		/// If set to <c>true</c> the application will run in fullscreen mode.
 		/// </param>
 		/// <param name='vSync'>
-		/// If <c>true</c>, the frame rate will sync to the screen refresh rate, so setting targetFps has no effect. 
+		/// If <c>true</c>, the frame rate will sync to the screen refresh rate, so setting targetFps has no effect.
 		/// (It's best to give this the same value as the 'fullScreen' parameter.)
 		/// </param>
 		/// <param name='realWidth'>
@@ -165,7 +165,7 @@ namespace GXPEngine
 		{
 			_glContext.ShowCursor(enable);
 		}
-		
+
 		//------------------------------------------------------------------------------------------------------------------------
 		//														Start()
 		//------------------------------------------------------------------------------------------------------------------------
@@ -175,7 +175,7 @@ namespace GXPEngine
 		public void Start() {
 			_glContext.Run();
 		}
-		
+
 		//------------------------------------------------------------------------------------------------------------------------
 		//														Step()
 		//------------------------------------------------------------------------------------------------------------------------
@@ -220,7 +220,7 @@ namespace GXPEngine
 			_updateManager.Add (gameObject);
 			_collisionManager.Add (gameObject);
 		}
-		
+
 		//------------------------------------------------------------------------------------------------------------------------
 		//														Remove()
 		//------------------------------------------------------------------------------------------------------------------------
@@ -251,7 +251,7 @@ namespace GXPEngine
 		public int width {
 			get { return _glContext.width; }
 		}
-		
+
 		//------------------------------------------------------------------------------------------------------------------------
 		//														height
 		//------------------------------------------------------------------------------------------------------------------------

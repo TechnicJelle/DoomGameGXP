@@ -16,7 +16,7 @@ namespace GXPEngine {
 
 		/// <summary>
 		/// Creates a camera game object and a sub window to render to.
-		/// Add this camera as child to the object you want to follow, or 
+		/// Add this camera as child to the object you want to follow, or
 		/// update its coordinates directly in an update method.
 		/// The scale of the camera determines the "zoom factor" (High scale = zoom out)
 		/// </summary>
@@ -42,7 +42,7 @@ namespace GXPEngine {
 
 		/// <summary>
 		/// Translates a point from camera space to global space, taking the camera transform and window position into account.
-		/// The input should be a point in screen space (coordinates between 0 and game.width/height), 
+		/// The input should be a point in screen space (coordinates between 0 and game.width/height),
 		/// that is covered by the camera window (use ScreenPointInWindow to check).
 		/// You can combine this for instance with HitTestPoint and Input.mouseX/Y to check whether the
 		/// mouse hits a sprite that is shown in the camera's window.

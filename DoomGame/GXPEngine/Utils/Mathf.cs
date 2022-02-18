@@ -125,7 +125,7 @@ namespace GXPEngine
 		public static int Min(int value1, int value2) {
 			return (value2<value1)?value2:value1;
 		}
-		
+
 		/// <summary>
 		/// Returns x raised to the power of y
 		/// </summary>
@@ -164,7 +164,7 @@ namespace GXPEngine
 		public static float Sin(float f) {
 			return (float)Math.Sin (f);
 		}
-		
+
 		/// <summary>
 		/// Returns the hyperbolic sine of the specified number
 		/// </summary>
@@ -185,7 +185,7 @@ namespace GXPEngine
 		public static float Tan(float f) {
 			return (float)Math.Tan (f);
 		}
-		
+
 		/// <summary>
 		/// Returns the hyperbolic tangent of the specified number
 		/// </summary>

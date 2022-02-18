@@ -4,12 +4,12 @@ using System;
 
 namespace GXPEngine {
 	/// <summary>
-	/// If you are getting strange bugs because you are calling Destroy during the Update loop, 
-	/// you can use this class to do this more cleanly: when using 
+	/// If you are getting strange bugs because you are calling Destroy during the Update loop,
+	/// you can use this class to do this more cleanly: when using
 	/// HierarchyManager.Instance.LateDestroy,
 	/// all these hierarchy changes will be made after the update loop is finished.
 	/// You can also use HierarchyManager.Instance.LateAdd to add a game object after the update loop is finished.
-	/// Similarly, you can use HierarchyManager.Instance.LateCall to postpone a certain method call until 
+	/// Similarly, you can use HierarchyManager.Instance.LateCall to postpone a certain method call until
 	/// after the update loop.
 	/// </summary>
 	public class HierarchyManager {
@@ -33,7 +33,7 @@ namespace GXPEngine {
 				return instance;
 			}
 		}
-		private static HierarchyManager instance; 
+		private static HierarchyManager instance;
 
 		private List<GameObjectPair> toAdd;
 		private List<GameObject> toDestroy;

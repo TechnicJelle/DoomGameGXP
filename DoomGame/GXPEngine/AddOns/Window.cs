@@ -4,7 +4,7 @@ using GXPEngine.Core;
 namespace GXPEngine {
 	/// <summary>
 	/// A class that can be used to create "sub windows" (e.g. mini-map, splitscreen, etc).
-	/// This is not a gameobject. Instead, subscribe the RenderWindow method to the main game's 
+	/// This is not a gameobject. Instead, subscribe the RenderWindow method to the main game's
 	/// OnAfterRender event.
 	/// </summary>
 	public class Window {

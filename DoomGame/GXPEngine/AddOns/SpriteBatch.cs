@@ -6,9 +6,9 @@ using GXPEngine.OpenGL;
 namespace GXPEngine {
 	/// <summary>
 	/// A SpriteBatch is a GameObject that can be used to render many sprites efficiently, and change the color, alpha and blend mode of
-	/// all of those sprites simultaneously. 
+	/// all of those sprites simultaneously.
 	/// Usage: Add any number of sprites as child to a sprite batch, and then call the Freeze method.
-	/// Note that this will destroy the individual sprites, so there won't be colliders for them anymore, and 
+	/// Note that this will destroy the individual sprites, so there won't be colliders for them anymore, and
 	/// the position and rotation of individual sprites cannot be changed anymore.
 	/// </summary>
 	public class SpriteBatch : GameObject {
@@ -22,7 +22,7 @@ namespace GXPEngine {
 		Rectangle _bounds;
 
 		/// <summary>
-		/// Create a new SpriteBatch game object. 
+		/// Create a new SpriteBatch game object.
 		/// After adding sprites as child to this game object, call the Freeze method to started batched drawing.
 		/// </summary>
 		public SpriteBatch() : base(false) {
@@ -32,7 +32,7 @@ namespace GXPEngine {
 		/// <summary>
 		/// Call this method after adding sprites as child to this game object, and positioning and rotating them correctly.
 		/// This will destroy the individual sprites and their colliders.
-		/// Note that the individual color, alpha and blend mode of those sprites is forgotten: 
+		/// Note that the individual color, alpha and blend mode of those sprites is forgotten:
 		/// use the color, alpha and blend mode of the sprite batch instead.
 		/// </summary>
 		public void Freeze() {
@@ -71,7 +71,7 @@ namespace GXPEngine {
 
 			// Create buffers:
 			foreach (var texture in renderers.Keys) {
-				renderers[texture].CreateBuffers(); 
+				renderers[texture].CreateBuffers();
 			}
 
 			initialized = true;
@@ -179,7 +179,7 @@ namespace GXPEngine {
 		//														alpha
 		//------------------------------------------------------------------------------------------------------------------------
 		/// <summary>
-		/// Gets or sets the alpha value of the sprite batch. 
+		/// Gets or sets the alpha value of the sprite batch.
 		/// Setting this value allows you to make the sprite batch (semi-)transparent.
 		/// The alpha value should be in the range 0...1, where 0 is fully transparent and 1 is fully opaque.
 		/// </summary>

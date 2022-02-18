@@ -4,6 +4,7 @@ using System;
 using System.Threading;
 using System.Collections.Generic;
 using GXPEngine.Core;
+using GXPEngine.MyGame;
 
 namespace GXPEngine
 {
@@ -36,16 +37,16 @@ namespace GXPEngine
         /// <param name='cached'>
         /// If set to <c>true</c>, the sound will be stored in cache, preserving memory when creating the same sound multiple times.
         /// </param>
-        public Sound( String filename, bool looping = false, bool streaming = false)
+        public Sound(string filename, bool looping = false, bool streaming = false)
 		{
             _system = GLContext.soundSystem;
 
             if (streaming) {
-                _id = _system.CreateStream(filename, looping);
+                _id = _system.CreateStream(TechUtils.LoadAsset(filename), looping);
 			} else {
                 if (!_soundCache.ContainsKey(filename))
                 {
-                    _id = _system.LoadSound(filename, looping);
+                    _id = _system.LoadSound(TechUtils.LoadAsset(filename), looping);
                     if (_id == IntPtr.Zero)
                     {
                         throw new Exception("Sound file not found: " + filename);
@@ -58,7 +59,7 @@ namespace GXPEngine
                 }
 			}
 		}
-		
+
 		~Sound()
 		{
 		}

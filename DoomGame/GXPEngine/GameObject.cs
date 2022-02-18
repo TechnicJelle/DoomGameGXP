@@ -5,16 +5,16 @@ using GXPEngine.Core;
 namespace GXPEngine
 {
 	/// <summary>
-	/// GameObject is the base class for all display objects. 
+	/// GameObject is the base class for all display objects.
 	/// </summary>
 	public abstract class GameObject : Transformable
 	{
 		public string name;
 		private Collider _collider;
-		
+
 		private List<GameObject> _children = new List<GameObject>();
 		private GameObject _parent = null;
-		
+
 		public bool visible = true;
 		private bool destroyed = false;
 
@@ -27,9 +27,9 @@ namespace GXPEngine
 		/// Other objects can be added using child commands as AddChild.
 		/// </summary>
 		/// <param name="addCollider">
-		/// If <c>true</c>, then the virtual function createCollider will be called, which can be overridden to create a collider that 
-		/// will be added to the collision manager. 
-		/// </param> 
+		/// If <c>true</c>, then the virtual function createCollider will be called, which can be overridden to create a collider that
+		/// will be added to the collision manager.
+		/// </param>
 		public GameObject(bool addCollider=false)
 		{
 			if (addCollider) {
@@ -67,12 +67,12 @@ namespace GXPEngine
 		internal Collider collider {
 			get { return _collider; }
 		}
-		
+
 		//------------------------------------------------------------------------------------------------------------------------
 		//														game
 		//------------------------------------------------------------------------------------------------------------------------
 		/// <summary>
-		/// Gets the game that this object belongs to. 
+		/// Gets the game that this object belongs to.
 		/// This is a unique instance throughout the runtime of the game.
 		/// Use this to access the top of the displaylist hierarchy, and to retreive the width and height of the screen.
 		/// </summary>
@@ -86,14 +86,14 @@ namespace GXPEngine
 		/// Get all a list of all objects that currently overlap this one.
 		/// Calling this method will test collisions between this object and all other colliders in the scene.
 		/// It can be called mid-step and is included for convenience, not performance.
-		/// Set includeTriggers to true to include trigger colliders in the list, and 
+		/// Set includeTriggers to true to include trigger colliders in the list, and
 		/// includeSolid to include solid (=non-trigger) colliders.
 		/// </summary>
 		public GameObject[] GetCollisions (bool includeTriggers = true, bool includeSolid = true)
 		{
 			return game.GetGameObjectCollisions(this, includeTriggers, includeSolid);
 		}
-		
+
 		//------------------------------------------------------------------------------------------------------------------------
 		//														Render
 		//------------------------------------------------------------------------------------------------------------------------
@@ -108,16 +108,16 @@ namespace GXPEngine
 		public virtual void Render(GLContext glContext) {
 			if (visible) {
 				glContext.PushMatrix(matrix);
-				
+
 				RenderSelf (glContext);
 				foreach (GameObject child in GetChildren()) {
 					child.Render(glContext);
 				}
-				
+
 				glContext.PopMatrix();
 			}
 		}
-		
+
 		//------------------------------------------------------------------------------------------------------------------------
 		//														RenderSelf
 		//------------------------------------------------------------------------------------------------------------------------
@@ -164,7 +164,7 @@ namespace GXPEngine
 		//														OnDestroy()
 		//------------------------------------------------------------------------------------------------------------------------
 		/// <summary>
-		/// Subclasses can implement this method to clean up resources once on destruction. 
+		/// Subclasses can implement this method to clean up resources once on destruction.
 		/// Will be called by the engine when the game object is destroyed.
 		/// </summary>
 		protected virtual void OnDestroy ()
@@ -176,7 +176,7 @@ namespace GXPEngine
 		//														Destroy()
 		//------------------------------------------------------------------------------------------------------------------------
 		/// <summary>
-		/// Destroy this instance, and removes it from the game. To complete garbage collection, you must nullify all 
+		/// Destroy this instance, and removes it from the game. To complete garbage collection, you must nullify all
 		/// your own references to this object.
 		/// </summary>
 		public virtual void Destroy ()
@@ -263,7 +263,7 @@ namespace GXPEngine
 				child.parent = null;
 			}
 		}
-		
+
 		//------------------------------------------------------------------------------------------------------------------------
 		//														removeChild()
 		//------------------------------------------------------------------------------------------------------------------------
@@ -271,7 +271,7 @@ namespace GXPEngine
 			_children.Remove(child);
 
 		}
-		
+
 		//------------------------------------------------------------------------------------------------------------------------
 		//														addChild()
 		//------------------------------------------------------------------------------------------------------------------------
@@ -280,12 +280,12 @@ namespace GXPEngine
 			_children.Add(child);
 			return;
 		}
-		
+
 		//------------------------------------------------------------------------------------------------------------------------
 		//														AddChildAt()
 		//------------------------------------------------------------------------------------------------------------------------
 		/// <summary>
-		/// Adds the specified GameObject as a child to this object at an specified index. 
+		/// Adds the specified GameObject as a child to this object at an specified index.
 		/// This will alter the position of other objects as well.
 		/// You can use this to determine the draw order of child objects.
 		/// </summary>
@@ -347,7 +347,7 @@ namespace GXPEngine
 			}
 			return false;
 		}
-				
+
 		//------------------------------------------------------------------------------------------------------------------------
 		//														GetChildren()
 		//------------------------------------------------------------------------------------------------------------------------
@@ -371,7 +371,7 @@ namespace GXPEngine
 		public int GetChildCount() {
 			return _children.Count;
 		}
-		
+
 		//------------------------------------------------------------------------------------------------------------------------
 		//														SetChildIndex()
 		//------------------------------------------------------------------------------------------------------------------------
@@ -412,7 +412,7 @@ namespace GXPEngine
 		//														HitTest()
 		//------------------------------------------------------------------------------------------------------------------------
 		/// <summary>
-		/// Tests if this object overlaps with the one specified. 
+		/// Tests if this object overlaps with the one specified.
 		/// </summary>
 		/// <returns>
 		/// <c>true</c>, if 'this' overlaps with 'other'.
@@ -426,13 +426,13 @@ namespace GXPEngine
 
 		/// <summary>
 		/// If changing the x and y coordinates of this GameObject by vx and vy respectively
-		///   would cause a collision with the GameObject other, this method returns a 
+		///   would cause a collision with the GameObject other, this method returns a
 		///   "time of impact" between 0 and 1,
 		///   which is a scalar multiplier for vx and vy, giving the amount of safe movement until collision.
-		/// It is zero if the two game objects are already overlapping, and 
+		/// It is zero if the two game objects are already overlapping, and
 		///   moving by vx and vy would cause a worse overlap.
 		/// In all other cases, the returned value is bigger than 1.
-		/// If a time of impact below 1 is returned, the normal will be the collision normal 
+		/// If a time of impact below 1 is returned, the normal will be the collision normal
 		///   (otherwise it is undefined).
 		/// </summary>
 		virtual public float TimeOfImpact (GameObject other, float vx, float vy, out Vector2 normal) {
@@ -443,8 +443,8 @@ namespace GXPEngine
 			//Vector2 p1 = parent.TransformPoint (vx, vy);
 			//Vector2 p0 = parent.TransformPoint (0, 0);
 			Vector2 worldVelocity=parent.TransformDirection(vx,vy);
-			float TOI=_collider.TimeOfImpact (other._collider, 
-				//p1.x-p0.x, p1.y-p0.y, 
+			float TOI=_collider.TimeOfImpact (other._collider,
+				//p1.x-p0.x, p1.y-p0.y,
 				worldVelocity.x,worldVelocity.y,
 				out normal
 			);
@@ -452,13 +452,13 @@ namespace GXPEngine
 		}
 
 		/// <summary>
-		/// Tries to move this object by vx,vy (in parent space, similar to the translate method), 
+		/// Tries to move this object by vx,vy (in parent space, similar to the translate method),
 		/// until it collides with one of the given objects. Objects without a solid (=non-trigger) collider are ignored.
-		/// In case of a collision, it returns a Collision object with information such as the normal and time of impact 
+		/// In case of a collision, it returns a Collision object with information such as the normal and time of impact
 		/// (the point and penetration depth fields of the collision object will always be zero).
 		/// Otherwise it returns null.
 		/// 
-		/// As objectsToCheck, pass an array or List of game objects to check against 
+		/// As objectsToCheck, pass an array or List of game objects to check against
 		/// (this moving game object will move through all objects that are not in the given array or list).
 		/// </summary>
 		virtual public Collision MoveUntilCollision(float vx, float vy, IEnumerable<GameObject> objectsToCheck) {
@@ -479,13 +479,13 @@ namespace GXPEngine
 		}
 
 		/// <summary>
-		/// Tries to move this object by vx,vy (in parent space, similar to the translate method), 
-		/// until it collides with another object that has a solid (=non-trigger) collider. 
-		/// In case of a collision, it returns a Collision object with information such as the normal and time of impact 
+		/// Tries to move this object by vx,vy (in parent space, similar to the translate method),
+		/// until it collides with another object that has a solid (=non-trigger) collider.
+		/// In case of a collision, it returns a Collision object with information such as the normal and time of impact
 		/// (the point and penetration depth fields of the collision object will always be zero).
 		/// Otherwise it returns null.
 		/// 
-		/// Note: this is a very expensive method since it uses GetCollisions, and 
+		/// Note: this is a very expensive method since it uses GetCollisions, and
 		/// tunneling is possible since it uses discrete collision detection - use with care.
 		/// </summary>
 		virtual public Collision MoveUntilCollision(float vx, float vy) {
@@ -512,8 +512,8 @@ namespace GXPEngine
 		/// </param>
 		virtual public bool HitTestPoint(float x, float y) {
 			return _collider != null && _collider.HitTestPoint(x, y);
-		}		
-		
+		}
+
 		//------------------------------------------------------------------------------------------------------------------------
 		//														TransformPoint()
 		//------------------------------------------------------------------------------------------------------------------------
@@ -602,7 +602,7 @@ namespace GXPEngine
 		/// Returns the first object of the given type, found within the descendants of this game object
 		/// (including this game object itself).
 		/// If there's no descendant of the given type, returns null.
-		/// For example, if you have made a Player class, call this method like this: 
+		/// For example, if you have made a Player class, call this method like this:
 		///  game.FindObjectOfType(typeof(Player));
 		/// </summary>
 		/// <param name="type">The object type you're looking for (must inherit from GameObject)</param>
@@ -643,7 +643,7 @@ namespace GXPEngine
 		/// <summary>
 		/// Returns the all objects of the given type, found within the descendants of this game object
 		/// (including this game object itself).
-		/// For example, if you have made a Player class, call this like this: 
+		/// For example, if you have made a Player class, call this like this:
 		///  game.FindObjectsOfType(typeof(Player));
 		/// </summary>
 		/// <param name="type">The object type you're looking for (must inherit from GameObject)</param>
@@ -690,7 +690,7 @@ namespace GXPEngine
 		public override string ToString() {
 			return "[" + this.GetType().Name + "::" + name + "]";
 		}
-				
+
 	}
 }
 

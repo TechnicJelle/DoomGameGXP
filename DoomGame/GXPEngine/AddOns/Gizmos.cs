@@ -7,8 +7,8 @@ using GXPEngine.OpenGL;
 namespace GXPEngine {
 	/// <summary>
 	/// This class can be used to easily draw line based shapes (like arrows and rectangles),
-	/// mostly for debug purposes (it is not made for efficiency). 
-	/// For each draw call, shapes are drawn for one frame only, after rendering all sprites. 
+	/// mostly for debug purposes (it is not made for efficiency).
+	/// For each draw call, shapes are drawn for one frame only, after rendering all sprites.
 	/// See the DrawLine method for more information.
 	/// </summary>
 	public class Gizmos {
@@ -70,7 +70,7 @@ namespace GXPEngine {
 
 		/// <summary>
 		/// You can call this method from anywhere. A (debug) line will be drawn from (x1,y1) to (x2,y2),
-		/// in the space of the given game object. 
+		/// in the space of the given game object.
 		/// If no game object is given, it will be drawn in screen space.
 		/// The line will be drawn after drawing all other game objects.
 		/// You can give color and line width. If no values are given (=0), the default values are
@@ -169,9 +169,9 @@ namespace GXPEngine {
 		/// <summary>
 		/// This method should typically be called from the RenderSelf method of a GameObject,
 		/// or from the game's OnAfterRender event.
-		/// The line from (x1,y1) to (x2,y2) is then drawn immediately, 
+		/// The line from (x1,y1) to (x2,y2) is then drawn immediately,
 		/// behind objects that are drawn later.
-		/// It is drawn in the space of the game object itself if called from RenderSelf with 
+		/// It is drawn in the space of the game object itself if called from RenderSelf with
 		/// pGlobalCoords=false, and in screen space otherwise.
 		/// You can give color and line width. If no values are given (=0), the default values are
 		/// used. These can be set using SetStyle, SetColor and SetWidth.
