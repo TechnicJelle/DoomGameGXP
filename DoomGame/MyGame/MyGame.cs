@@ -1,83 +1,87 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using GXPEngine.Core;
+using GXPEngine.GXPEngine;
+using GXPEngine.GXPEngine.AddOns;
+using GXPEngine.GXPEngine.Core;
+using GXPEngine.GXPEngine.Utils;
+
 #pragma warning disable CS0162
 
 namespace GXPEngine.MyGame;
 
 public class MyGame : Game
 {
-	public static int staticWidth;
-	public static int staticHeight;
-	private readonly EasyDraw mainMenu;
+	public static int StaticWidth;
+	public static int StaticHeight;
+	private readonly EasyDraw _mainMenu;
 
-	public static float fieldOfView;
+	public static float FieldOfView;
 
-	private static Level[] levels;
-	public static Level currentLevel { get; private set; }
-	private int currentLevelIndex;
+	private static Level[] _levels;
+	public static Level CurrentLevel { get; private set; }
+	private int _currentLevelIndex;
 
 	private const int MILLIS_FOR_TITLE = 3000;
-	private readonly EasyDraw title;
-	private int millisAtTitleShow;
+	private readonly EasyDraw _title;
+	private int _millisAtTitleShow;
 
 	private const bool USE_TILED = true;
 
-	private bool inGame;
-	private bool gameJustEnded;
+	private bool _inGame;
+	private bool _gameJustEnded;
 
 	private MyGame(int width, int height, bool fullScreen, int realWidth, int realHeight, bool pixelArt)
 		: base(width, height, fullScreen, true, realWidth, realHeight, pixelArt)
 	{
-		staticWidth = width;
-		staticHeight = height;
+		StaticWidth = width;
+		StaticHeight = height;
 
-		fieldOfView = Settings.FieldOfViewDegrees * Mathf.PI / 180.0f;
+		FieldOfView = Settings.FieldOfViewDegrees * Mathf.PI / 180.0f;
 
 		//Render Background
-		EasyDraw background = new(staticWidth, staticHeight, false);
-		for (int iy = 0; iy < staticHeight; iy++)
+		EasyDraw background = new(StaticWidth, StaticHeight, false);
+		for (int iy = 0; iy < StaticHeight; iy++)
 		{
-			if (iy < staticHeight / 2)
+			if (iy < StaticHeight / 2)
 			{
 				// Ceiling
-				float fac = Mathf.Clamp(Mathf.Map(iy, 0, staticHeight, 1.0f, -3), 0.0f, 1.0f);
+				float fac = Mathf.Clamp(Mathf.Map(iy, 0, StaticHeight, 1.0f, -3), 0.0f, 1.0f);
 				background.Stroke(0, (int) (150 * fac), (int) (255 * fac));
 			}
 			else
 			{
 				//Floor
-				background.Stroke((int) Mathf.Clamp(Mathf.Map(iy, 0, staticHeight, -300, 64), 0, 255));
+				background.Stroke((int) Mathf.Clamp(Mathf.Map(iy, 0, StaticHeight, -300, 64), 0, 255));
 			}
 
-			background.Line(0, iy, staticWidth, iy);
+			background.Line(0, iy, StaticWidth, iy);
 		}
 		AddChild(background);
 
 		//Render main menu
-		mainMenu = new EasyDraw(staticWidth, staticHeight, false);
-		mainMenu.TextAlign(CenterMode.Center, CenterMode.Center);
-		mainMenu.TextSize(staticHeight * 0.09f);
-		mainMenu.Text("TechnicJelle's DoomGame", staticWidth * 0.5f, staticHeight * 0.2f);
+		_mainMenu = new EasyDraw(StaticWidth, StaticHeight, false);
+		_mainMenu.TextAlign(CenterMode.Center, CenterMode.Center);
+		_mainMenu.TextSize(StaticHeight * 0.09f);
+		_mainMenu.Text("TechnicJelle's DoomGame", StaticWidth * 0.5f, StaticHeight * 0.2f);
 
-		AddChild(mainMenu);
+		AddChild(_mainMenu);
 
 		//Set up the title shower
-		title = new EasyDraw(staticWidth, staticHeight, false);
-		title.TextAlign(CenterMode.Center, CenterMode.Center);
-		title.TextSize(staticHeight * 0.1f);
+		_title = new EasyDraw(StaticWidth, StaticHeight, false);
+		_title.TextAlign(CenterMode.Center, CenterMode.Center);
+		_title.TextSize(StaticHeight * 0.1f);
 
 		//Prepare the music
 		Sounds.LoadAllSounds();
-		Sounds.music.Play();
+		Sounds.Music.Play();
 
 		Console.WriteLine("MyGame initialized");
 	}
 
 	private void StartGame()
 	{
-		RemoveChild(mainMenu);
+		RemoveChild(_mainMenu);
 
 		//Minimap
 		if(Settings.Minimap)
@@ -86,7 +90,7 @@ public class MyGame : Game
 		//Level
 		if (USE_TILED)
 		{
-			levels = new[]
+			_levels = new[]
 			{
 				new Level("Level01.tmx", "Floor 3/3"),
 				new Level("Level02.tmx", "Floor 2/3"),
@@ -112,50 +116,50 @@ public class MyGame : Game
 			map += "#...###........#";
 			map += "#..............#";
 			map += "################";
-			levels = new []
+			_levels = new []
 			{
 				new Level(16, 16, map),
 			};
 		}
 
-		currentLevelIndex = 0;
-		SwitchLevel(currentLevelIndex);
+		_currentLevelIndex = 0;
+		SwitchLevel(_currentLevelIndex);
 		if(Settings.Minimap)
 			Minimap.DrawCurrentLevel();
 
-		inGame = true;
+		_inGame = true;
 	}
 
 	// For every game object, Update is called every frame by the engine:
 	private void Update()
 	{
-		if (!inGame)
+		if (!_inGame)
 		{
-			if (gameJustEnded)
+			if (_gameJustEnded)
 			{
-				AddChild(mainMenu);
-				title.alpha = 0;
-				gameJustEnded = false;
+				AddChild(_mainMenu);
+				_title.alpha = 0;
+				_gameJustEnded = false;
 				RemoveAllWarpedSprites();
 				if (Settings.Minimap)
 					Minimap.ClearAll();
 			}
 
-			bool overButton = Input.mouseX > staticWidth * 0.25 && Input.mouseX < staticWidth * 0.75f &&
-			                  Input.mouseY > staticHeight * 0.7f && Input.mouseY < staticHeight * 0.9f;
-			mainMenu.Fill(overButton ? 200 : 100);
-			mainMenu.StrokeWeight(5);
-			mainMenu.Stroke(164);
-			mainMenu.Rect(staticWidth * 0.5f, staticHeight * 0.8f, staticWidth * 0.5f, staticHeight * 0.2f);
+			bool overButton = Input.mouseX > StaticWidth * 0.25 && Input.mouseX < StaticWidth * 0.75f &&
+			                  Input.mouseY > StaticHeight * 0.7f && Input.mouseY < StaticHeight * 0.9f;
+			_mainMenu.Fill(overButton ? 200 : 100);
+			_mainMenu.StrokeWeight(5);
+			_mainMenu.Stroke(164);
+			_mainMenu.Rect(StaticWidth * 0.5f, StaticHeight * 0.8f, StaticWidth * 0.5f, StaticHeight * 0.2f);
 
-			mainMenu.Fill(0);
-			mainMenu.TextSize(staticHeight * 0.16f);
-			mainMenu.Text("Start!", staticWidth * 0.5f, staticHeight * 0.81f);
+			_mainMenu.Fill(0);
+			_mainMenu.TextSize(StaticHeight * 0.16f);
+			_mainMenu.Text("Start!", StaticWidth * 0.5f, StaticHeight * 0.81f);
 
 			if (Input.AnyKeyDown() || overButton && Input.GetMouseButtonDown(0))
 			{
 				StartGame();
-				Sounds.buttonClick.Play();
+				Sounds.ButtonClick.Play();
 			}
 		}
 		else
@@ -222,7 +226,7 @@ public class MyGame : Game
 				}
 			}
 
-			RemoveChild(title);
+			RemoveChild(_title);
 
 			if (Settings.Minimap)
 				Minimap.ClearDebug();
@@ -230,14 +234,14 @@ public class MyGame : Game
 			if (Settings.Minimap)
 				Minimap.ClearEnemies();
 
-			currentLevel.player.MoveInput(this);
-			currentLevel.MoveEnemies();
+			CurrentLevel.Player.MoveInput(this);
+			CurrentLevel.MoveEnemies();
 
 			//Make the render pool
-			List<Renderable> visibleRenderables = new List<Renderable>();
+			List<Renderable> visibleRenderables = new();
 
 			//First we get all tiles that are on screen
-			List<TileWall> onscreenTileWalls = currentLevel.FindOnscreenTileWalls();
+			List<TileWall> onscreenTileWalls = CurrentLevel.FindOnscreenTileWalls();
 
 			//Then we loop through those tiles and see which sides are actually visible
 			foreach (TileWall tileWall in onscreenTileWalls)
@@ -247,10 +251,10 @@ public class MyGame : Game
 			}
 
 			//Enemies need to be rendered too, of course
-			visibleRenderables.AddRange(currentLevel.FindVisibleEnemies());
+			visibleRenderables.AddRange(CurrentLevel.FindVisibleEnemies());
 
 			//We sort the renderables by their distance to the player, to make sure they're rendered in the correct order
-			List<Renderable> sorted = visibleRenderables.OrderByDescending(renderable => renderable.distToPlayer).ToList();
+			List<Renderable> sorted = visibleRenderables.OrderByDescending(renderable => renderable.DistToPlayer).ToList();
 
 			//Then we refresh all those renderables
 			foreach (Renderable renderable in sorted)
@@ -258,10 +262,10 @@ public class MyGame : Game
 				renderable.RefreshVisuals();
 			}
 
-			title.alpha = Mathf.Clamp(Mathf.Map(Time.time - millisAtTitleShow, 0, MILLIS_FOR_TITLE, 2, 0), 0, 1);
-			if (Time.time - millisAtTitleShow > MILLIS_FOR_TITLE)
-				title.alpha = 0;
-			AddChild(title);
+			_title.alpha = Mathf.Clamp(Mathf.Map(Time.time - _millisAtTitleShow, 0, MILLIS_FOR_TITLE, 2, 0), 0, 1);
+			if (Time.time - _millisAtTitleShow > MILLIS_FOR_TITLE)
+				_title.alpha = 0;
+			AddChild(_title);
 
 			if (Settings.Minimap)
 				Minimap.ReOverlay();
@@ -281,10 +285,10 @@ public class MyGame : Game
 
 	private void SetTitle(string titleText)
 	{
-		title.ClearTransparent();
-		title.Text(titleText, staticWidth * 0.5f, staticHeight * 0.5f);
-		title.alpha = 1;
-		millisAtTitleShow = Time.time;
+		_title.ClearTransparent();
+		_title.Text(titleText, StaticWidth * 0.5f, StaticHeight * 0.5f);
+		_title.alpha = 1;
+		_millisAtTitleShow = Time.time;
 	}
 
 	public static (int, float) WorldToScreen(Vector2 p)
@@ -294,36 +298,36 @@ public class MyGame : Game
 
 		// Minimap.DebugLine(Player.position.x, Player.position.y, p.x, p.y);
 
-		Vector2 pp = Vector2.Sub(p, currentLevel.player.position);
-		float dist = Vector2.Dist(currentLevel.player.position, p);
+		Vector2 pp = p - CurrentLevel.Player.Position;
+		float dist = Vector2.Dist(CurrentLevel.Player.Position, p);
 		// Minimap.DebugLine(Player.position.x, Player.position.y, Player.position.x + pp.x, Player.position.y + pp.y);
-		float angle = Vector2.AngleBetween2(currentLevel.player.heading, pp);
+		float angle = Angle.Difference(CurrentLevel.Player.Heading.Heading(), pp.Heading());
 		if (angle > Mathf.PI)
 			angle -= Mathf.TWO_PI; //Thanks https://github.com/EV4gamer
 
-		int ix = Mathf.Round((staticWidth / 2.0f) + angle * (staticWidth / fieldOfView)); //Thanks https://github.com/StevenClifford!
+		int ix = Mathf.Round((StaticWidth / 2.0f) + angle * (StaticWidth / FieldOfView)); //Thanks https://github.com/StevenClifford!
 		return (ix, dist);
 	}
 
 	public void NextLevel()
 	{
-		Sounds.elevator.Play();
-		currentLevelIndex++;
-		if (currentLevelIndex >= levels.Length)
+		Sounds.Elevator.Play();
+		_currentLevelIndex++;
+		if (_currentLevelIndex >= _levels.Length)
 		{
-			inGame = false;
-			gameJustEnded = true;
+			_inGame = false;
+			_gameJustEnded = true;
 		}
 		else
-			SwitchLevel(currentLevelIndex);
+			SwitchLevel(_currentLevelIndex);
 	}
 
 	private void SwitchLevel(int index)
 	{
 		RemoveAllWarpedSprites();
-		currentLevelIndex = index;
-		currentLevel = levels[currentLevelIndex];
-		currentLevel.SetVisibility(true);
+		_currentLevelIndex = index;
+		CurrentLevel = _levels[_currentLevelIndex];
+		CurrentLevel.SetVisibility(true);
 
 		if (Settings.Minimap)
 		{
@@ -331,7 +335,7 @@ public class MyGame : Game
 			Minimap.UpdatePlayer();
 		}
 
-		SetTitle(currentLevel.title);
+		SetTitle(CurrentLevel.Title);
 	}
 
 	private static void Main() // Main() is the first method that's called when the program is run

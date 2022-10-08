@@ -1,16 +1,17 @@
-﻿namespace GXPEngine.MyGame
-{
-	public static class Sounds
-	{
-		public static Sound music { get; private set; }
-		public static Sound buttonClick { get; private set; }
-		public static Sound elevator { get; private set; }
+﻿using GXPEngine.GXPEngine;
 
-		public static void LoadAllSounds()
-		{
-			music = new Sound("197 - Invocation.ogg", true, true);
-			buttonClick = new Sound("ping.wav");
-			elevator = new Sound("elevator_door.wav");
-		}
+namespace GXPEngine.MyGame;
+
+public static class Sounds
+{
+	public static Sound Music { get; private set; }
+	public static Sound ButtonClick { get; private set; }
+	public static Sound Elevator { get; private set; }
+
+	public static void LoadAllSounds()
+	{
+		Music = new Sound("197 - Invocation.ogg", true, true);
+		ButtonClick = new Sound("ping.wav");
+		Elevator = new Sound("elevator_door.wav");
 	}
 }

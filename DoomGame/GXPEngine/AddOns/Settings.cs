@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
+using GXPEngine.GXPEngine.Utils;
 using GXPEngine.MyGame;
 
 /* Here is an example of a possible settings file (create a file settings.txt in bin/Debug, and copy the next lines to it):
@@ -23,7 +24,7 @@ SettingsFileName = settings.txt
 // MyLevels = Level1.tmx, Level2.tmx, Level3.tmx 
 */
 
-namespace GXPEngine;
+namespace GXPEngine.GXPEngine.AddOns;
 
 /// <summary>
 /// Static class that contains various settings, such as screen resolution and player controls.
@@ -92,7 +93,7 @@ public class Settings
 			return;
 		}
 
-		StreamReader reader = new StreamReader(SettingsFileName);
+		StreamReader reader = new(SettingsFileName);
 
 		string line = reader.ReadLine();
 		while (line != null)

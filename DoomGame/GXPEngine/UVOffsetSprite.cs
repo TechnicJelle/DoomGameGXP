@@ -1,9 +1,10 @@
-﻿using GXPEngine.Core;
-using GXPEngine;
+﻿using GXPEngine.GXPEngine.Core;
+
+namespace GXPEngine.GXPEngine;
 
 public class UVOffsetSprite : Sprite
 {
-	private float[] vertices;
+	private float[] _vertices;
 
 	public UVOffsetSprite(string filename, bool keepInCache=false, bool addCollider=true) : base(filename, keepInCache, addCollider)
 	{
@@ -16,8 +17,21 @@ public class UVOffsetSprite : Sprite
 	/// </param>
 	public void SetVertices(float[] verts)
 	{
-		vertices = verts;
+		_vertices = verts;
 	}
+
+	// private void DrawWarpedDecal(Vector2[] pos)
+	// {
+	// 	Vector2 center;
+	// 	float rd = ((pos[2].x - pos[0].x) * (pos[3].y - pos[1].y) - (pos[3].x - pos[1].x) * (pos[2].y - pos[0].y));
+	// 	if (rd != 0)
+	// 	{
+	// 		rd = 1.0f / rd;
+	// 		float rn = ((pos[3].x - pos[1].x) * (pos[0].y - pos[1].y) - (pos[3].y - pos[1].y) * (pos[0].x - pos[1].x)) * rd;
+	// 		float sn = ((pos[2].x - pos[0].x) * (pos[0].y - pos[1].y) - (pos[2].y - pos[0].y) * (pos[0].x - pos[1].x)) * rd;
+	// 		if (!(rn < 0.f || rn > 1.f || sn < 0.f || sn > 1.f)) center = pos[0] + rn * (pos[2] - pos[0]);
+	// 	}
+	// }
 
 	protected override void setUVs()
 	{
@@ -53,7 +67,7 @@ public class UVOffsetSprite : Sprite
 		_texture.Bind();
 		(byte r, byte g, byte b, byte a) tempColor  = GetColor();
 		glContext.SetColor(tempColor.r, tempColor.g, tempColor.b, tempColor.a);
-		glContext.DrawQuad(vertices, _uvs);
+		glContext.DrawQuad(_vertices, _uvs);
 		_texture.Unbind();
 		if (blendMode != null) BlendMode.NORMAL.enable();
 	}

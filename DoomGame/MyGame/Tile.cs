@@ -1,7 +1,6 @@
-﻿namespace GXPEngine.MyGame
+﻿namespace GXPEngine.MyGame;
+
+public class Tile
 {
-	public class Tile
-	{
-		//lol empty
-	}
+	//lol empty
 }

@@ -1,264 +1,401 @@
+// Author: TechnicJelle
+// Copyright (c) TechnicJelle. All rights reserved.
+//  Except for the functions in this file that are either inspired by, or taken from Processing: https://github.com/processing/processing4/blob/master/core/src/processing/core/PVector.java
+// You're allowed to learn from this, but please do not simply copy.
+
 using System;
 using System.Diagnostics.CodeAnalysis;
 
-namespace GXPEngine.Core
+namespace GXPEngine.GXPEngine.Core;
+
+//TODO: Polish up XML documentation
+public struct Vector2
 {
-	[SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
-	[SuppressMessage("ReSharper", "ParameterHidesMember")]
-	//File basically copied from Processing: https://github.com/processing/processing/blob/master/core/src/processing/core/PVector.java
-	public class Vector2
+	// ReSharper disable InconsistentNaming
+	public float x;
+	public float y;
+	// ReSharper restore InconsistentNaming
+
+	/// <summary>
+	/// When comparing values, the values can be off by this much in either direction before it gets flagged as actually two different numbers
+	/// </summary>
+	private const float TOLERANCE = 0.0000001f;
+
+	/// <summary>
+	/// Constructs a new vector (defaults to (0, 0) )
+	/// </summary>
+	/// <param name="pX">new x position</param>
+	/// <param name="pY">new y position</param>
+	public Vector2(float pX = 0.0f, float pY = 0.0f)
 	{
-		public float x;
-		public float y;
+		x = pX;
+		y = pY;
+	}
 
-		public Vector2()
-		{
-			x = 0;
-			y = 0;
-		}
+	public Vector2(double pX = 0.0, double pY = 0.0) : this((float) pX, (float) pY)
+	{
+	}
 
-		public Vector2 (float x, float y)
-		{
-			this.x = x;
-			this.y = y;
-		}
+	public Vector2(int pX = 0, int pY = 0) : this((float) pX, (float) pY)
+	{
+	}
 
-		public Vector2 Set(float x, float y) {
-			this.x = x;
-			this.y = y;
-			return this;
-		}
+	/// <summary>
+	/// Constructs a new vector with the same number for both of the elements
+	/// </summary>
+	public Vector2(float f) : this(f, f)
+	{
+	}
 
-		public Vector2 Set(float[] source) {
-			if (source.Length < 2) return this;
-			x = source[0];
-			y = source[1];
-			return this;
-		}
+	/// <summary>
+	/// Constructs a new vector with the same number for both of the elements
+	/// </summary>
+	public Vector2(double d) : this(d, d)
+	{
+	}
 
-		//TODO: Random()
+	/// <summary>
+	/// Constructs a new vector with the same number for both of the elements
+	/// </summary>
+	public Vector2(int i) : this(i, i)
+	{
+	}
 
-		public static Vector2 FromAngle(float angle, Vector2 target = null) {
-			if (target == null) {
-				target = new Vector2(Mathf.Cos(angle),Mathf.Sin(angle));
-			} else {
-				target.Set(Mathf.Cos(angle),Mathf.Sin(angle));
-			}
-			return target;
-		}
+	/// <summary>
+	/// Returns a new vector pointing in the given direction
+	/// </summary>
+	public static Vector2 FromAngle(Angle angle)
+	{
+		return new Vector2(Math.Cos(angle), Math.Sin(angle));
+	}
 
-		public Vector2 Copy() {
-			return new Vector2(x, y);
-		}
+	/// <summary>
+	/// Returns a new unit vector pointing in a random direction
+	/// </summary>
+	public static Vector2 Random()
+	{
+		return FromAngle(Angle.Random());
+	}
 
-		public float[] Get(float[] target) {
-			if (target == null) {
-				return new[] { x, y };
-			}
-			if (target.Length < 2) return target;
-			target[0] = x;
-			target[1] = y;
-			return target;
-		}
+	/// <summary>
+	/// Set the vector to a different point
+	/// </summary>
+	/// <param name="x">new x position</param>
+	/// <param name="y">new y position</param>
+	[SuppressMessage("ReSharper", "ParameterHidesMember")]
+	// ReSharper disable once InconsistentNaming
+	public Vector2 SetXY(float x = 0.0f, float y = 0.0f)
+	{
+		this.x = x;
+		this.y = y;
+		return this;
+	}
 
-		public float Mag() {
-			return Mathf.Sqrt(x*x + y*y);
-		}
+	/// <summary>
+	/// Calculates the magnitude of the vector (using sqrt)
+	/// </summary>
+	/// <returns>The magnitude of the vector</returns>
+	public static float Mag(Vector2 v)
+	{
+		return (float) Math.Sqrt(v.x * v.x + v.y * v.y);
+	}
 
-		public float MagSq() {
-			return x*x + y*y;
-		}
+	/// <summary>
+	/// Calculates the magnitude of the vector (using sqrt)
+	/// </summary>
+	/// <returns>The magnitude of the vector</returns>
+	public float Mag()
+	{
+		return Mag(this);
+	}
 
-		public Vector2 Add(Vector2 v) {
-			x += v.x;
-			y += v.y;
-			return this;
-		}
+	/// <summary>
+	/// Calculates the square magnitude of the vector (so there is no slow sqrt() being called)
+	/// </summary>
+	/// <returns>The square magnitude of the vector</returns>
+	public static float MagSq(Vector2 v)
+	{
+		return v.x * v.x + v.y * v.y;
+	}
 
-		public Vector2 Add(float x, float y) {
-			this.x += x;
-			this.y += y;
-			return this;
-		}
+	/// <summary>
+	/// Calculates the square magnitude of the vector (so there is no slow sqrt() being called)
+	/// </summary>
+	/// <returns>The square magnitude of the vector</returns>
+	public float MagSq()
+	{
+		return MagSq(this);
+	}
 
-		public static Vector2 Add(Vector2 v1, Vector2 v2, Vector2 target = null) {
-			if (target == null) {
-				target = new Vector2(v1.x + v2.x,v1.y + v2.y);
-			} else {
-				target.Set(v1.x + v2.x, v1.y + v2.y);
-			}
-			return target;
-		}
+	/// <summary>
+	/// Calculates a normalized version of the vector
+	/// </summary>
+	/// <returns>A normalized copy of the vector</returns>
+	public Vector2 Normalized()
+	{
+		return Normalized(this);
+	}
 
-		public Vector2 Sub(Vector2 v) {
-			x -= v.x;
-			y -= v.y;
-			return this;
-		}
+	/// <summary>
+	/// Calculates a normalized version of the vector
+	/// </summary>
+	/// <returns>A normalized copy of the vector</returns>
+	public static Vector2 Normalized(Vector2 v)
+	{
+		float mag = v.Mag();
+		return mag == 0 ? new Vector2() : new Vector2(v.x / mag, v.y / mag);
+	}
 
-		public Vector2 Sub(float x, float y) {
-			this.x -= x;
-			this.y -= y;
-			return this;
-		}
+	/// <summary>
+	/// Modifies the vector to be normalized
+	/// </summary>
+	/// <returns>The normalized vector</returns>
+	public Vector2 Normalize()
+	{
+		return this = Normalized();
+	}
 
-		public static Vector2 Sub(Vector2 v1, Vector2 v2, Vector2 target = null) {
-			if (target == null) {
-				target = new Vector2(v1.x - v2.x, v1.y - v2.y);
-			} else {
-				target.Set(v1.x - v2.x, v1.y - v2.y);
-			}
-			return target;
-		}
+	/// <summary>
+	/// Sets the magnitude of this vector
+	/// </summary>
+	/// <param name="mag">The desired magnitude for this vector</param>
+	/// <returns>The modified vector</returns>
+	public Vector2 SetMag(float mag)
+	{
+		Normalize();
+		return this *= mag;
+	}
 
-		public Vector2 Mult(float n) {
-			x *= n;
-			y *= n;
-			return this;
-		}
+	/// <summary>
+	/// Limit the magnitude of this vector
+	/// </summary>
+	/// <param name="max">The maximum magnitude the vector may be</param>
+	/// <returns>The modified vector</returns>
+	public Vector2 Limit(float max)
+	{
+		return MagSq() < max * max ? this : SetMag(max);
+	}
 
-		public static Vector2 Mult(Vector2 v, float n, Vector2 target = null) {
-			if (target == null) {
-				target = new Vector2(v.x*n, v.y*n);
-			} else {
-				target.Set(v.x*n, v.y*n);
-			}
-			return target;
-		}
+	/// <summary>
+	/// Set vector heading angle (magnitude doesn't change)
+	/// </summary>
+	/// <returns>The modified vector</returns>
+	public Vector2 SetHeading(Angle angle)
+	{
+		float m = Mag();
+		x = (float) (m * Math.Cos(angle));
+		y = (float) (m * Math.Sin(angle));
+		return this;
+	}
 
-		public Vector2 Div(float n) {
-			x /= n;
-			y /= n;
-			return this;
-		}
+	/// <summary>
+	/// Gets the vector's heading angle
+	/// </summary>
+	public Angle Heading()
+	{
+		return Angle.FromRadians((float) Math.Atan2(y, x));
+	}
 
-		public static Vector2 Div(Vector2 v, float n, Vector2 target = null) {
-			if (target == null) {
-				target = new Vector2(v.x/n, v.y/n);
-			} else {
-				target.Set(v.x/n, v.y/n);
-			}
-			return target;
-		}
+	/// <summary>
+	/// Rotate the vector over the given angle
+	/// </summary>
+	/// <returns>The modified vector</returns>
+	public Vector2 Rotate(Angle angle)
+	{
+		return this = Rotate(this, angle);
+	}
 
-		public float Dist(Vector2 v) {
-			float dx = x - v.x;
-			float dy = y - v.y;
-			return Mathf.Sqrt(dx*dx + dy*dy);
-		}
+	/// <summary>
+	/// Rotate the vector over the given angle
+	/// </summary>
+	/// <returns>The modified vector</returns>
+	public static Vector2 Rotate(Vector2 vec, Angle angle)
+	{
+		float temp = vec.x;
+		vec.x = (float) (vec.x * Math.Cos(angle) - vec.y * Math.Sin(angle));
+		vec.y = (float) (temp * Math.Sin(angle) + vec.y * Math.Cos(angle));
+		return vec;
+	}
 
-		public static float Dist(Vector2 v1, Vector2 v2) {
-			float dx = v1.x - v2.x;
-			float dy = v1.y - v2.y;
-			return Mathf.Sqrt(dx*dx + dy*dy);
-		}
+	/// <summary>
+	/// Rotate the vector around the given point over the given angle
+	/// </summary>
+	/// <returns></returns>
+	public Vector2 RotateAround(Vector2 rotateAround, Angle angle)
+	{
+		this -= rotateAround;
+		Rotate(angle);
+		return this += rotateAround;
+	}
 
-		public float Dot(Vector2 v) {
-			return x*v.x + y*v.y;
-		}
+	/// <summary>
+	/// Calculates the absolute components of the vector
+	/// </summary>
+	/// <returns>A new vector with both components positive</returns>
+	public Vector2 GetAbs()
+	{
+		return new Vector2(Math.Abs(x), Math.Abs(y));
+	}
 
-		public float Dot(float x, float y) {
-			return this.x*x + this.y*y;
-		}
+	/// <summary>
+	/// Calculates the normal vector on this vector
+	/// </summary>
+	/// <returns>A new vector that points in the perpendicular direction</returns>
+	public Vector2 GetNormal()
+	{
+		return new Vector2(-y, x);
+	}
 
-		public static float Dot(Vector2 v1, Vector2 v2) {
-			return v1.x*v2.x + v1.y*v2.y;
-		}
+	/// <summary>
+	/// Calculates the distance between this vector and another vector
+	/// </summary>
+	public float Dist(Vector2 other)
+	{
+		return Dist(this, other);
+	}
 
-		//TODO: Cross()
+	/// <summary>
+	/// Calculates the distance between two vectors
+	/// </summary>
+	public static float Dist(Vector2 v1, Vector2 v2)
+	{
+		Vector2 d = v1 - v2;
+		return d.Mag();
+	}
 
-		public Vector2 Normalize() {
-			float m = Mag();
-			// ReSharper disable once CompareOfFloatsByEqualityOperator
-			if (m != 0.0 && m != 1.0) {
-				Div(m);
-			}
-			return this;
-		}
+	/// <summary>
+	/// Calculates the square distance between this vector and another vector (so there is no slow sqrt() being called)
+	/// </summary>
+	public float DistSq(Vector2 other)
+	{
+		return DistSq(this, other);
+	}
 
-		public Vector2 Normalize(Vector2 target) {
-			if (target == null) {
-				target = new Vector2();
-			}
-			float m = Mag();
-			if (m > 0) {
-				target.Set(x/m, y/m);
-			} else {
-				target.Set(x, y);
-			}
-			return target;
-		}
+	/// <summary>
+	/// Calculates the square distance between two vectors (so there is no slow sqrt() being called)
+	/// </summary>
+	public static float DistSq(Vector2 v1, Vector2 v2)
+	{
+		Vector2 d = v1 - v2;
+		return d.MagSq();
+	}
 
-		public Vector2 Limit(float max) {
-			if (!(MagSq() > max * max)) return this;
-			Normalize();
-			Mult(max);
-			return this;
-		}
+	/// <summary>
+	/// Calculates the dot product between this vector and another vector
+	/// </summary>
+	public float Dot(Vector2 v)
+	{
+		return Dot(this, v);
+	}
 
-		public Vector2 SetMag(float len) {
-			Normalize();
-			Mult(len);
-			return this;
-		}
+	/// <summary>
+	/// Calculates the dot product between two vectors
+	/// </summary>
+	public static float Dot(Vector2 v1, Vector2 v2)
+	{
+		return v1.x * v2.x + v1.y * v2.y;
+	}
 
-		public Vector2 SetMag(Vector2 target, float len) {
-			target = Normalize(target);
-			target.Mult(len);
-			return target;
-		}
+	/// <summary>
+	/// Calculates the cross product between this vector and another vector
+	/// </summary>
+	public float Cross(Vector2 other)
+	{
+		return Cross(this, other);
+	}
 
-		public float Heading() {
-			float angle = Mathf.Atan2(y, x);
-			return angle;
-		}
+	/// <summary>
+	/// Calculates the cross product between two vectors
+	/// </summary>
+	public static float Cross(Vector2 v1, Vector2 v2)
+	{
+		return v1.x * v2.y - v1.y * v2.x;
+	}
 
-		public Vector2 Rotate(float theta) {
-			float temp = x;
-			// Might need to check for rounding errors like with angleBetween function?
-			x = x*Mathf.Cos(theta) - y*Mathf.Sin(theta);
-			y = temp*Mathf.Sin(theta) + y*Mathf.Cos(theta);
-			return this;
-		}
+	public static Vector2 operator +(Vector2 left, Vector2 right)
+	{
+		return new Vector2(left.x + right.x, left.y + right.y);
+	}
 
-		//TODO: Lerp()
+	public static Vector2 operator -(Vector2 vec)
+	{
+		return new Vector2(-vec.x, -vec.y);
+	}
 
-		public static float AngleBetween(Vector2 v1, Vector2 v2) {
+	public static Vector2 operator -(Vector2 left, Vector2 right)
+	{
+		return new Vector2(left.x - right.x, left.y - right.y);
+	}
 
-			// We get NaN if we pass in a zero vector which can cause problems
-			// Zero seems like a reasonable angle between a (0,0,0) vector and something else
-			if (v1.x == 0 && v1.y == 0) return 0.0f;
-			if (v2.x == 0 && v2.y == 0) return 0.0f;
+	public static Vector2 operator *(Vector2 vec, float f)
+	{
+		return new Vector2(vec.x * f, vec.y * f);
+	}
 
-			double dot = v1.x * v2.x + v1.y * v2.y;
-			double v1Mag = Mathf.Sqrt(v1.x * v1.x + v1.y * v1.y);
-			double v2Mag = Mathf.Sqrt(v2.x * v2.x + v2.y * v2.y);
-			// This should be a number between -1 and 1, since it's "normalized"
-			double amt = dot / (v1Mag * v2Mag);
-			// But if it's not due to rounding error, then we need to fix it
-			// http://code.google.com/p/processing/issues/detail?id=340
-			// Otherwise if outside the range, acos() will return NaN
-			// http://www.cppreference.com/wiki/c/math/acos
-			if (amt <= -1) {
-				return Mathf.PI;
-			}
+	public static Vector2 operator *(float f, Vector2 vec)
+	{
+		return new Vector2(f * vec.x, f * vec.y);
+	}
 
-			if (amt >= 1) {
-				// http://code.google.com/p/processing/issues/detail?id=435
-				return 0;
-			}
-			return (float) Math.Acos(amt);
-		}
+	/// <summary>
+	/// Element-wise multiplication
+	/// </summary>
+	public static Vector2 operator *(Vector2 left, Vector2 right)
+	{
+		return new Vector2(left.x * right.x, left.y * right.y);
+	}
 
-		public static float AngleBetween2(Vector2 v1, Vector2 v2) {
-			//Thanks to https://github.com/EV4gamer for making this one!
-			float a = Mathf.Atan2(v2.y, v2.x) - Mathf.Atan2(v1.y, v1.x);
-			return (a + Mathf.TWO_PI) % Mathf.TWO_PI;
-		}
+	/// <summary>
+	/// Divide a vector by a number (scalar division)
+	/// </summary>
+	public static Vector2 operator /(Vector2 vec, float f)
+	{
+		return vec / new Vector2(f);
+	}
 
-		public override string ToString() {
-			return "[ " + x + ", " + y + " ]";
-		}
+	/// <summary>
+	/// Divide a number by a vector
+	/// </summary>
+	public static Vector2 operator /(float f, Vector2 vec)
+	{
+		return new Vector2(f) / vec;
+	}
+
+	/// <summary>
+	/// Element-wise division
+	/// </summary>
+	public static Vector2 operator /(Vector2 left, Vector2 right)
+	{
+		return new Vector2(left.x / right.x, left.y / right.y);
+	}
+
+	public static bool operator ==(Vector2 left, Vector2 right)
+	{
+		return Math.Abs(left.x - right.x) < TOLERANCE && Math.Abs(left.y - right.y) < TOLERANCE;
+	}
+
+	public static bool operator !=(Vector2 left, Vector2 right)
+	{
+		return Math.Abs(left.x - right.x) > TOLERANCE || Math.Abs(left.y - right.y) > TOLERANCE;
+	}
+
+	public override bool Equals(object obj)
+	{
+		if (obj is not Vector2 vec2)
+			return false;
+		return Math.Abs(x - vec2.x) < TOLERANCE && Math.Abs(y - vec2.y) < TOLERANCE;
+	}
+
+	public override int GetHashCode()
+	{
+		int hash = 17;
+		hash = hash * 31 + x.GetHashCode();
+		hash = hash * 31 + y.GetHashCode();
+		return hash;
+	}
+
+	public override string ToString()
+	{
+		return $"({x},{y})";
 	}
 }
-

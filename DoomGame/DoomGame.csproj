@@ -38,6 +38,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GXPEngine\Core\Angle.cs" />
     <Compile Include="GXPEngine\UVOffsetSprite.cs" />
     <Compile Include="MyGame\Enemy.cs" />
     <Compile Include="MyGame\Level.cs" />
