@@ -17,6 +17,7 @@ public class GL
 	public const int COLOR_BUFFER_BIT			= 0x4000;
 	public const int QUADS						= 0x0007;
 	public const int TRIANGLES					= 0x0004;
+	public const int TRIANGLE_FAN			 	= 0x0006;
 	public const int LINES						= 0x0001;
 	public const int TEXTURE_MIN_FILTER			= 0x2801;
 	public const int TEXTURE_MAG_FILTER			= 0x2800;
@@ -98,6 +99,8 @@ public class GL
 
 	[DllImport("opengl32.dll", EntryPoint="glTexCoord2f")]
 	public static extern void TexCoord2f(float u, float v);
+	[DllImport("opengl32.dll", EntryPoint = "glTexCoord4f")]
+	public static extern void TexCoord4f(float s, float t, float r, float q);
 	[DllImport("opengl32.dll", EntryPoint="glVertex2f")]
 	public static extern void Vertex2f(float x, float y);
 	[DllImport("opengl32.dll", EntryPoint="glVertex3f")]
