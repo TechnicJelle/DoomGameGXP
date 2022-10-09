@@ -319,7 +319,7 @@ public class Layer : PropertyContainer {
 		return grid;
 	}
 
-	void FillTileArray(short[,] sgrid=null, uint[,] uigrid=null) { 
+	void FillTileArray(short[,] sgrid=null, uint[,] uigrid=null) {
 		string[] lines = Data.innerXML.Split ('\n');
 		int row = 0;
 
@@ -474,7 +474,7 @@ public class TiledObject : PropertyContainer {
 	}
 
 	override public string ToString() {
-		return "Object: " + Name + " ID: " + ID + " Type: " + Type + " coordinates: (" + X + "," + Y + ") dimensions: (" + Width + "," + Height + ")\n";	
+		return "Object: " + Name + " ID: " + ID + " Type: " + Type + " coordinates: (" + X + "," + Y + ") dimensions: (" + Width + "," + Height + ")\n";
 	}
 }
 
