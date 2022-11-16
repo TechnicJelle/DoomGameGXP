@@ -8,7 +8,11 @@ Because the GXP Engine was really not meant for this kind of stuff, the developm
 I'll still implement the last three items on the [TODO](https://github.com/TechnicJelle/DoomGameGXP/projects/1?fullscreen=true) (Wall warping & Enemy interaction), but after that I'll start the other project, which I'll link to down below here once it's ready.
 
 
+
 ## Progress GIFs
+### The fix for the texture warping!!
+[texture-warping-fix.webm](https://user-images.githubusercontent.com/22576047/202271199-9621695e-4a0d-47da-b6eb-41b83f2c0797.webm)
+
 ### The switch to a horror game
 ![](.github/scarey.gif)
 
